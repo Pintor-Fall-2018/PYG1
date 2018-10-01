@@ -39,10 +39,21 @@ class Game:
                 self.status = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
-                    spec.rect.x += 5
+                    spec.forward = True
+                if event.key == pygame.K_LEFT:
+                    spec.backward = True
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_RIGHT:
+                    spec.forward = False
+                if event.key == pygame.K_LEFT:
+                    spec.backward = False
 
     def updateSprites(self):
-        pass
+        if spec.forward:
+            spec.moveForward()
+
+        if spec.backward:
+            spec.moveBackward()
 
     def checkStatus(self, events):
         pass
@@ -56,6 +67,14 @@ class Spec(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 0
         self.rect.y = 200
+        self.forward = False
+        self.backward = False
+
+    def moveForward(self):
+        self.rect.x += 5
+
+    def moveBackward(self):
+        self.rect.x -= 5
 
 
 
