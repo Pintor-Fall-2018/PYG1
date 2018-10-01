@@ -21,7 +21,9 @@ class Menu:
         (self.width/2), (int(self.height/1.5)) )
 
         pygame.display.flip()
+        self.runMenu()
 
+    def runMenu(self):
         openMenu = True
         while openMenu:
             self.time.tick(self.fps)
@@ -31,7 +33,6 @@ class Menu:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         openMenu = False
-
     def gameoverScreen(self):
         pass
 
