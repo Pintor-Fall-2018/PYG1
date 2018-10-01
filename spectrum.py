@@ -5,6 +5,7 @@ from menu import *
 RESOLUTION = (600, 400)  # width x height
 FRAMES = 60   # Frames per second
 TITLE = "Spectrum v1.0"
+DEBUG = 1   #Debug Mode 1 == On 0 == Off
 
 pygame.init()
 pygame.display.set_caption(TITLE)
@@ -32,6 +33,10 @@ class Game:
 
     def getCommands(self, events):
         for event in events:
+            if event.type == pygame.QUIT:       #check if QUIT event. Return status false to terminate game
+                self.status = False
+            else:
+                self.status = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     spec.rect.x += 5
@@ -40,11 +45,7 @@ class Game:
         pass
 
     def checkStatus(self, events):
-        for event in events:
-            if event.type == pygame.QUIT:       #check if QUIT event. Return status false to terminate game
-                self.status = False
-            else:
-                self.status = True
+        pass
 
 
 class Spec(pygame.sprite.Sprite):
@@ -87,6 +88,10 @@ while(active):
     #print to screen
     game.drawScreen(sprites)
 
+    #debugging info
+    if DEBUG:
+        if len(events) > 0:
+            print(events)
 
 
 
