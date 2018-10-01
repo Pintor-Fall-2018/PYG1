@@ -37,11 +37,13 @@ class Game:
                 self.status = False
             else:
                 self.status = True
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN:        #Hold Keys for fluid movement
                 if event.key == pygame.K_RIGHT:
                     spec.forward = True
                 if event.key == pygame.K_LEFT:
                     spec.backward = True
+                if event.key == pygame.K_UP:
+                    spec.jump = True
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_RIGHT:
                     spec.forward = False
@@ -54,6 +56,18 @@ class Game:
 
         if spec.backward:
             spec.moveBackward()
+
+        #jump mechanics (crude)
+        if spec.jump == True and spec.jumpTimer > 20:
+            spec.rect.y -= 5
+            spec.jumpTimer -= 1
+        elif spec.jump == True and spec.jumpTimer > 0:
+            spec.rect.y += 5
+            spec.jumpTimer -= 1
+        elif spec.jump == True and spec.jumpTimer == 0:
+            spec.jump = False
+            spec.jumpTimer = 40
+
 
     def checkStatus(self, events):
         pass
@@ -69,13 +83,14 @@ class Spec(pygame.sprite.Sprite):
         self.rect.y = 200
         self.forward = False
         self.backward = False
+        self.jumpTimer = 40
+        self.jump = False
 
     def moveForward(self):
         self.rect.x += 5
 
     def moveBackward(self):
         self.rect.x -= 5
-
 
 
 game = Game()
@@ -90,6 +105,7 @@ game.startup()
 
 active = True
 
+# Main Game Loop
 while(active):
     #increment time
     time.tick(FRAMES)
