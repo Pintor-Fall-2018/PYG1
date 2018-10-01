@@ -1,42 +1,93 @@
 # Spectrum.py
-import pygame
+import pygame, sys, os
+from menu import *
 
 RESOLUTION = (600, 400)  # width x height
+FRAMES = 60   # Frames per second
+TITLE = "Spectrum v1.0"
 
 pygame.init()
-screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)
+pygame.display.set_caption(TITLE)
+time = pygame.time.Clock()
 
-
-
-class Menu:
-    pass
 
 class Game:
     def __init__(self):
+        #sets up screen resolution
+        self.status = True
+        self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)
         pass
 
     def startup(self):
         pass
 
     def shutdown(self):
+        pygame.quit()
+        sys.exit()
+
+    def drawScreen(self, sprites):
+        self.screen.fill((255,255,255))
+        sprites.draw(self.screen)
+        pygame.display.flip()
+
+    def getCommands(self, events):
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    spec.rect.x += 5
+
+    def updateSprites(self):
         pass
 
+    def checkStatus(self, events):
+        for event in events:
+            if event.type == pygame.QUIT:       #check if QUIT event. Return status false to terminate game
+                self.status = False
+            else:
+                self.status = True
 
-menu = Menu()
+
+class Spec(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self) #sprite constructor
+        self.image = pygame.Surface((20,20)) #width x height
+        self.image.fill((100,100,0))
+        self.rect = self.image.get_rect()
+        self.rect.x = 0
+        self.rect.y = 200
+
+
+
 game = Game()
+menu = Menu(game.screen, RESOLUTION[0], RESOLUTION[1], time, FRAMES)
+spec = Spec()
 
-menu.
+sprites = pygame.sprite.Group()
+sprites.add(spec)
+
+menu.startScreen()
 game.startup()
 
-while(1):
+active = True
+
+while(active):
+    #increment time
+    time.tick(FRAMES)
+
+    events = pygame.event.get()
+    game.checkStatus(events)
+    active = game.status #check if game is still active based on game status
+
     #obtain keyboard inputs
-    game.getCommands()
+    game.getCommands(events)
 
     #update sprites
     game.updateSprites()
 
     #print to screen
-    game.printScreen()
+    game.drawScreen(sprites)
+
+
 
 
 game.shutdown()
