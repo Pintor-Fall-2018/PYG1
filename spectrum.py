@@ -44,6 +44,8 @@ class Game:
                     spec.backward = True
                 if event.key == pygame.K_UP:
                     spec.jump = True
+                if event.key == pygame.K_ESCAPE:
+                    menu.pauseScreen()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_RIGHT:
                     spec.forward = False
