@@ -116,7 +116,18 @@ class Spec(pygame.sprite.Sprite):
 
 
 game = Game()
-menu = Menu(game.screen, RESOLUTION[0], RESOLUTION[1], time, FRAMES)
+
+# Load Menu images
+bl_light_img = pygame.image.load('images/blueLight.png').convert()
+rd_light_img = pygame.image.load('images/redLight.png').convert()
+gr_light_img = pygame.image.load('images/greenLight.png').convert()
+
+menu_imgs = []
+menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img))
+
+# Create menu object
+menu = Menu(game.screen, time, menu_imgs)
+
 #spec = Spec()
 
 #sprites = pygame.sprite.Group()
