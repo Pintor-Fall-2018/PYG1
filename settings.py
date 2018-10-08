@@ -15,6 +15,3 @@ BLUE = (0, 0, 255)
 
 LIGHT_RED = (255, 50, 0)
 LIGHT_GREEN = (0, 255, 0)
-
-RESOLUTION = (600, 400)  # width x height
-FRAMES = 60   # Frames per second
