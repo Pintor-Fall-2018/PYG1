@@ -45,7 +45,9 @@ class Menu:
             self.generateText(self.authors, self.fontName, WHITE, 20,
             (int(RESOLUTION[0]/2)), (int(RESOLUTION[1]/1.2)) )
 
-            print("Tick")
+            if DEBUG_MENU:
+                print("Tick")
+
             self.time.tick(FRAMES)
 
             # Check boundaries for lights - needs refactoring
@@ -62,15 +64,18 @@ class Menu:
                  rd_x = self.rd_x_y_Spawn[0]
                  rd_y = self.rd_x_y_Spawn[1]
             if gr_x < -30:
-                 print("---------------- GREEN X JUMP!-------------------")
-                 gr_x = self.gr_x_y_Spawn[0]
-                 gr_y = self.gr_x_y_Spawn[1]
+                if DEBUG_MENU:
+                    print("---------------- GREEN X JUMP!-------------------")
+                gr_x = self.gr_x_y_Spawn[0]
+                gr_y = self.gr_x_y_Spawn[1]
             if gr_y > RESOLUTION[1] + 100 or gr_y < (-1 * (RESOLUTION[1] + 30)):
-                 print("---------------- GREEN Y JUMP!-------------------")
-                 gr_x = self.gr_x_y_Spawn[0]
-                 gr_y = self.gr_x_y_Spawn[1]
+                if DEBUG_MENU:
+                    print("---------------- GREEN Y JUMP!-------------------")
+                gr_x = self.gr_x_y_Spawn[0]
+                gr_y = self.gr_x_y_Spawn[1]
 
-            print(gr_x, gr_y)
+            if DEBUG_MENU:
+                print(gr_x, gr_y)
             self.screen.blit(self.bl_light, (bl_x,bl_y))
             self.screen.blit(self.rd_light, (rd_x,rd_y))
             self.screen.blit(self.gr_light, (gr_x,rd_y))
