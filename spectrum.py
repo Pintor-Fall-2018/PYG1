@@ -1,11 +1,7 @@
 # Spectrum.py
 import pygame, sys, os
 from menu import *
-
-RESOLUTION = (600, 400)  # width x height
-FRAMES = 60   # Frames per second
-TITLE = "Spectrum v1.0"
-DEBUG = 1   #Debug Mode 1 == On 0 == Off
+from settings import *
 
 pygame.init()   #initialize imported pygame modules
 pygame.display.set_caption(TITLE)
