@@ -1,5 +1,6 @@
 # Spectrum.py
 import pygame, sys, os
+import random
 from settings import *
 from menu import *
 
