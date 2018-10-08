@@ -1,4 +1,4 @@
-import pygame
+import pygame, sys, os
 from settings import *
 class Menu:
     def __init__(self, screen, window_width, window_height, time, fps):
@@ -83,6 +83,7 @@ class Menu:
             quit = self.button("Quit", LIGHT_RED, RED, btnWidth, btnHeight, quit_btn_x, quit_btn_y)
             if quit:
                 pygame.quit()
+                sys.exit()        #exit() needed after pygame.quit() fixes video system not initialized issue
             pygame.display.flip()
 
 

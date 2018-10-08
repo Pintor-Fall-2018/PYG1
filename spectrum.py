@@ -1,7 +1,8 @@
 # Spectrum.py
 import pygame, sys, os
-from menu import *
 from settings import *
+from menu import *
+
 
 pygame.init()   #initialize imported pygame modules
 pygame.display.set_caption(TITLE)
@@ -138,7 +139,6 @@ while(active):
 
     #print to screen
     game.drawScreen()
-
 
 
 game.shutdown()

@@ -1,5 +1,6 @@
 # settings.py
 # settings file
+
 RESOLUTION = (600, 400)  # width x height
 FRAMES = 60   # Frames per second
 TITLE = "Spectrum v1.0"
