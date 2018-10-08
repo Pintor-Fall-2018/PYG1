@@ -1,17 +1,13 @@
 # Spectrum.py
 import pygame, sys, os
+from settings import *
 from menu import *
 
-RESOLUTION = (600, 400)  # width x height
-FRAMES = 60   # Frames per second
-TITLE = "Spectrum v1.0"
-DEBUG = 0   #Debug Mode 1 == On 0 == Off
 
 pygame.init()   #initialize imported pygame modules
 pygame.display.set_caption(TITLE)
 pygame.mouse.set_visible(1)   # Mouse visible == 1
 time = pygame.time.Clock()
-
 
 class Game:
     def __init__(self):
@@ -23,6 +19,9 @@ class Game:
         self.spec = Spec()
         self.sprites = pygame.sprite.Group()
         self.sprites.add(self.spec)
+        if DEBUG:
+            print('Pygame Version: ' + pygame.version.ver)
+            print('Platform: ' + sys.platform)
 
     def shutdown(self):
         pygame.quit()
@@ -34,25 +33,22 @@ class Game:
         pygame.display.flip()
 
     def getCommands(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:       #check if QUIT event. Return status false to terminate game
-                self.status = False
-            else:
-                self.status = True
-            if event.type == pygame.KEYDOWN:        #Hold Keys for fluid movement
-                if event.key == pygame.K_RIGHT:
-                    self.spec.forward = True
-                if event.key == pygame.K_LEFT:
-                    self.spec.backward = True
-                if event.key == pygame.K_UP:
-                    self.spec.jump = True
-                if event.key == pygame.K_ESCAPE:
-                    menu.pauseScreen()
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_RIGHT:
-                    self.spec.forward = False
-                if event.key == pygame.K_LEFT:
-                    self.spec.backward = False
+        #Hold Keys for fluid movement
+        for event in pygame.event.get(pygame.KEYDOWN):   # gets events and clears queue
+            if event.key == pygame.K_RIGHT:  #273
+                self.spec.forward = True
+            if event.key == pygame.K_LEFT:   #275
+                self.spec.backward = True
+            if event.key == pygame.K_UP:
+                self.spec.jump = True
+            if event.key == pygame.K_ESCAPE:
+                menu.pauseScreen()
+
+        for event in pygame.event.get(pygame.KEYUP):
+            if event.key == pygame.K_RIGHT:  #273
+                self.spec.forward = False
+            if event.key == pygame.K_LEFT:   #275
+                self.spec.backward = False
 
     def updateSprites(self):
         self.sprites.update()
@@ -70,8 +66,8 @@ class Game:
 
 
     def checkStatus(self):
-        pass
-
+        if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
+            self.status = False
 
 class Spec(pygame.sprite.Sprite):
     def __init__(self):
@@ -105,7 +101,6 @@ class Spec(pygame.sprite.Sprite):
             self.resting()
 
     def animate(self):
-        print(self.step)
         self.step += 1
         if self.step > 39:
             self.step = 0
@@ -155,12 +150,6 @@ while(active):
 
     #print to screen
     game.drawScreen()
-
-    #debugging info
-    if DEBUG:
-        if len(events) > 0:
-            print(events)
-
 
 
 game.shutdown()

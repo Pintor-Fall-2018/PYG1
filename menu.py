@@ -1,4 +1,4 @@
-import pygame, os
+import pygame, sys, os
 from settings import *
 import random as rand
 class Menu:
@@ -152,6 +152,7 @@ class Menu:
             self.generateText("Quit", self.fontName, BLACK, 20, quit_btn_x + 50, quit_btn_y + 10)
             if quit:
                 pygame.quit()
+                sys.exit()        #exit() needed after pygame.quit() fixes video system not initialized issue
             pygame.display.flip()
 
 
