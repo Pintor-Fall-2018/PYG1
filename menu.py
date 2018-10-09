@@ -50,32 +50,17 @@ class Menu:
 
             self.time.tick(FRAMES)
 
-            # Check boundaries for lights - needs refactoring
-            if bl_x > RESOLUTION[0] + 100:
-                 bl_x = self.bl_x_y_Spawn[0]
-                 bl_y = self.bl_x_y_Spawn[1]
-            if bl_y > RESOLUTION[1] + 100 or bl_y < -100:
-                 bl_x = self.bl_x_y_Spawn[0]
-                 bl_y = self.bl_x_y_Spawn[1]
-            if rd_x > RESOLUTION[0] + 100:
-                 rd_x = self.rd_x_y_Spawn[0]
-                 rd_y = self.rd_x_y_Spawn[1]
-            if rd_y > RESOLUTION[1] + 100 or rd_y < -100:
-                 rd_x = self.rd_x_y_Spawn[0]
-                 rd_y = self.rd_x_y_Spawn[1]
-            if gr_x < -30:
-                if DEBUG_MENU:
-                    print("---------------- GREEN X JUMP!-------------------")
-                gr_x = self.gr_x_y_Spawn[0]
-                gr_y = self.gr_x_y_Spawn[1]
-            if gr_y > RESOLUTION[1] + 100 or gr_y < (-1 * (RESOLUTION[1] + 30)):
-                if DEBUG_MENU:
-                    print("---------------- GREEN Y JUMP!-------------------")
-                gr_x = self.gr_x_y_Spawn[0]
-                gr_y = self.gr_x_y_Spawn[1]
+            # Check boundaries for lights
+            bl_x, bl_y = self.checkBoundaries("blue", (bl_x, bl_y), self.bl_x_y_Spawn)
+            rd_x, rd_y = self.checkBoundaries("red", (rd_x, rd_y), self.rd_x_y_Spawn)
+            gr_x,gr_y = self.checkBoundaries("green", (gr_x, gr_y), self.gr_x_y_Spawn)
 
+            # Green light is still jumping in the middle of the screen at times.
+            # Debug later
             if DEBUG_MENU:
                 print(gr_x, gr_y)
+
+            # Display the light changes
             self.screen.blit(self.bl_light, (bl_x,bl_y))
             self.screen.blit(self.rd_light, (rd_x,rd_y))
             self.screen.blit(self.gr_light, (gr_x,rd_y))
@@ -102,6 +87,24 @@ class Menu:
             #Check if start button was pressed
             if start:
                 openMenu = False
+
+    def checkBoundaries(self, lightColor, curCoords, spawnCoords):
+        x, y = curCoords
+        if lightColor == "red" or lightColor == "blue":
+            if x > RESOLUTION[0] + 100:
+                 x = spawnCoords[0]
+                 y = spawnCoords[1]
+            if y > RESOLUTION[1] + 100 or y < -100:
+                 x = spawnCoords[0]
+                 y = spawnCoords[1]
+        else:
+            if x < -30:
+                x = spawnCoords[0]
+                y = spawnCoords[1]
+            if y > RESOLUTION[1] + 100 or y < (-1 * (RESOLUTION[1] + 30)):
+                x = spawnCoords[0]
+                y = spawnCoords[1]
+        return (x, y)
 
     def updateLightPos(self, startPath, x_speed, y_speed, x, y):
         if startPath == "right":
