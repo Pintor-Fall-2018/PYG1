@@ -57,7 +57,7 @@ class Game:
 
     def updateSprites(self):
         self.sprites.update()
-<<<<<<< HEAD
+
         collisions = pygame.sprite.spritecollide(self.spec, self.blocks, False)
         if len(collisions) != 0:
             self.spec.falling = False
@@ -66,7 +66,6 @@ class Game:
         else:
             if self.spec.jump == False:
                 self.spec.falling = True
-=======
 
         # Scrolling happens in the updateSprites part of game
         if self.spec.rect.x == WIDTH - 50:
@@ -74,7 +73,7 @@ class Game:
             self.spec.rect.x -= 50
             #self.block.rect.y -=100
             self.block.rect.x -= 50
->>>>>>> d63977fb29499bf32c911204d6ff4a54358393c1
+            
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
@@ -123,10 +122,7 @@ class Spec(pygame.sprite.Sprite):
             self.jump = False
             self.jumpTimer = 40
 
-<<<<<<< HEAD
-=======
 
->>>>>>> d63977fb29499bf32c911204d6ff4a54358393c1
     def animate(self):
         self.step += 1
         if self.step > 39:
@@ -142,15 +138,8 @@ class Block(pygame.sprite.Sprite):
         self.image = pygame.Surface([w, h]) #width x height
         self.image.fill(color)
         self.rect = self.image.get_rect()
-<<<<<<< HEAD
         self.rect.x = x
         self.rect.y = y
-=======
-        self.rect.x = 0
-        self.rect.y = HEIGHT-20
-
-    #def update(self):
->>>>>>> d63977fb29499bf32c911204d6ff4a54358393c1
 
 
 game = Game()
