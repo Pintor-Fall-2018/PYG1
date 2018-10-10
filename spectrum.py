@@ -21,14 +21,17 @@ class Game:
         self.sprites = pygame.sprite.Group()
         self.blocks = pygame.sprite.Group()
 
-        # Create Game Objects
+        # Create Game Objects and add to their Groups()
         self.spec = Spec()
-        self.block1 = Block(0,350,475,200, GREEN)
-        self.block2 = Block(100, 275, 100, 20, GRAY)
+        self.sprites.add(self.spec)
 
-        # Add Game objects to their respective Groups
-        self.sprites.add([self.spec, self.block1, self.block2])
-        self.blocks.add([self.block1, self.block2])
+        #Initialize blocks by picking which BLOCK_LIST to use from settings and add to Groups
+        for block in BLOCK_LIST:
+            b = Block(*block) # explode list from block in BLOCK_LIST
+            self.sprites.add(b)
+            self.blocks.add(b)
+
+
         if DEBUG:
             print('Pygame Version: ' + pygame.version.ver)
             print('Platform: ' + sys.platform)

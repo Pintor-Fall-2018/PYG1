@@ -20,3 +20,15 @@ BLUE = (0, 0, 255)
 
 LIGHT_RED = (255, 50, 0)
 LIGHT_GREEN = (0, 255, 0)
+
+# Block Lists. These lists will be the platform lists for the entire levels 1-3
+# Block __init__(self, x, y, w, h, color):
+
+# Block list Sky (Level 1)
+# This is currently the only level
+BLOCK_LIST = [(0, 350, 475, 200, GREEN),
+              (100, 275, 100, 20, GRAY)]
+
+# Block List Forst (Level 2)
+
+#Block List Desert (Level 3)
