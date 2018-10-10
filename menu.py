@@ -3,6 +3,9 @@ from settings import *
 import random as rand
 class Menu:
     def __init__(self, screen, time, images):
+        """
+        Description: Initiates Menu Class Instance... to be continued
+        """
         self.screen = screen
         self.time = time
         self.fps = FRAMES
@@ -24,6 +27,11 @@ class Menu:
 
 
     def startScreen(self):
+        """
+        Description: Generates the start screen and loops
+                     until user clicks start or closes the window
+        Returns: x and y coordinates of the light
+        """
         openMenu = True
         # Faster y-speed gives lights "bouncy" effect
         x_speed, y_speed = (3, 8)
@@ -89,6 +97,12 @@ class Menu:
                 openMenu = False
 
     def checkBoundaries(self, lightColor, curCoords, spawnCoords):
+        """
+        Description: Checks if lights have surpassed screen boundaries and
+                     resets the x and y coordinates of the lights to the
+                     spawn point as needed.
+        Returns: x and y coordinates of the light
+        """
         x, y = curCoords
         if lightColor == "red" or lightColor == "blue":
             if x > RESOLUTION[0] + 100:
@@ -107,6 +121,10 @@ class Menu:
         return (x, y)
 
     def updateLightPos(self, startPath, x_speed, y_speed, x, y):
+        """
+        Description: Updates animated light position on start screen
+        Returns: Updated x and y coordinates
+        """
         if startPath == "right":
             x += x_speed
         if startPath == "left":
@@ -115,13 +133,30 @@ class Menu:
         return (x, y)
 
     def pauseScreen(self):
+        """
+        Description: Generates the pause screen
+        """
         self.screen.fill((0,0,0))
         pygame.draw.rect(self.screen, RED, (350, 250, 100, 50))
         pygame.draw.rect(self.screen, GREEN,(150, 250, 100, 50))
         pygame.display.flip()
         self.runPauseMenu()
 
-    def button(self, active_color, inactive_color, width, height, x_coord, y_coord):
+    # ---------------------------------------------------------------
+    # The following code to create a button was made based on this
+    # reference: https://pythonprogramming.net/pygame-button-function/
+    #----------------------------------------------------------------
+    def button(self, active_color, inactive_color, width, height, x_coord, y_coord,  outline=True):
+        """
+        Description: Creates a button on the screen that reacts to mouse position
+        Parameters: active color = int tuple - Color while mouse is hovering
+                    inactive_color = int tuple - Color while mouse is not hovering
+                    width = int - button width in pixels
+                    height = int - button height in pixels
+                    x_coord = int - x position of button on screen
+                    y_coord = int - y position of button on screen
+                    outline = bool - defaults to true if no value is given
+        """
         mouse_pos = pygame.mouse.get_pos()
         outline = pygame.Rect(x_coord, y_coord, width, height)
         btn_click = pygame.mouse.get_pressed()
@@ -129,29 +164,35 @@ class Menu:
             #draw.rect(x, y, width, height)
             pygame.draw.rect(self.screen, active_color,
                             (x_coord, y_coord, width, height))
-            pygame.draw.rect(self.screen, WHITE, outline, 5)
+            if outline:
+                pygame.draw.rect(self.screen, WHITE, outline, 5)
             if btn_click[0] == 1:
                 return True
         else:
             pygame.draw.rect(self.screen, inactive_color,
                             (x_coord, y_coord, width, height))
-            pygame.draw.rect(self.screen, WHITE, outline, 5)
+            if outline:
+                pygame.draw.rect(self.screen, WHITE, outline, 5)
 
     def runPauseMenu(self):
+        """
+        Description: Loop that maintains the pause menu while
+                     waiting for user input
+        """
         openMenu = True
         menuFPS = 20
         while openMenu:
-            self.time.tick(menuFPS)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-            mouse_pos = pygame.mouse.get_pos()
             btnWidth = 100
             btnHeight = 50
             resume_btn_x = 150
             resume_btn_y = 250
             quit_btn_x = 350
             quit_btn_y = 250
+            self.time.tick(menuFPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+            mouse_pos = pygame.mouse.get_pos()
             resume = self.button(LIGHT_GREEN, GREEN, btnWidth, btnHeight, resume_btn_x, resume_btn_y)
             self.generateText("Resume", self.fontName, BLACK, 20, resume_btn_x + 50, resume_btn_y + 10)
             if resume:
@@ -168,6 +209,15 @@ class Menu:
         pass
 
     def generateText(self, text, font, color, textSize, x_coord, y_coord):
+        """
+        Description: Generates text on the screen
+        Parameters: text = string - to be generated
+                    font = string - font name
+                    color = int tuple - indicating rgb color
+                    textSize = int - pixel size of text
+                    x_coord = int - x position of text on screen
+                    y_coord = int - y position of text on screen
+        """
         antialias = True
         font = pygame.font.Font(font, textSize)
         textDisplay = font.render(text, antialias, color)
