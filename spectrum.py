@@ -17,13 +17,18 @@ class Game:
         self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)   #display settings
 
     def startup(self):
+        # Create Groups()
+        self.sprites = pygame.sprite.Group()
+        self.blocks = pygame.sprite.Group()
+
+        # Create Game Objects
         self.spec = Spec()
         self.block1 = Block(0,350,475,200, GREEN)
         self.block2 = Block(100, 275, 100, 20, GRAY)
-        self.sprites = pygame.sprite.Group()
-        self.blocks = pygame.sprite.Group()
-        self.blocks.add([self.block1, self.block2])
+
+        # Add Game objects to their respective Groups
         self.sprites.add([self.spec, self.block1, self.block2])
+        self.blocks.add([self.block1, self.block2])
         if DEBUG:
             print('Pygame Version: ' + pygame.version.ver)
             print('Platform: ' + sys.platform)
@@ -72,8 +77,9 @@ class Game:
             #self.spec.rect.y -= 100
             self.spec.rect.x -= 50
             #self.block.rect.y -=100
-            self.block.rect.x -= 50
-            
+            for block in self.blocks:
+                block.rect.x -= 50
+
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
