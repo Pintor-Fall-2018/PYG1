@@ -18,10 +18,12 @@ class Game:
 
     def startup(self):
         self.spec = Spec()
-        self.block = Block()
+        self.block1 = Block(0,350,475,200, GREEN)
+        self.block2 = Block(100, 275, 100, 20, GRAY)
         self.sprites = pygame.sprite.Group()
-        self.sprites.add(self.block)
-        self.sprites.add(self.spec)
+        self.blocks = pygame.sprite.Group()
+        self.blocks.add([self.block1, self.block2])
+        self.sprites.add([self.spec, self.block1, self.block2])
         if DEBUG:
             print('Pygame Version: ' + pygame.version.ver)
             print('Platform: ' + sys.platform)
@@ -55,7 +57,14 @@ class Game:
 
     def updateSprites(self):
         self.sprites.update()
-
+        collisions = pygame.sprite.spritecollide(self.spec, self.blocks, False)
+        if len(collisions) != 0:
+            self.spec.falling = False
+            if DEBUG:
+                print(collisions)
+        else:
+            if self.spec.jump == False:
+                self.spec.falling = True
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
@@ -79,10 +88,13 @@ class Spec(pygame.sprite.Sprite):
         self.rect.y = 200
         self.forward = False
         self.backward = False
+        self.falling = True
         self.jumpTimer = 40
         self.jump = False
 
     def update(self):
+        if self.falling:
+            self.rect.y += 5
         if self.forward:
             self.rect.x += 5
             self.animate()
@@ -97,16 +109,9 @@ class Spec(pygame.sprite.Sprite):
             self.rect.y -= 5
             self.jumpTimer -= 1
         elif self.jump == True and self.jumpTimer > 0:
-            self.rect.y += 5
-            self.jumpTimer -= 1
-        elif self.jump == True and self.jumpTimer == 0:
+            self.falling = True
             self.jump = False
             self.jumpTimer = 40
-
-        # Scrolling the screen
-        #if self.rect.x == (WIDTH / 4)
-        #    self.rect.x -= 5
-
 
     def animate(self):
         self.step += 1
@@ -118,13 +123,13 @@ class Spec(pygame.sprite.Sprite):
         self.image = self.resting_img
 
 class Block(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, x, y, w, h, color):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
-        self.image = pygame.Surface((475,20)) #width x height
-        self.image.fill((0,102,51))
+        self.image = pygame.Surface([w, h]) #width x height
+        self.image.fill(color)
         self.rect = self.image.get_rect()
-        self.rect.x = 0
-        self.rect.y = 350
+        self.rect.x = x
+        self.rect.y = y
 
 
 game = Game()
