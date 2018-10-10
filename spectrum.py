@@ -94,13 +94,14 @@ class Spec(pygame.sprite.Sprite):
         self.image = pygame.Surface((20,20)) #width x height
         #self.image.fill((100,100,0))
         self.step = 0
-        self.resting_img = pygame.image.load('images/spec0.png').convert()
+        self.resting_spec = pygame.image.load('images/spec0.png').convert()
         self.animations = []
         self.animations.append(pygame.image.load('images/spec1.png').convert())
         self.animations.append(pygame.image.load('images/spec2.png').convert())
         self.animations.append(pygame.image.load('images/spec3.png').convert())
         self.animations.append(pygame.image.load('images/spec4.png').convert())
-        self.image = self.resting_img
+        for animation in self.animations:
+        self.image = self.resting_spec
         self.rect = self.image.get_rect()
         self.rect.x = 0
         self.rect.y = 200
@@ -139,7 +140,7 @@ class Spec(pygame.sprite.Sprite):
         self.image = self.animations[int(self.step/10)]
 
     def resting(self):
-        self.image = self.resting_img
+        self.image = self.resting_spec
 
 class Block(pygame.sprite.Sprite):
     def __init__(self, x, y, w, h, color):
