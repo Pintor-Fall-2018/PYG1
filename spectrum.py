@@ -18,7 +18,9 @@ class Game:
 
     def startup(self):
         self.spec = Spec()
+        self.block = Block()
         self.sprites = pygame.sprite.Group()
+        self.sprites.add(self.block)
         self.sprites.add(self.spec)
         if DEBUG:
             print('Pygame Version: ' + pygame.version.ver)
@@ -53,17 +55,6 @@ class Game:
 
     def updateSprites(self):
         self.sprites.update()
-
-        #jump mechanics (crude)
-        if self.spec.jump == True and self.spec.jumpTimer > 20:
-            self.spec.rect.y -= 5
-            self.spec.jumpTimer -= 1
-        elif self.spec.jump == True and self.spec.jumpTimer > 0:
-            self.spec.rect.y += 5
-            self.spec.jumpTimer -= 1
-        elif self.spec.jump == True and self.spec.jumpTimer == 0:
-            self.spec.jump = False
-            self.spec.jumpTimer = 40
 
 
     def checkStatus(self):
@@ -101,6 +92,22 @@ class Spec(pygame.sprite.Sprite):
         else:
             self.resting()
 
+        #jump mechanics (crude)
+        if self.jump == True and self.jumpTimer > 20:
+            self.rect.y -= 5
+            self.jumpTimer -= 1
+        elif self.jump == True and self.jumpTimer > 0:
+            self.rect.y += 5
+            self.jumpTimer -= 1
+        elif self.jump == True and self.jumpTimer == 0:
+            self.jump = False
+            self.jumpTimer = 40
+
+        # Scrolling the screen
+        #if self.rect.x == (WIDTH / 4)
+        #    self.rect.x -= 5
+
+
     def animate(self):
         self.step += 1
         if self.step > 39:
@@ -109,6 +116,15 @@ class Spec(pygame.sprite.Sprite):
 
     def resting(self):
         self.image = self.resting_img
+
+class Block(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self) #sprite constructor
+        self.image = pygame.Surface((475,20)) #width x height
+        self.image.fill((0,102,51))
+        self.rect = self.image.get_rect()
+        self.rect.x = 0
+        self.rect.y = 350
 
 
 game = Game()
@@ -123,11 +139,6 @@ menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img))
 
 # Create menu object
 menu = Menu(game.screen, time, menu_imgs)
-
-#spec = Spec()
-
-#sprites = pygame.sprite.Group()
-#sprites.add(spec)
 
 menu.startScreen()
 game.startup()
