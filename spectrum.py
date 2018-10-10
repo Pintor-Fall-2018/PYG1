@@ -29,7 +29,7 @@ class Game:
         sys.exit()
 
     def drawScreen(self):
-        self.screen.fill((255,255,255))
+        self.screen.fill(BLACK)
         self.sprites.draw(self.screen)
         pygame.display.flip()
 
