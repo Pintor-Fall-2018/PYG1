@@ -3,7 +3,7 @@
 
 WIDTH = 600
 HEIGHT = 400
-RESOLUTION = (WIDTH, HEIGHT)  # width x height
+RESOLUTION = (600, HEIGHT)  # width x height
 FRAMES = 60   # Frames per second
 TITLE = "Spectrum v1.0"
 

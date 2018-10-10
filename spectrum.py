@@ -56,6 +56,12 @@ class Game:
     def updateSprites(self):
         self.sprites.update()
 
+        # Scrolling happens in the updateSprites part of game
+        if self.spec.rect.x == WIDTH - 50:
+            #self.spec.rect.y -= 100
+            self.spec.rect.x -= 50
+            #self.block.rect.y -=100
+            self.block.rect.x -= 50
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
@@ -103,10 +109,6 @@ class Spec(pygame.sprite.Sprite):
             self.jump = False
             self.jumpTimer = 40
 
-        # Scrolling the screen
-        #if self.rect.x == (WIDTH / 4)
-        #    self.rect.x -= 5
-
 
     def animate(self):
         self.step += 1
@@ -124,7 +126,9 @@ class Block(pygame.sprite.Sprite):
         self.image.fill((0,102,51))
         self.rect = self.image.get_rect()
         self.rect.x = 0
-        self.rect.y = 350
+        self.rect.y = HEIGHT-20
+
+    #def update(self):
 
 
 game = Game()
