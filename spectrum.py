@@ -95,12 +95,14 @@ class Spec(pygame.sprite.Sprite):
         #self.image.fill((100,100,0))
         self.step = 0
         self.resting_spec = pygame.image.load('images/spec0.png').convert()
+        self.resting_spec.set_colorkey([34,177,76])
         self.animations = []
         self.animations.append(pygame.image.load('images/spec1.png').convert())
         self.animations.append(pygame.image.load('images/spec2.png').convert())
         self.animations.append(pygame.image.load('images/spec3.png').convert())
         self.animations.append(pygame.image.load('images/spec4.png').convert())
         for animation in self.animations:
+            animation.set_colorkey([34,177,76])
         self.image = self.resting_spec
         self.rect = self.image.get_rect()
         self.rect.x = 0
