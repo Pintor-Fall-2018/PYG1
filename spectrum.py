@@ -16,6 +16,9 @@ class Game:
         self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)   #display settings
 
     def startup(self):
+        #Create Start Up Game timers
+        self.blockTimer = pygame.time.get_ticks()
+
         # Create Groups()
         self.sprites = pygame.sprite.Group()
         self.blocks = pygame.sprite.Group()
@@ -82,10 +85,13 @@ class Game:
             for block in self.blocks:
                 block.rect.x -= 50
 
-        self.timeSinceInit = pygame.time.get_ticks()
-        if self.timeSinceInit % 1000 == 0:
-            print("time: ", self.timeSinceInit)
-
+        self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
+        if self.timeSinceInit - self.blockTimer > 1000: # Check if it has been 1000ms
+            print("time should be above 1000 ms: ", self.timeSinceInit)
+            self.blockTimer = self.timeSinceInit
+            self.timeSinceInit = 0
+            for block in self.blocks:
+                block.rect.x +=5
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
