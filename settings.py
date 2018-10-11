@@ -37,10 +37,14 @@ MAX_RIGHT_WIDTH = 1500 # Maximum distance to the right that the map goes
 
 # Block list Sky (Level 1)
 # This is currently the only level
-BLOCK_LIST = [(0, 350, MAX_RIGHT_WIDTH, 200, GREEN),
+BLOCK_LIST = [(-100, 350, MAX_RIGHT_WIDTH, 200, GREEN),
               (100, 275, 100, 20, GRAY),
               (600, 275, 100, 20, BLUE)]
 
 # Menu Colors
 MAINMENU_BG = BLACK
 MENU_BG_MUSIC = "sounds/Convert.ogg"
+
+# Block List Forest (Level 2)
+
+# Block List Desert (Level 3)
