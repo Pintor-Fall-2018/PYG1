@@ -4,6 +4,13 @@ import random
 from settings import *
 from menu import *
 
+# Note: Initialize sound before game to prevent sound lag
+#       Especially import for sound effects
+# 44100 Hz = Frequency,    -16 = size
+# 1 = channels, 2048 = buffersize -- this is what prevents sound lag
+pygame.mixer.pre_init(44100, -16, 1, 2048)
+
+
 pygame.init()   #initialize imported pygame modules
 pygame.display.set_caption(TITLE)
 pygame.mouse.set_visible(1)   # Mouse visible == 1
