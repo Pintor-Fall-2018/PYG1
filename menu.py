@@ -40,7 +40,9 @@ class Menu:
         bl_x, bl_y = self.bl_x_y_Spawn
         rd_x, rd_y = self.rd_x_y_Spawn
         gr_x, gr_y = self.gr_x_y_Spawn
-
+        pygame.mixer.music.load(MENU_BG_MUSIC)
+        pygame.mixer.music.set_volume(0.09)
+        pygame.mixer.music.play(-1)
         # Begin loop for animations
         while openMenu:
             # Cover old screen
@@ -69,9 +71,9 @@ class Menu:
                 print(gr_x, gr_y)
 
             # Display the light changes
-            self.screen.blit(self.bl_light, (bl_x,bl_y))
-            self.screen.blit(self.rd_light, (rd_x,rd_y))
-            self.screen.blit(self.gr_light, (gr_x,rd_y))
+            self.screen.blit(self.bl_light, (bl_x, bl_y))
+            self.screen.blit(self.rd_light, (rd_x, rd_y))
+            self.screen.blit(self.gr_light, (gr_x, rd_y))
 
             # Generate start button
             start = self.button(LIGHT_GREEN, GRAY, 200, 50, ((int(RESOLUTION[0]/2)) - 100), (int(RESOLUTION[1]/1.8)) )
@@ -95,6 +97,52 @@ class Menu:
             #Check if start button was pressed
             if start:
                 openMenu = False
+        self.mainMenu()
+
+    def mainMenu(self):
+        lvl_btn_w = 160
+        lvl_btn_h = 120
+        btn_w = 220
+        btn_h = 60
+        bl_lvl_coords = ((int(WIDTH/6) - lvl_btn_w/2), int(HEIGHT/8))
+        gr_lvl_coords = ((int(WIDTH/2) - lvl_btn_w/2), int(HEIGHT/8))
+        rd_lvl_coords = ((int(WIDTH/1.2) - lvl_btn_w/2), int(HEIGHT/8))
+        openMenu = True
+        while openMenu:
+            self.time.tick(FRAMES)
+            # Cover old screen
+            self.screen.fill(MAINMENU_BG)
+            # Check for events to see if user closed window
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+
+            blue = self.button(LIGHT_BLUE, PASTEL_BLUE, lvl_btn_w, lvl_btn_h, bl_lvl_coords[0], bl_lvl_coords[1])
+            btnRect = pygame.Rect(bl_lvl_coords[0], bl_lvl_coords[1], lvl_btn_w, lvl_btn_h)
+            self.btnOutline(btnRect, PASTEL_BLUE_2, 5)
+            green = self.button(LIGHT_GREEN, GREEN, lvl_btn_w, lvl_btn_h, (int(WIDTH/2) - lvl_btn_w/2), int(HEIGHT/8) )
+            btnRect = pygame.Rect(gr_lvl_coords[0], gr_lvl_coords[1], lvl_btn_w, lvl_btn_h)
+            self.btnOutline(btnRect, DARK_GREEN, 5)
+            red = self.button(LIGHT_RED, RED, lvl_btn_w, lvl_btn_h, int(WIDTH/1.2) - lvl_btn_w/2, int(HEIGHT/8) )
+            btnRect = pygame.Rect(rd_lvl_coords[0], rd_lvl_coords[1], lvl_btn_w, lvl_btn_h)
+            self.btnOutline(btnRect, DARK_RED, 5)
+
+            tutorial = self.button(WHITE, GRAY, btn_w, btn_h, int(WIDTH/1.8), HEIGHT/2 )
+            self.generateText("Tutorial", self.fontName, BLACK, 30, (int(WIDTH/1.8)+ 110), int(HEIGHT/2)+ 10)
+
+            quit = self.button(WHITE, GRAY, btn_w, btn_h, int(WIDTH/1.8), HEIGHT/1.4 )
+            self.generateText("Quit", self.fontName, BLACK, 30, (int(WIDTH/1.8)+ 110), int(HEIGHT/1.4)+ 10)
+
+            pygame.display.flip()
+
+            # Since blue will be the only level available right now. Only check blue
+            if blue:
+                openMenu = False
+        pygame.mixer.music.stop() #Stop menu music
+
+
 
     def checkBoundaries(self, lightColor, curCoords, spawnCoords):
         """
@@ -146,7 +194,7 @@ class Menu:
     # The following code to create a button was made based on this
     # reference: https://pythonprogramming.net/pygame-button-function/
     #----------------------------------------------------------------
-    def button(self, active_color, inactive_color, width, height, x_coord, y_coord,  outline=True):
+    def button(self, active_color, inactive_color, width, height, x_coord, y_coord):
         """
         Description: Creates a button on the screen that reacts to mouse position
         Parameters: active color = int tuple - Color while mouse is hovering
@@ -155,24 +203,23 @@ class Menu:
                     height = int - button height in pixels
                     x_coord = int - x position of button on screen
                     y_coord = int - y position of button on screen
-                    outline = bool - defaults to true if no value is given
         """
         mouse_pos = pygame.mouse.get_pos()
-        outline = pygame.Rect(x_coord, y_coord, width, height)
         btn_click = pygame.mouse.get_pressed()
         if x_coord < mouse_pos[0] < (x_coord + width) and y_coord < mouse_pos[1] < (y_coord + height):
             #draw.rect(x, y, width, height)
             pygame.draw.rect(self.screen, active_color,
                             (x_coord, y_coord, width, height))
-            if outline:
-                pygame.draw.rect(self.screen, WHITE, outline, 5)
             if btn_click[0] == 1:
                 return True
         else:
             pygame.draw.rect(self.screen, inactive_color,
                             (x_coord, y_coord, width, height))
-            if outline:
-                pygame.draw.rect(self.screen, WHITE, outline, 5)
+
+    def btnOutline(self, btn, color, size):
+        pygame.draw.rect(self.screen, color, btn, size)
+
+
 
     def runPauseMenu(self):
         """
