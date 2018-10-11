@@ -78,7 +78,6 @@ class Game:
 
         collisions = pygame.sprite.spritecollide(self.spec, self.blocks, False)
         if len(collisions) != 0:
-            print(collisions)
             self.spec.falling = False
             if DEBUG:
                 print(collisions)
