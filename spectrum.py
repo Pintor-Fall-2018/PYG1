@@ -94,7 +94,7 @@ class Game:
 
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
         if self.timeSinceInit - self.blockTimer > 1000: # Check if it has been 1000ms
-            print("time should be above 1000 ms: ", self.timeSinceInit)
+            print("time should be above 1000 ms: ", self.timeSinceInit - self.blockTimer)
             self.blockTimer = self.timeSinceInit
             self.timeSinceInit = 0
             for block in self.blocks:
