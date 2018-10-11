@@ -62,7 +62,8 @@ class Game:
             if event.key == pygame.K_LEFT:   #275
                 self.spec.backward = True
             if event.key == pygame.K_UP:
-                self.spec.jump = True
+                if self.spec.falling is not True:
+                    self.spec.jump = True
             if event.key == pygame.K_ESCAPE:
                 menu.pauseScreen()
 
@@ -77,6 +78,7 @@ class Game:
 
         collisions = pygame.sprite.spritecollide(self.spec, self.blocks, False)
         if len(collisions) != 0:
+            print(collisions)
             self.spec.falling = False
             if DEBUG:
                 print(collisions)
@@ -94,7 +96,7 @@ class Game:
 
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
         if self.timeSinceInit - self.blockTimer > 1000: # Check if it has been 1000ms
-            print("time should be above 1000 ms: ", self.timeSinceInit - self.blockTimer)
+            #print("time should be above 1000 ms: ", self.timeSinceInit - self.blockTimer)
             self.blockTimer = self.timeSinceInit
             self.timeSinceInit = 0
             for block in self.blocks:
@@ -128,20 +130,24 @@ class Spec(pygame.sprite.Sprite):
         self.falling = True
         self.jumpTimer = 40
         self.jump = False
+        self.speed = 0
 
     def update(self):
         if self.falling:
             self.rect.y += 5
         if self.forward:
-            self.rect.x += 5
+            self.rect.x += self.speed
+            self.speedlimiter()
             self.animate()
         elif self.backward:
-            self.rect.x -= 5
+            self.rect.x -= self.speed
+            self.speedlimiter()
             self.animate()
         else:
             self.resting()
+            self.speed = 0
 
-        #jump mechanics (crude)
+        #jump mechanics
         if self.jump == True and self.jumpTimer > 20:
             self.rect.y -= 5
             self.jumpTimer -= 1
@@ -150,6 +156,11 @@ class Spec(pygame.sprite.Sprite):
             self.jump = False
             self.jumpTimer = 40
 
+    #Sprite acceleration
+    def speedlimiter(self):
+        self.speed += .25
+        if self.speed > 6:
+            self.speed = 6
 
     def animate(self):
         self.step += 1
