@@ -4,7 +4,6 @@ import random
 from settings import *
 from menu import *
 
-
 pygame.init()   #initialize imported pygame modules
 pygame.display.set_caption(TITLE)
 pygame.mouse.set_visible(1)   # Mouse visible == 1
@@ -25,7 +24,7 @@ class Game:
         self.spec = Spec()
         self.sprites.add(self.spec)
 
-        #Initialize blocks by picking which BLOCK_LIST to use from settings and add to Groups
+        #Initialize blocks by picking from BLOCK_LIST to use from settings and add to Groups
         for block in BLOCK_LIST:
             b = Block(*block) # explode list from block in BLOCK_LIST
             self.sprites.add(b)
@@ -82,6 +81,10 @@ class Game:
             #self.block.rect.y -=100
             for block in self.blocks:
                 block.rect.x -= 50
+
+        self.timeSinceInit = pygame.time.get_ticks()
+        if self.timeSinceInit % 1000 == 0:
+            print("time: ", self.timeSinceInit)
 
 
     def checkStatus(self):
@@ -177,6 +180,7 @@ while(active):
 
     #increment time
     time.tick(FRAMES)
+    #print (time.tick(FRAMES)) prints how many frames of seconds has been passed
 
     game.checkStatus()
     active = game.status #check if game is still active based on game status
