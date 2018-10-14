@@ -36,9 +36,9 @@ class Game:
 
         #Initialize blocks by picking from BLOCK_LIST to use from settings and add to Groups
         for block in BLOCK_LIST:
-            b = Block(*block) # explode list from block in BLOCK_LIST
-            self.sprites.add(b)
-            self.blocks.add(b)
+            b = Block(*block)       # explode list from block in BLOCK_LIST
+            self.sprites.add(b)     # add blocks to the sprites Group
+            self.blocks.add(b)      # add blocks to the blocks Group
 
 
         if DEBUG:
@@ -86,7 +86,8 @@ class Game:
                 self.spec.falling = True
 
         # Scrolling happens in the updateSprites part of game
-        if self.spec.rect.x == WIDTH - 50:
+        if self.spec.rect.x > WIDTH - 50:
+            print ('Scrolling map')
             #self.spec.rect.y -= 100
             self.spec.rect.x -= 50
             #self.block.rect.y -=100
