@@ -95,7 +95,7 @@ class Game:
                 self.spec.falling = True
 
         # Scrolling happens in the updateSprites part of game
-        if self.spec.rect.x == WIDTH - 50:
+        if self.spec.rect.x > WIDTH - 50:
             #self.spec.rect.y -= 100
             self.spec.rect.x -= 50
             #self.block.rect.y -=100
