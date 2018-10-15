@@ -36,9 +36,9 @@ class Game:
 
         #Initialize blocks by picking from BLOCK_LIST to use from settings and add to Groups
         for block in BLOCK_LIST:
-            b = Block(*block)       # explode list from block in BLOCK_LIST
-            self.sprites.add(b)     # add blocks to the sprites Group
-            self.blocks.add(b)      # add blocks to the blocks Group
+            b = Block(*block) # explode list from block in BLOCK_LIST
+            self.sprites.add(b)
+            self.blocks.add(b)
 
 
         if DEBUG:
@@ -56,11 +56,17 @@ class Game:
 
     def getCommands(self):
         #Hold Keys for fluid movement
-        for event in pygame.event.get(pygame.KEYDOWN):   # gets events and clears queue
-            if event.key == pygame.K_RIGHT:  #273
-                self.spec.forward = True
-            if event.key == pygame.K_LEFT:   #275
-                self.spec.backward = True
+        for event in pygame.event.get(pygame.KEYDOWN):   # gets keydown events and clears queue
+            if event.key == pygame.K_RIGHT:  #right arrow
+                if self.spec.speed[1] == 0:  #disallows immediately reversing direction
+                    self.spec.forward = True
+                else:  #permits player to hold down opposite direction key
+                    pygame.event.post(event) #places keydown event back to queue
+            if event.key == pygame.K_LEFT:   #left arrow
+                if self.spec.speed[0] == 0: #disallows immediately reversing direction
+                    self.spec.backward = True
+                else: #permits player to hold down opposite direction key
+                    pygame.event.post(event) #places keydown event back into queue
             if event.key == pygame.K_UP:
                 if self.spec.falling is not True:
                     self.spec.jump = True
@@ -68,10 +74,12 @@ class Game:
                 menu.pauseScreen()
 
         for event in pygame.event.get(pygame.KEYUP):
-            if event.key == pygame.K_RIGHT:  #273
+            if event.key == pygame.K_RIGHT:  #right arrow
                 self.spec.forward = False
-            if event.key == pygame.K_LEFT:   #275
+                self.spec.slowForward = True
+            if event.key == pygame.K_LEFT:   #left arrow
                 self.spec.backward = False
+                self.spec.slowBackward = True
 
     def updateSprites(self):
         self.sprites.update()
@@ -86,8 +94,7 @@ class Game:
                 self.spec.falling = True
 
         # Scrolling happens in the updateSprites part of game
-        if self.spec.rect.x > WIDTH - 50:
-            print ('Scrolling map')
+        if self.spec.rect.x == WIDTH - 50:
             #self.spec.rect.y -= 100
             self.spec.rect.x -= 50
             #self.block.rect.y -=100
@@ -125,27 +132,41 @@ class Spec(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 0
         self.rect.y = 200
-        self.forward = False
-        self.backward = False
+        self.forward = False  #sprite forward movement
+        self.backward = False #sprite backward movement
+        self.slowForward = False  #slowing forward movement
+        self.slowBackward = False  #slowing backward movement
         self.falling = True
         self.jumpTimer = 40
         self.jump = False
-        self.speed = 0
+        self.speed = [0,0]  #[forward, backward]
 
     def update(self):
         if self.falling:
             self.rect.y += 5
-        if self.forward:
-            self.rect.x += self.speed
-            self.speedlimiter()
+        if self.forward:  #speeds up sprite in right direction
+            self.rect.x += self.speed[0]
+            self.speedlimiter('forward')
             self.animate()
-        elif self.backward:
-            self.rect.x -= self.speed
-            self.speedlimiter()
+        elif self.backward: #speeds up sprite in left direction
+            self.rect.x -= self.speed[1]
+            self.speedlimiter('backward')
             self.animate()
-        else:
+        elif self.slowForward:  #slows down sprite in right direction
+            self.speed[0] -= .5
+            self.rect.x += self.speed[0]
+            if self.speed[0] < 0:
+                self.slowForward = False
+                self.speed[0] = 0
+        elif self.slowBackward:  #slows down sprite in left direction
+            self.speed[1] -= .5
+            self.rect.x -= self.speed[1]
+            if self.speed[1] < 0:
+                self.slowBackward = False
+                self.speed[1] = 0
+        else:  #sprite at rest
             self.resting()
-            self.speed = 0
+            self.speed = [0,0]
 
         #jump mechanics
         if self.jump == True and self.jumpTimer > 20:
@@ -156,11 +177,16 @@ class Spec(pygame.sprite.Sprite):
             self.jump = False
             self.jumpTimer = 40
 
-    #Sprite acceleration
-    def speedlimiter(self):
-        self.speed += .25
-        if self.speed > 6:
-            self.speed = 6
+    #Sprite acceleration & deceleration
+    def speedlimiter(self, direction):
+        if direction == 'forward':
+            self.speed[0] += .25
+            if self.speed[0] > 6:
+                self.speed[0] = 6
+        if direction == 'backward':
+            self.speed[1] += .25
+            if self.speed[1] > 6:
+                self.speed[1] = 6
 
     def animate(self):
         self.step += 1
