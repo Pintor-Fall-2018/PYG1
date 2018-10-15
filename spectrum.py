@@ -87,7 +87,7 @@ class Game:
         collisions = pygame.sprite.spritecollide(self.spec, self.blocks, False)
         if len(collisions) != 0:
             self.spec.falling = False
-            self.spec.fallTimer = 0
+            self.spec.fallTimer = 0  # reset falltimer
             if DEBUG:
                 print(collisions)
         else:
@@ -117,7 +117,7 @@ class Game:
 class Spec(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
-        self.image = pygame.Surface((20,20)) #width x height
+        #self.image = pygame.Surface((30,30)) #width x height
         #self.image.fill((100,100,0))
         self.step = 0
         self.resting_spec = pygame.image.load('images/spec0.png').convert()
@@ -173,14 +173,14 @@ class Spec(pygame.sprite.Sprite):
             self.resting()
             self.speed = [0,0]
 
-        #jump mechanics
-        if self.jump == True and self.jumpTimer > 20:
+        #Jump mechanics
+        if self.jump == True and self.jumpTimer > 20:  #upward arc
             self.rect.y -= self.jumpTimer / 5
             self.jumpTimer -= 1
-        elif self.jump == True and self.jumpTimer > 0:
+        elif self.jump == True:  #downward arc
             self.falling = True
             self.jump = False
-            self.jumpTimer = 40
+            self.jumpTimer = 40  # reset timer
 
     #Sprite acceleration & deceleration
     def speedlimiter(self, direction):
