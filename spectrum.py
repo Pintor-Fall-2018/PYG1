@@ -87,6 +87,7 @@ class Game:
         collisions = pygame.sprite.spritecollide(self.spec, self.blocks, False)
         if len(collisions) != 0:
             self.spec.falling = False
+            self.spec.fallTimer = 0
             if DEBUG:
                 print(collisions)
         else:
@@ -138,12 +139,16 @@ class Spec(pygame.sprite.Sprite):
         self.slowBackward = False  #slowing backward movement
         self.falling = True
         self.jumpTimer = 40
+        self.fallTimer = 0
         self.jump = False
         self.speed = [0,0]  #[forward, backward]
 
     def update(self):
-        if self.falling:
-            self.rect.y += 5
+        if self.falling:  #gravity increases velocity
+            self.rect.y += self.fallTimer
+            self.fallTimer += .5
+            if self.fallTimer > 6:
+                self.fallTimer = 6
         if self.forward:  #speeds up sprite in right direction
             self.rect.x += self.speed[0]
             self.speedlimiter('forward')
@@ -170,7 +175,7 @@ class Spec(pygame.sprite.Sprite):
 
         #jump mechanics
         if self.jump == True and self.jumpTimer > 20:
-            self.rect.y -= 5
+            self.rect.y -= self.jumpTimer / 5
             self.jumpTimer -= 1
         elif self.jump == True and self.jumpTimer > 0:
             self.falling = True
