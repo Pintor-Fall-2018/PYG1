@@ -11,6 +11,7 @@ class Menu:
         self.fps = FRAMES
         self.images = images
         self.fontName = pygame.font.match_font('arial')
+        self.titleFont = os.path.join("fonts", "VT323-Regular.ttf")
         self.titleText = "Spectrum"
         self.authors = "(c) 2018 Jarret Edelen, Shane Klumpp, and Tiffany Warner"
         self.quitText = "Press Escape to quit"
@@ -23,7 +24,7 @@ class Menu:
         self.gr_light.set_colorkey(BLACK)
         self.bl_x_y_Spawn = (-30, 100)
         self.rd_x_y_Spawn = (-30, 250)
-        self.gr_x_y_Spawn = (RESOLUTION[0] + 30, 50)
+        self.gr_x_y_Spawn = (WIDTH + 30, 50)
 
 
     def startScreen(self):
@@ -33,6 +34,7 @@ class Menu:
         Returns: x and y coordinates of the light
         """
         openMenu = True
+
         # Faster y-speed gives lights "bouncy" effect
         x_speed, y_speed = (3, 8)
 
@@ -49,11 +51,16 @@ class Menu:
             self.screen.fill(BLACK)
 
             # Generate text
-            titleFont = os.path.join("fonts", "VT323-Regular.ttf")
-            self.generateText(self.titleText, titleFont , WHITE, 100,
-            (int(RESOLUTION[0]/2)), (int(RESOLUTION[1]/8)) )
+            self.generateText(self.titleText, self.titleFont , WHITE, 100,
+            (int(WIDTH/2)), (int(HEIGHT/4)) )
             self.generateText(self.authors, self.fontName, WHITE, 20,
-            (int(RESOLUTION[0]/2)), (int(RESOLUTION[1]/1.2)) )
+            (int(WIDTH/2)), (int(HEIGHT/1.2)) )
+
+            # Generate start button
+            start_x = (int(WIDTH/2))
+            start_y = (int(HEIGHT/1.8))
+            start = self.button(LIGHT_GREEN, GRAY, 200, 50, (start_x, start_y) )
+            self.generateText("Start", self.fontName, BLACK, 30, start_x, start_y)
 
             if DEBUG_MENU:
                 print("Tick")
@@ -75,12 +82,10 @@ class Menu:
             self.screen.blit(self.rd_light, (rd_x, rd_y))
             self.screen.blit(self.gr_light, (gr_x, rd_y))
 
-            # Generate start button
-            start = self.button(LIGHT_GREEN, GRAY, 200, 50, ((int(RESOLUTION[0]/2)) - 100), (int(RESOLUTION[1]/1.8)) )
-            self.generateText("Start", self.fontName, BLACK, 30, (int(RESOLUTION[0]/2)), (int(RESOLUTION[1]/1.8))+ 5)
 
             # Show changes
             pygame.display.flip()
+
             # Update Light Positions
             bl_x, bl_y = self.updateLightPos("right", x_speed, y_speed, bl_x, bl_y)
             rd_x, rd_y = self.updateLightPos("right", x_speed, y_speed, rd_x, rd_y)
@@ -104,9 +109,9 @@ class Menu:
         lvl_btn_h = 120
         btn_w = 220
         btn_h = 60
-        bl_lvl_coords = ((int(WIDTH/6) - lvl_btn_w/2), int(HEIGHT/8))
-        gr_lvl_coords = ((int(WIDTH/2) - lvl_btn_w/2), int(HEIGHT/8))
-        rd_lvl_coords = ((int(WIDTH/1.2) - lvl_btn_w/2), int(HEIGHT/8))
+        bl_lvl_coords = (int(WIDTH/6), int(HEIGHT/5))
+        gr_lvl_coords = (int(WIDTH/2), int(HEIGHT/5))
+        rd_lvl_coords = (int(WIDTH/1.2), int(HEIGHT/5))
         openMenu = True
         while openMenu:
             self.time.tick(FRAMES)
@@ -118,22 +123,23 @@ class Menu:
                     pygame.quit()
                     sys.exit()
 
+            # Colored level panels for main menu
+            #---Blue----
+            blue = self.button(LIGHT_BLUE, PASTEL_BLUE, lvl_btn_w, lvl_btn_h, bl_lvl_coords, True, PASTEL_BLUE_2)
+            #---Green----
+            green = self.button(LIGHT_GREEN, GREEN, lvl_btn_w, lvl_btn_h, gr_lvl_coords, True, DARK_GREEN)
+            #---Red----
+            red = self.button(LIGHT_RED, RED, lvl_btn_w, lvl_btn_h, rd_lvl_coords, True, DARK_RED)
 
-            blue = self.button(LIGHT_BLUE, PASTEL_BLUE, lvl_btn_w, lvl_btn_h, bl_lvl_coords[0], bl_lvl_coords[1])
-            btnRect = pygame.Rect(bl_lvl_coords[0], bl_lvl_coords[1], lvl_btn_w, lvl_btn_h)
-            self.btnOutline(btnRect, PASTEL_BLUE_2, 5)
-            green = self.button(LIGHT_GREEN, GREEN, lvl_btn_w, lvl_btn_h, (int(WIDTH/2) - lvl_btn_w/2), int(HEIGHT/8) )
-            btnRect = pygame.Rect(gr_lvl_coords[0], gr_lvl_coords[1], lvl_btn_w, lvl_btn_h)
-            self.btnOutline(btnRect, DARK_GREEN, 5)
-            red = self.button(LIGHT_RED, RED, lvl_btn_w, lvl_btn_h, int(WIDTH/1.2) - lvl_btn_w/2, int(HEIGHT/8) )
-            btnRect = pygame.Rect(rd_lvl_coords[0], rd_lvl_coords[1], lvl_btn_w, lvl_btn_h)
-            self.btnOutline(btnRect, DARK_RED, 5)
+            tutorial = self.button(WHITE, GRAY, btn_w, btn_h, (int(WIDTH/1.3), HEIGHT/1.6) )
+            self.generateText("Tutorial", self.fontName, BLACK, 30, (int(WIDTH/1.3)), int(HEIGHT/1.6))
 
-            tutorial = self.button(WHITE, GRAY, btn_w, btn_h, int(WIDTH/1.8), HEIGHT/2 )
-            self.generateText("Tutorial", self.fontName, BLACK, 30, (int(WIDTH/1.8)+ 110), int(HEIGHT/2)+ 10)
+            quit = self.button(WHITE, GRAY, btn_w, btn_h, (int(WIDTH/1.3), HEIGHT/1.2) )
+            self.generateText("Quit", self.fontName, BLACK, 30, (int(WIDTH/1.3)), int(HEIGHT/1.2))
 
-            quit = self.button(WHITE, GRAY, btn_w, btn_h, int(WIDTH/1.8), HEIGHT/1.4 )
-            self.generateText("Quit", self.fontName, BLACK, 30, (int(WIDTH/1.8)+ 110), int(HEIGHT/1.4)+ 10)
+            if quit:
+                pygame.quit()
+                sys.exit()
 
             pygame.display.flip()
 
@@ -184,17 +190,52 @@ class Menu:
         """
         Description: Generates the pause screen
         """
-        self.screen.fill((0,0,0))
-        pygame.draw.rect(self.screen, RED, (350, 250, 100, 50))
-        pygame.draw.rect(self.screen, GREEN,(150, 250, 100, 50))
+        paused_coords = (int(WIDTH/2), int(HEIGHT/4))
+        self.screen.fill(BLACK)
+
+        self.generateText("Paused", self.titleFont , WHITE, 100,
+        paused_coords[0], paused_coords[1])
+
+        # pygame.draw.rect(self.screen, RED, (350, 250, 100, 50))
+        # pygame.draw.rect(self.screen, GREEN,(150, 250, 100, 50))
         pygame.display.flip()
         self.runPauseMenu()
+
+    def runPauseMenu(self):
+        """
+        Description: Loop that maintains the pause menu while
+                     waiting for user input
+        """
+        openMenu = True
+        menuFPS = 20
+        btn_w = 220
+        btn_h = 60
+        resume_coords = (int(WIDTH/2)), int(HEIGHT/1.8)
+        quit_coords = (int(WIDTH/2)), int(HEIGHT/1.2)
+
+        while openMenu:
+            self.time.tick(menuFPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+            #Generate buttons
+            resume = self.button(LIGHT_GREEN, GRAY, btn_w, btn_h, resume_coords)
+            self.generateText("Resume", self.fontName, BLACK, 30, resume_coords[0], resume_coords[1])
+            quit = self.button(LIGHT_RED, GRAY, btn_w, btn_h, quit_coords)
+            self.generateText("Quit", self.fontName, BLACK, 30, quit_coords[0], quit_coords[1])
+
+            if resume:
+                openMenu = False
+            if quit:
+                pygame.quit()
+                sys.exit()        #exit() needed after pygame.quit() fixes video system not initialized issue
+            pygame.display.flip()
 
     # ---------------------------------------------------------------
     # The following code to create a button was made based on this
     # reference: https://pythonprogramming.net/pygame-button-function/
     #----------------------------------------------------------------
-    def button(self, active_color, inactive_color, width, height, x_coord, y_coord):
+    def button(self, active_color, inactive_color, width, height, coords, outline=False, outline_color=BLACK):
         """
         Description: Creates a button on the screen that reacts to mouse position
         Parameters: active color = int tuple - Color while mouse is hovering
@@ -204,56 +245,39 @@ class Menu:
                     x_coord = int - x position of button on screen
                     y_coord = int - y position of button on screen
         """
+        x, y = coords
         mouse_pos = pygame.mouse.get_pos()
         btn_click = pygame.mouse.get_pressed()
-        if x_coord < mouse_pos[0] < (x_coord + width) and y_coord < mouse_pos[1] < (y_coord + height):
+
+        btn = pygame.Surface((width, height))
+        btn_rect = btn.get_rect()
+        btn_rect.center = (x, y)
+        if outline:
+            self.btnOutline(btn_rect, outline_color, 5)
+
+        if(
+            x - width/2 < mouse_pos[0] < (x + width/2) and
+            y - height/2 < mouse_pos[1] < (y + height/2)
+         ):
             #draw.rect(x, y, width, height)
-            pygame.draw.rect(self.screen, active_color,
-                            (x_coord, y_coord, width, height))
+            btn.fill(active_color)
+            self.screen.blit(btn, btn_rect)
             if btn_click[0] == 1:
                 return True
         else:
-            pygame.draw.rect(self.screen, inactive_color,
-                            (x_coord, y_coord, width, height))
+            btn.fill(inactive_color)
+            self.screen.blit(btn, btn_rect)
 
-    def btnOutline(self, btn, color, size):
-        pygame.draw.rect(self.screen, color, btn, size)
+    def btnOutline(self, btnRect, color, size):
+        pygame.draw.rect(self.screen, color, btnRect, size)
 
 
 
-    def runPauseMenu(self):
-        """
-        Description: Loop that maintains the pause menu while
-                     waiting for user input
-        """
-        openMenu = True
-        menuFPS = 20
-        while openMenu:
-            btnWidth = 100
-            btnHeight = 50
-            resume_btn_x = 150
-            resume_btn_y = 250
-            quit_btn_x = 350
-            quit_btn_y = 250
-            self.time.tick(menuFPS)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-            mouse_pos = pygame.mouse.get_pos()
-            resume = self.button(LIGHT_GREEN, GREEN, btnWidth, btnHeight, resume_btn_x, resume_btn_y)
-            self.generateText("Resume", self.fontName, BLACK, 20, resume_btn_x + 50, resume_btn_y + 10)
-            if resume:
-                openMenu = False
-            quit = self.button(LIGHT_RED, RED, btnWidth, btnHeight, quit_btn_x, quit_btn_y)
-            self.generateText("Quit", self.fontName, BLACK, 20, quit_btn_x + 50, quit_btn_y + 10)
-            if quit:
-                pygame.quit()
-                sys.exit()        #exit() needed after pygame.quit() fixes video system not initialized issue
-            pygame.display.flip()
 
 
     def gameoverScreen(self):
         pass
+
 
     def generateText(self, text, font, color, textSize, x_coord, y_coord):
         """
@@ -269,5 +293,5 @@ class Menu:
         font = pygame.font.Font(font, textSize)
         textDisplay = font.render(text, antialias, color)
         textRect = textDisplay.get_rect()
-        textRect.midtop = (x_coord, y_coord)
+        textRect.center = (x_coord, y_coord)
         self.screen.blit(textDisplay, textRect)
