@@ -124,12 +124,12 @@ class Game:
                 block.rect.x +=5        # Move blocks
 
         # Scrolling happens in the updateSprites part of game
-        if (self.spec.rect.x > WIDTH - 150) and self.spec.at_rest == False:
+        if (self.spec.rect.x > WIDTH - 150) and self.spec.speed[0] is not 0:
             #self.spec.rect.y -= 100
-            self.spec.rect.x -= 2
+            self.spec.rect.x -= self.spec.speed[0]
             #self.block.rect.y -=100
             for block in self.blocks:
-                block.rect.x -= 2
+                block.rect.x -= self.spec.speed[0]
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
@@ -162,11 +162,9 @@ class Spec(pygame.sprite.Sprite):
         self.jumpTimer = 40
         self.fallTimer = 0
         self.jump = False
-        self.at_rest = False
         self.speed = [0,0]  #[forward, backward]
 
     def update(self):
-        self.at_rest = False #set that he's not at rest
         if self.falling:  #gravity increases velocity
             self.rect.y += self.fallTimer
             self.fallTimer += .5
@@ -193,7 +191,6 @@ class Spec(pygame.sprite.Sprite):
                 self.slowBackward = False
                 self.speed[1] = 0
         else:  #sprite at rest
-            self.at_rest = True
             self.resting()
             self.speed = [0,0]
 
