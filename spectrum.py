@@ -31,10 +31,14 @@ class Game:
         self.sprites = pygame.sprite.Group()
         self.blocks = pygame.sprite.Group()         # Moving blocks
         self.ground_blocks = pygame.sprite.Group()  # Ground blocks don't move!
+        self.light_object = pygame.sprite.Group()
 
         # Create Game Objects and add to their Groups()
         self.spec = Spec()
         self.sprites.add(self.spec)
+
+        # Create Light Object that wins the game and adds it to its Groups()
+
 
         #Initialize blocks by picking from BLOCK_LIST to use from settings and add to Groups
         block_counter = 0
@@ -231,6 +235,15 @@ class Spec(pygame.sprite.Sprite):
 
 class Block(pygame.sprite.Sprite):
     def __init__(self, x, y, w, h, color):
+        pygame.sprite.Sprite.__init__(self) #sprite constructor
+        self.image = pygame.Surface([w, h]) #width x height
+        self.image.fill(color)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+class LightSpec(pygame.sprite.Sprite):
+    def __init_(self, x, y, w, h, color):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
         self.image = pygame.Surface([w, h]) #width x height
         self.image.fill(color)
