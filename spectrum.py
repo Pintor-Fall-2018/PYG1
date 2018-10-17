@@ -95,24 +95,17 @@ class Game:
         self.sprites.update()
 
         collisions = pygame.sprite.spritecollide(self.spec, self.blocks, False)
-        if len(collisions) != 0:
+        ground_collisions = pygame.sprite.spritecollide(self.spec, self.ground_blocks, False)
+        if len(collisions) or len(ground_collisions) != 0:
             self.spec.falling = False
             self.spec.fallTimer = 0  # reset falltimer
             if DEBUG:
                 print(collisions)
-        else:
-            if self.spec.jump == False:
-                self.spec.falling = True
-
-        ground_collisions = pygame.sprite.spritecollide(self.spec, self.ground_blocks, False)
-        if len(ground_collisions) != 0:
-            self.spec.falling = False
-            self.spec.fallTimer = 0  # reset falltimer
-            if DEBUG:
                 print(ground_collisions)
         else:
             if self.spec.jump == False:
                 self.spec.falling = True
+
 
         # Moving the Blocks based on time
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
