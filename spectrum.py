@@ -29,8 +29,9 @@ class Game:
 
         # Create Groups()
         self.sprites = pygame.sprite.Group()
-        self.blocks = pygame.sprite.Group()         # Moving blocks
+        self.sky_blocks = pygame.sprite.Group()         # Moving blocks
         self.ground_blocks = pygame.sprite.Group()  # Ground blocks don't move!
+        self.all_blocks = pygame.sprite.Group()
 
         # Create Game Objects and add to their Groups()
         self.spec = Spec()
@@ -43,14 +44,15 @@ class Game:
             block_counter += 1
             b = Block(*block) # explode list from block in BLOCK_LIST
             self.sprites.add(b)
-            self.blocks.add(b)
+            self.sky_blocks.add(b)
+            self.all_blocks.add(b)
 
         # Initalize ground blocks
         for ground_block in GROUND_BLOCK_LIST:
             gb = Block(*ground_block)
             self.sprites.add(gb)
             self.ground_blocks.add(gb)
-
+            self.all_blocks.add(gb)
 
         if DEBUG:
             print('Pygame Version: ' + pygame.version.ver)
@@ -87,7 +89,6 @@ class Game:
                 if status == "restart":
                     return status
 
-
         for event in pygame.event.get(pygame.KEYUP):
             if event.key == pygame.K_RIGHT:  #right arrow
                 self.spec.forward = False
@@ -99,18 +100,30 @@ class Game:
     def updateSprites(self):
         self.sprites.update()
 
-        collisions = pygame.sprite.spritecollide(self.spec, self.blocks, False)
-        ground_collisions = pygame.sprite.spritecollide(self.spec, self.ground_blocks, False)
-        if len(collisions) or len(ground_collisions) != 0:
-            self.spec.falling = False
-            self.spec.fallTimer = 0  # reset falltimer
+        # Test Spec for collisions with environment
+        #collisions = pygame.sprite.spritecollide(self.spec, self.blocks, False)
+        collisions = pygame.sprite.spritecollide(self.spec, self.all_blocks, False)
+        if len(collisions) != 0:
+            if self.spec.rect.bottom <= collisions[0].rect.centery:
+                self.spec.rect.bottom = collisions[0].rect.top + 1 #reposition spec to above object
+                self.spec.falling = False
+                self.spec.fallTimer = 0  # reset falltimer
+            elif self.spec.rect.top - collisions[0].rect.bottom <= 10 and self.spec.rect.top - collisions[0].rect.bottom >= -10:  #top collision
+                self.spec.rect.top = collisions[0].rect.bottom  #reposition spec to bottom of object
+                self.spec.jump = False
+                self.spec.jumpTimer = 40
+                self.spec.falling = True
+            elif self.spec.rect.right - collisions[0].rect.left <= 10 and self.spec.rect.right - collisions[0].rect.left >= -10: #right collision
+                self.spec.rect.right = collisions[0].rect.left #reposition spec to left side of object
+                self.spec.speed[0] = 0 #stop all forward movement
+            elif self.spec.rect.left - collisions[0].rect.right <= 10 and self.spec.rect.left - collisions[0].rect.right >= -10: #left collision
+                self.spec.rect.left = collisions[0].rect.right #reposition spec to right side of object
+                self.spec.speed[1] = 0 #stop all backward movement
             if DEBUG:
                 print(collisions)
-                print(ground_collisions)
         else:
             if self.spec.jump == False:
                 self.spec.falling = True
-
 
         # Moving the Blocks based on time
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
@@ -120,11 +133,11 @@ class Game:
             self.timeSinceInit = 0
             if self.block_movement_counter < 5:
                 self.block_movement_counter += 1
-                for block in self.blocks:
+                for block in self.sky_blocks:
                     block.rect.x += 1        # Move blocks right
             elif self.block_movement_counter < 10:
                 self.block_movement_counter += 1
-                for block in self.blocks:
+                for block in self.sky_blocks:
                     block.rect.x -= 1        # Move blocks left
             else:
                 self.block_movement_counter = 0
@@ -134,7 +147,7 @@ class Game:
             #self.spec.rect.y -= 100
             self.spec.rect.x -= self.spec.speed[0]
             #self.block.rect.y -=100
-            for block in self.blocks:
+            for block in self.sky_blocks:
                 block.rect.x -= self.spec.speed[0]
 
     def checkStatus(self):
