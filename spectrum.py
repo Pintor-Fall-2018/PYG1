@@ -82,7 +82,6 @@ class Game:
                     self.spec.jump = True
             if event.key == pygame.K_ESCAPE:
                 status = menu.pauseScreen()
-                print("Status: ", status)
                 if status == "restart":
                     return status
 
@@ -240,10 +239,10 @@ vol_slider = pygame.image.load('images/vol_slider.png').convert()
 vol_bar = pygame.image.load('images/vol_bar.png').convert()
 vol_arr_right = pygame.image.load('images/vol_arrowRight.png').convert()
 vol_arr_left = pygame.image.load('images/vol_arrowLeft.png').convert()
-
+frame_img = pygame.image.load('images/frame.png').convert()
 
 menu_imgs = []
-menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar, vol_arr_right, vol_arr_left))
+menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar, vol_arr_right, vol_arr_left, frame_img))
 
 # Create menu object
 menu = Menu(game.screen, time, menu_imgs)
@@ -252,7 +251,7 @@ count = 0
 music_vol = 0.5
 
 while(openGame):
-
+    print("Starting outer loop...")
     if count == 0:
         menu.startScreen()
         music_vol = menu.mainMenu()
@@ -268,6 +267,8 @@ while(openGame):
 
     # Main Game Loop
     while(active):
+        print("Active: ", active)
+        print("openGame: ", openGame)
         #increment time
         time.tick(FRAMES)
         #print (time.tick(FRAMES)) prints how many frames of seconds has been passed
@@ -276,19 +277,20 @@ while(openGame):
         active = game.status #check if game is still active based on game status
         if not active:
             openGame = False
-        #obtain keyboard inputs
+
+        # Obtain keyboard inputs
         status = game.getCommands()
         if status == "restart":
-            print("RESTART!")
             break
 
-        #update sprites
+        # Update sprites
         game.updateSprites()
 
-        #print to screen
+        # Print to screen
         game.drawScreen()
 
     count += 1
+    print("openGame", openGame)
 
 
 game.shutdown()

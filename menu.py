@@ -27,7 +27,7 @@ class Menu:
         self.bl_x_y_Spawn = (-30, 100)
         self.rd_x_y_Spawn = (-30, 250)
         self.gr_x_y_Spawn = (WIDTH + 30, 50)
-
+        self.images[-1].set_colorkey(BLACK) #Frame
 
     def startScreen(self):
         """
@@ -56,8 +56,8 @@ class Menu:
             # Generate text
             self.generateText(self.titleText, self.titleFont , WHITE, 100,
             (int(WIDTH/2)), (int(HEIGHT/4)) )
-            self.generateText(self.authors, self.fontName, WHITE, 20,
-            (int(WIDTH/2)), (int(HEIGHT/1.2)) )
+            self.generateText(self.authors, self.fontName, WHITE, 14,
+            (int(WIDTH/2.1)), (int(HEIGHT/1.2)) )
 
             # Generate start button
             start_x = (int(WIDTH/2))
@@ -84,7 +84,7 @@ class Menu:
             self.screen.blit(self.bl_light, (bl_x, bl_y))
             self.screen.blit(self.rd_light, (rd_x, rd_y))
             self.screen.blit(self.gr_light, (gr_x, rd_y))
-
+            self.screen.blit(self.images[-1], (0, 0))
 
             # Show changes
             pygame.display.flip()
@@ -105,6 +105,8 @@ class Menu:
             #Check if start button was pressed
             if start:
                 openMenu = False
+
+
 
     def mainMenu(self):
         lvl_btn_w = 160
@@ -287,6 +289,7 @@ class Menu:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+
             #Generate buttons
             resume = self.button(LIGHT_GREEN, GRAY, btn_w, btn_h, resume_coords)
             self.generateText("Resume", self.fontName, BLACK, 30, resume_coords[0], resume_coords[1])
@@ -296,7 +299,6 @@ class Menu:
             if resume:
                 openMenu = False
             if quit:
-                print("Found quit")
                 return "restart"
             #     pygame.quit()
             #     sys.exit()        #exit() needed after pygame.quit() fixes video system not initialized issue
@@ -341,8 +343,6 @@ class Menu:
 
     def btnOutline(self, btnRect, color, size):
         pygame.draw.rect(self.screen, color, btnRect, size)
-
-
 
 
 

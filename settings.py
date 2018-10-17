@@ -56,5 +56,5 @@ BLOCK_LIST = [(100, 250, 100, 20, GRAY),
 
 # Menu Colors
 MAINMENU_BG = BLACK
-MENU_BG_MUSIC = "sounds/Convert.ogg"
+MENU_BG_MUSIC = "sounds/acción.ogg"
 MUSIC_VOL = 1.0
