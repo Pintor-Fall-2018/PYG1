@@ -121,7 +121,7 @@ class Menu:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    sys.exit()
+                    sys.exit() #system exit to properly shut down
 
             # Colored level panels for main menu
             #---Blue----
