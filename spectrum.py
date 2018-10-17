@@ -23,17 +23,22 @@ class Game:
         self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)   #display settings
 
     def startup(self):
-        #Create Start Up Game timers
+        #Create Start Up Game timers and counters
+        self.block_movement_counter = 0
         self.blockTimer = pygame.time.get_ticks()
 
         # Create Groups()
         self.sprites = pygame.sprite.Group()
         self.blocks = pygame.sprite.Group()         # Moving blocks
         self.ground_blocks = pygame.sprite.Group()  # Ground blocks don't move!
+        self.light_object = pygame.sprite.Group()
 
         # Create Game Objects and add to their Groups()
         self.spec = Spec()
         self.sprites.add(self.spec)
+
+        # Create Light Object that wins the game and adds it to its Groups()
+
 
         #Initialize blocks by picking from BLOCK_LIST to use from settings and add to Groups
         block_counter = 0
@@ -112,12 +117,20 @@ class Game:
 
         # Moving the Blocks based on time
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
-        if self.timeSinceInit - self.blockTimer > 1000: # Check if it has been 1000ms
+        if self.timeSinceInit - self.blockTimer > 50: # Check if it has been 1000ms
             #print("time should be above 1000 ms: ", self.timeSinceInit - self.blockTimer)
             self.blockTimer = self.timeSinceInit
             self.timeSinceInit = 0
-            for block in self.blocks:
-                block.rect.x +=5        # Move blocks
+            if self.block_movement_counter < 50:
+                self.block_movement_counter += 1
+                for block in self.blocks:
+                    block.rect.x += 1        # Move blocks right
+            elif self.block_movement_counter < 100:
+                self.block_movement_counter += 1
+                for block in self.blocks:
+                    block.rect.x -= 1        # Move blocks left
+            else:
+                self.block_movement_counter = 0
 
         # Scrolling happens in the updateSprites part of game
         if (self.spec.rect.x > WIDTH - 150) and self.spec.speed[0] is not 0:
@@ -221,6 +234,15 @@ class Spec(pygame.sprite.Sprite):
 
 class Block(pygame.sprite.Sprite):
     def __init__(self, x, y, w, h, color):
+        pygame.sprite.Sprite.__init__(self) #sprite constructor
+        self.image = pygame.Surface([w, h]) #width x height
+        self.image.fill(color)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+class LightSpec(pygame.sprite.Sprite):
+    def __init_(self, x, y, w, h, color):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
         self.image = pygame.Surface([w, h]) #width x height
         self.image.fill(color)
