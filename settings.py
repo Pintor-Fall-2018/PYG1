@@ -41,10 +41,11 @@ BLOCK_LIST = [(-100, 350, MAX_RIGHT_WIDTH, 200, GREEN),
               (100, 275, 100, 20, GRAY),
               (600, 275, 100, 20, BLUE)]
 
-# Menu Colors
-MAINMENU_BG = BLACK
-MENU_BG_MUSIC = "sounds/Convert.ogg"
-
 # Block List Forest (Level 2)
 
 # Block List Desert (Level 3)
+
+# Menu Colors
+MAINMENU_BG = BLACK
+MENU_BG_MUSIC = "sounds/Convert.ogg"
+MUSIC_VOL = 1.0
