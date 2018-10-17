@@ -118,11 +118,11 @@ class Game:
             #print("time should be above 1000 ms: ", self.timeSinceInit - self.blockTimer)
             self.blockTimer = self.timeSinceInit
             self.timeSinceInit = 0
-            if self.block_movement_counter < 5:
+            if self.block_movement_counter < 50:
                 self.block_movement_counter += 1
                 for block in self.blocks:
                     block.rect.x += 1        # Move blocks right
-            elif self.block_movement_counter < 10:
+            elif self.block_movement_counter < 100:
                 self.block_movement_counter += 1
                 for block in self.blocks:
                     block.rect.x -= 1        # Move blocks left
