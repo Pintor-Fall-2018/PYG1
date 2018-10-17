@@ -81,7 +81,11 @@ class Game:
                 if self.spec.falling is not True:
                     self.spec.jump = True
             if event.key == pygame.K_ESCAPE:
-                menu.pauseScreen()
+                status = menu.pauseScreen()
+                print("Status: ", status)
+                if status == "restart":
+                    return status
+
 
         for event in pygame.event.get(pygame.KEYUP):
             if event.key == pygame.K_RIGHT:  #right arrow
@@ -253,31 +257,46 @@ menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar,
 
 # Create menu object
 menu = Menu(game.screen, time, menu_imgs)
+openGame = True
+count = 0
+music_vol = 0.5
 
-music_vol = menu.startScreen()
+while(openGame):
+    if count == 0:
+        menu.startScreen()
+        music_vol = menu.mainMenu()
+    else:
+        pygame.mixer.music.load(MENU_BG_MUSIC)
+        pygame.mixer.music.set_volume(music_vol)
+        pygame.mixer.music.play(-1) # -1 = loop the song
+        music_vol = menu.mainMenu()
 
-game.startup()
+    game.startup()
 
-active = True
+    active = True
 
-# Main Game Loop
-while(active):
+    # Main Game Loop
+    while(active):
+        #increment time
+        time.tick(FRAMES)
+        #print (time.tick(FRAMES)) prints how many frames of seconds has been passed
 
-    #increment time
-    time.tick(FRAMES)
-    #print (time.tick(FRAMES)) prints how many frames of seconds has been passed
+        game.checkStatus()
+        active = game.status #check if game is still active based on game status
 
-    game.checkStatus()
-    active = game.status #check if game is still active based on game status
+        #obtain keyboard inputs
+        status = game.getCommands()
+        if status == "restart":
+            print("RESTART!")
+            break
 
-    #obtain keyboard inputs
-    game.getCommands()
+        #update sprites
+        game.updateSprites()
 
-    #update sprites
-    game.updateSprites()
+        #print to screen
+        game.drawScreen()
 
-    #print to screen
-    game.drawScreen()
+    count += 1
 
 
 game.shutdown()

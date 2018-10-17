@@ -105,7 +105,6 @@ class Menu:
             #Check if start button was pressed
             if start:
                 openMenu = False
-        self.mainMenu()
 
     def mainMenu(self):
         lvl_btn_w = 160
@@ -268,7 +267,8 @@ class Menu:
         # pygame.draw.rect(self.screen, RED, (350, 250, 100, 50))
         # pygame.draw.rect(self.screen, GREEN,(150, 250, 100, 50))
         pygame.display.flip()
-        self.runPauseMenu()
+        status = self.runPauseMenu()
+        return status
 
     def runPauseMenu(self):
         """
@@ -291,13 +291,15 @@ class Menu:
             resume = self.button(LIGHT_GREEN, GRAY, btn_w, btn_h, resume_coords)
             self.generateText("Resume", self.fontName, BLACK, 30, resume_coords[0], resume_coords[1])
             quit = self.button(LIGHT_RED, GRAY, btn_w, btn_h, quit_coords)
-            self.generateText("Quit", self.fontName, BLACK, 30, quit_coords[0], quit_coords[1])
+            self.generateText("Main Menu", self.fontName, BLACK, 30, quit_coords[0], quit_coords[1])
 
             if resume:
                 openMenu = False
             if quit:
-                pygame.quit()
-                sys.exit()        #exit() needed after pygame.quit() fixes video system not initialized issue
+                print("Found quit")
+                return "restart"
+            #     pygame.quit()
+            #     sys.exit()        #exit() needed after pygame.quit() fixes video system not initialized issue
             pygame.display.flip()
 
     # ---------------------------------------------------------------
