@@ -28,17 +28,27 @@ class Game:
 
         # Create Groups()
         self.sprites = pygame.sprite.Group()
-        self.blocks = pygame.sprite.Group()
+        self.blocks = pygame.sprite.Group()         # Moving blocks
+        self.ground_blocks = pygame.sprite.Group()  # Ground blocks don't move!
 
         # Create Game Objects and add to their Groups()
         self.spec = Spec()
         self.sprites.add(self.spec)
 
         #Initialize blocks by picking from BLOCK_LIST to use from settings and add to Groups
+        block_counter = 0
         for block in BLOCK_LIST:
+            print ('printing block ', block_counter)
+            block_counter += 1
             b = Block(*block) # explode list from block in BLOCK_LIST
             self.sprites.add(b)
             self.blocks.add(b)
+
+        # Initalize ground blocks
+        for ground_block in GROUND_BLOCK_LIST:
+            gb = Block(*ground_block)
+            self.sprites.add(gb)
+            self.ground_blocks.add(gb)
 
 
         if DEBUG:
@@ -94,21 +104,32 @@ class Game:
             if self.spec.jump == False:
                 self.spec.falling = True
 
-        # Scrolling happens in the updateSprites part of game
-        if self.spec.rect.x > WIDTH - 50:
-            #self.spec.rect.y -= 100
-            self.spec.rect.x -= 50
-            #self.block.rect.y -=100
-            for block in self.blocks:
-                block.rect.x -= 50
+        ground_collisions = pygame.sprite.spritecollide(self.spec, self.ground_blocks, False)
+        if len(ground_collisions) != 0:
+            self.spec.falling = False
+            self.spec.fallTimer = 0  # reset falltimer
+            if DEBUG:
+                print(ground_collisions)
+        else:
+            if self.spec.jump == False:
+                self.spec.falling = True
 
+        # Moving the Blocks based on time
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
         if self.timeSinceInit - self.blockTimer > 1000: # Check if it has been 1000ms
             #print("time should be above 1000 ms: ", self.timeSinceInit - self.blockTimer)
             self.blockTimer = self.timeSinceInit
             self.timeSinceInit = 0
             for block in self.blocks:
-                block.rect.x +=5
+                block.rect.x +=5        # Move blocks
+
+        # Scrolling happens in the updateSprites part of game
+        if (self.spec.rect.x > WIDTH - 150) and self.spec.at_rest == False:
+            #self.spec.rect.y -= 100
+            self.spec.rect.x -= 2
+            #self.block.rect.y -=100
+            for block in self.blocks:
+                block.rect.x -= 2
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
@@ -141,9 +162,11 @@ class Spec(pygame.sprite.Sprite):
         self.jumpTimer = 40
         self.fallTimer = 0
         self.jump = False
+        self.at_rest = False
         self.speed = [0,0]  #[forward, backward]
 
     def update(self):
+        self.at_rest = False #set that he's not at rest
         if self.falling:  #gravity increases velocity
             self.rect.y += self.fallTimer
             self.fallTimer += .5
@@ -170,6 +193,7 @@ class Spec(pygame.sprite.Sprite):
                 self.slowBackward = False
                 self.speed[1] = 0
         else:  #sprite at rest
+            self.at_rest = True
             self.resting()
             self.speed = [0,0]
 

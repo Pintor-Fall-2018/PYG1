@@ -35,11 +35,19 @@ MAX_RIGHT_WIDTH = 1500 # Maximum distance to the right that the map goes
 # Block Lists. These lists will be the platform lists for the entire levels 1-3
 # Block __init__(self, x, y, w, h, color):
 
+# Ground Blocks that don't move. This is the base platforms
+GROUND_BLOCK_LIST = [(-100, 350, MAX_RIGHT_WIDTH, 200, GREEN)]
+
 # Block list Sky (Level 1)
 # This is currently the only level
-BLOCK_LIST = [(-100, 350, MAX_RIGHT_WIDTH, 200, GREEN),
-              (100, 275, 100, 20, GRAY),
-              (600, 275, 100, 20, BLUE)]
+BLOCK_LIST = [(100, 250, 100, 20, GRAY),
+              (200, 125, 100, 20, RED),
+              (350, 125, 100, 20, RED),
+              (500, 125, 100, 20, RED),
+              (650, 125, 100, 20, RED),
+              (800, 125, 100, 20, RED),
+              (600, 275, 100, 20, BLUE),
+              (900, 275, 100, 20, DARK_RED)]
 
 # Block List Forest (Level 2)
 
