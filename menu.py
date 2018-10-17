@@ -10,12 +10,14 @@ class Menu:
         self.time = time
         self.fps = FRAMES
         self.images = images
+        self.volume = MUSIC_VOL
         self.fontName = pygame.font.match_font('arial')
         self.titleFont = os.path.join("fonts", "VT323-Regular.ttf")
         self.titleText = "Spectrum"
         self.authors = "(c) 2018 Jarret Edelen, Shane Klumpp, and Tiffany Warner"
         self.quitText = "Press Escape to quit"
         self.helpText = "Press H to access help tutorial"
+        self.volumeBarImgs = images[3:]
         self.bl_light = images[0]
         self.bl_light.set_colorkey(BLACK)
         self.rd_light = images[1]
@@ -43,8 +45,9 @@ class Menu:
         rd_x, rd_y = self.rd_x_y_Spawn
         gr_x, gr_y = self.gr_x_y_Spawn
         pygame.mixer.music.load(MENU_BG_MUSIC)
-        pygame.mixer.music.set_volume(0.09)
-        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(self.volume)
+        pygame.mixer.music.play(-1) # -1 = loop the song
+
         # Begin loop for animations
         while openMenu:
             # Cover old screen
@@ -112,7 +115,21 @@ class Menu:
         bl_lvl_coords = (int(WIDTH/6), int(HEIGHT/5))
         gr_lvl_coords = (int(WIDTH/2), int(HEIGHT/5))
         rd_lvl_coords = (int(WIDTH/1.2), int(HEIGHT/5))
+
+        # Get volume images
+        vol_slider = self.volumeBarImgs[0]
+        vol_bar = self.volumeBarImgs[1]
+        vol_arr_right = self.volumeBarImgs[2]
+        vol_arr_left = self.volumeBarImgs[3]
+
+        #Bar is 200 pixels wide
+        vol_bar_coords = (int(WIDTH/10), int(HEIGHT/1.8))
+        #Slider 15 x 40
+        vol_slider_coords = [vol_bar_coords[0] + 90, vol_bar_coords[1] - 7]
+        vol_arr_right_coords = (vol_bar_coords[0] + 210, vol_bar_coords[1] - 5)
+        vol_arr_left_coords = (vol_bar_coords[0] - 50, vol_bar_coords[1] - 5)
         openMenu = True
+
         while openMenu:
             self.time.tick(FRAMES)
             # Cover old screen
@@ -121,7 +138,7 @@ class Menu:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    sys.exit() #system exit to properly shut down
+                    sys.exit()
 
             # Colored level panels for main menu
             #---Blue----
@@ -137,9 +154,47 @@ class Menu:
             quit = self.button(WHITE, GRAY, btn_w, btn_h, (int(WIDTH/1.3), HEIGHT/1.2) )
             self.generateText("Quit", self.fontName, BLACK, 30, (int(WIDTH/1.3)), int(HEIGHT/1.2))
 
+
+            #Load Volume bar
+            self.screen.blit(vol_bar, vol_bar_coords)
+            self.screen.blit(vol_slider, vol_slider_coords)
+            self.screen.blit(vol_arr_right, vol_arr_right_coords)
+            self.screen.blit(vol_arr_left, vol_arr_left_coords)
+
             if quit:
                 pygame.quit()
                 sys.exit()
+
+            vol_inc = self.checkMouseClicks(vol_arr_right_coords, 40, 41)
+            vol_dec = self.checkMouseClicks(vol_arr_left_coords, 40, 41)
+
+            # Volume starts at 0.5 - can click 4 times to the right
+            #If user increases volume
+            if vol_inc:
+                vol_slider_coords[0] += 5
+                self.volume = self.volume + 0.1
+                if vol_slider_coords[0] > vol_bar_coords[0] + 180:
+                    vol_slider_coords[0] = vol_bar_coords[0] + 180
+                    self.volume = 2.0
+                if self.volume > 2.0:
+                    self.volume = 2.0
+                pygame.mixer.music.set_volume(self.volume)
+                vol_inc = False
+
+            #If user decreases volume
+            if vol_dec:
+                vol_slider_coords[0] -= 5
+                self.volume = self.volume - 0.1
+                print("Slider x:", vol_slider_coords[0])
+                print("Bar x:", vol_bar_coords[0])
+                if vol_slider_coords[0] < vol_bar_coords[0]:
+                    vol_slider_coords[0] = vol_bar_coords[0]
+                    self.volume = 0
+                if self.volume < 0:
+                    self.volume = 0
+                print("Volume:", self.volume)
+                pygame.mixer.music.set_volume(self.volume)
+                vol_dec = False
 
             pygame.display.flip()
 
@@ -147,8 +202,22 @@ class Menu:
             if blue:
                 openMenu = False
         pygame.mixer.music.stop() #Stop menu music
+        return self.volume
 
+    #Check for mouse clicks within defined area.
+    #Set a start x, y, ar right top corner of area.
+    # Will check boundaries for width, height.
+    def checkMouseClicks(self, start_coords, width, height):
+        x, y = start_coords
+        mouse_pos = pygame.mouse.get_pos()
+        btn_click = pygame.mouse.get_pressed()
 
+        if( x < mouse_pos[0] < x + width and
+            y < mouse_pos[1] < y + height
+            ):
+            if btn_click[0] == 1:
+                return True
+        return False
 
     def checkBoundaries(self, lightColor, curCoords, spawnCoords):
         """

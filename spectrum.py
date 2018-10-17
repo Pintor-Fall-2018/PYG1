@@ -239,14 +239,20 @@ game = Game()
 bl_light_img = pygame.image.load('images/blueLight.png').convert()
 rd_light_img = pygame.image.load('images/redLight.png').convert()
 gr_light_img = pygame.image.load('images/greenLight.png').convert()
+vol_slider = pygame.image.load('images/vol_slider.png').convert()
+vol_bar = pygame.image.load('images/vol_bar.png').convert()
+vol_arr_right = pygame.image.load('images/vol_arrowRight.png').convert()
+vol_arr_left = pygame.image.load('images/vol_arrowLeft.png').convert()
+
 
 menu_imgs = []
-menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img))
+menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar, vol_arr_right, vol_arr_left))
 
 # Create menu object
 menu = Menu(game.screen, time, menu_imgs)
 
-menu.startScreen()
+music_vol = menu.startScreen()
+
 game.startup()
 
 active = True
