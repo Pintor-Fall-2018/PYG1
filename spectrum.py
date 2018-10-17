@@ -36,7 +36,10 @@ class Game:
         self.sprites.add(self.spec)
 
         #Initialize blocks by picking from BLOCK_LIST to use from settings and add to Groups
+        block_counter = 0
         for block in BLOCK_LIST:
+            print ('printing block ', block_counter)
+            block_counter += 1
             b = Block(*block) # explode list from block in BLOCK_LIST
             self.sprites.add(b)
             self.blocks.add(b)
