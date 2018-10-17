@@ -23,7 +23,8 @@ class Game:
         self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)   #display settings
 
     def startup(self):
-        #Create Start Up Game timers
+        #Create Start Up Game timers and counters
+        self.block_movement_counter = 0
         self.blockTimer = pygame.time.get_ticks()
 
         # Create Groups()
@@ -113,12 +114,20 @@ class Game:
 
         # Moving the Blocks based on time
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
-        if self.timeSinceInit - self.blockTimer > 1000: # Check if it has been 1000ms
+        if self.timeSinceInit - self.blockTimer > 50: # Check if it has been 1000ms
             #print("time should be above 1000 ms: ", self.timeSinceInit - self.blockTimer)
             self.blockTimer = self.timeSinceInit
             self.timeSinceInit = 0
-            for block in self.blocks:
-                block.rect.x +=5        # Move blocks
+            if self.block_movement_counter < 5:
+                self.block_movement_counter += 1
+                for block in self.blocks:
+                    block.rect.x += 1        # Move blocks right
+            elif self.block_movement_counter < 10:
+                self.block_movement_counter += 1
+                for block in self.blocks:
+                    block.rect.x -= 1        # Move blocks left
+            else:
+                self.block_movement_counter = 0
 
         # Scrolling happens in the updateSprites part of game
         if (self.spec.rect.x > WIDTH - 150) and self.spec.speed[0] is not 0:
