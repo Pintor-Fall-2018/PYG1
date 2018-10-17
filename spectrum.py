@@ -252,6 +252,7 @@ count = 0
 music_vol = 0.5
 
 while(openGame):
+
     if count == 0:
         menu.startScreen()
         music_vol = menu.mainMenu()
@@ -273,7 +274,8 @@ while(openGame):
 
         game.checkStatus()
         active = game.status #check if game is still active based on game status
-
+        if not active:
+            openGame = False
         #obtain keyboard inputs
         status = game.getCommands()
         if status == "restart":
