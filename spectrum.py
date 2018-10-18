@@ -32,10 +32,14 @@ class Game:
         self.sky_blocks = pygame.sprite.Group()         # Moving blocks
         self.ground_blocks = pygame.sprite.Group()  # Ground blocks don't move!
         self.all_blocks = pygame.sprite.Group()
+        self.light_object = pygame.sprite.Group()
 
         # Create Game Objects and add to their Groups()
         self.spec = Spec()
         self.sprites.add(self.spec)
+
+        # Create Light Object that wins the game and adds it to its Groups()
+
 
         #Initialize blocks by picking from BLOCK_LIST to use from settings and add to Groups
         block_counter = 0
@@ -85,7 +89,6 @@ class Game:
                     self.spec.jump = True
             if event.key == pygame.K_ESCAPE:
                 status = menu.pauseScreen()
-                print("Status: ", status)
                 if status == "restart":
                     return status
 
@@ -131,11 +134,11 @@ class Game:
             #print("time should be above 1000 ms: ", self.timeSinceInit - self.blockTimer)
             self.blockTimer = self.timeSinceInit
             self.timeSinceInit = 0
-            if self.block_movement_counter < 5:
+            if self.block_movement_counter < 50:
                 self.block_movement_counter += 1
                 for block in self.sky_blocks:
                     block.rect.x += 1        # Move blocks right
-            elif self.block_movement_counter < 10:
+            elif self.block_movement_counter < 100:
                 self.block_movement_counter += 1
                 for block in self.sky_blocks:
                     block.rect.x -= 1        # Move blocks left
@@ -251,6 +254,15 @@ class Block(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+class LightSpec(pygame.sprite.Sprite):
+    def __init_(self, x, y, w, h, color):
+        pygame.sprite.Sprite.__init__(self) #sprite constructor
+        self.image = pygame.Surface([w, h]) #width x height
+        self.image.fill(color)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
 
 game = Game()
 
@@ -262,10 +274,10 @@ vol_slider = pygame.image.load('images/vol_slider.png').convert()
 vol_bar = pygame.image.load('images/vol_bar.png').convert()
 vol_arr_right = pygame.image.load('images/vol_arrowRight.png').convert()
 vol_arr_left = pygame.image.load('images/vol_arrowLeft.png').convert()
-
+frame_img = pygame.image.load('images/frame.png').convert()
 
 menu_imgs = []
-menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar, vol_arr_right, vol_arr_left))
+menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar, vol_arr_right, vol_arr_left, frame_img))
 
 # Create menu object
 menu = Menu(game.screen, time, menu_imgs)
@@ -274,7 +286,7 @@ count = 0
 music_vol = 0.5
 
 while(openGame):
-
+    print("Starting outer loop...")
     if count == 0:
         menu.startScreen()
         music_vol = menu.mainMenu()
@@ -290,6 +302,8 @@ while(openGame):
 
     # Main Game Loop
     while(active):
+        print("Active: ", active)
+        print("openGame: ", openGame)
         #increment time
         time.tick(FRAMES)
         #print (time.tick(FRAMES)) prints how many frames of seconds has been passed
@@ -298,19 +312,20 @@ while(openGame):
         active = game.status #check if game is still active based on game status
         if not active:
             openGame = False
-        #obtain keyboard inputs
+
+        # Obtain keyboard inputs
         status = game.getCommands()
         if status == "restart":
-            print("RESTART!")
             break
 
-        #update sprites
+        # Update sprites
         game.updateSprites()
 
-        #print to screen
+        # Print to screen
         game.drawScreen()
 
     count += 1
+    print("openGame", openGame)
 
 
 game.shutdown()
