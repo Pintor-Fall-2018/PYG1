@@ -38,9 +38,6 @@ class Game:
         self.spec = Spec()
         self.sprites.add(self.spec)
 
-        # Create Light Object that wins the game and adds it to its Groups()
-
-
         #Initialize blocks by picking from BLOCK_LIST to use from settings and add to Groups
         block_counter = 0
         for block in BLOCK_LIST:
@@ -57,6 +54,11 @@ class Game:
             self.sprites.add(gb)
             self.ground_blocks.add(gb)
             self.all_blocks.add(gb)
+
+        # Create Light Object that wins the game and adds it to its Groups()
+        self.light = Light()
+        #self.sprites.add(self.light)
+        self.light_object.add(self.light)
 
         if DEBUG:
             print('Pygame Version: ' + pygame.version.ver)
@@ -146,7 +148,7 @@ class Game:
                 self.block_movement_counter = 0
 
         # Scrolling happens in the updateSprites part of game
-        if (self.spec.rect.x > WIDTH - 150) and self.spec.speed[0] is not 0:
+        if (self.spec.rect.x > WIDTH - 120) and self.spec.speed[0] is not 0:
             #self.spec.rect.y -= 100
             self.spec.rect.x -= self.spec.speed[0]
             #self.block.rect.y -=100
@@ -254,14 +256,14 @@ class Block(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-class LightSpec(pygame.sprite.Sprite):
-    def __init_(self, x, y, w, h, color):
+class Light(pygame.sprite.Sprite):
+    def __init_(self):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
-        self.image = pygame.Surface([w, h]) #width x height
-        self.image.fill(color)
+        self.image = pygame.Surface((30,40))
+        self.image.fill(YELLOW)
         self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.rect.x = 200
+        self.rect.y = 250
 
 
 game = Game()
