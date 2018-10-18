@@ -64,7 +64,7 @@ class Menu:
             # Generate text
             self.generateText(self.titleText, self.titleFont , WHITE, 100,
             (int(WIDTH/2)), (int(HEIGHT/4)) )
-            self.generateText(self.authors, self.fontName, WHITE, 14,
+            self.generateText(self.authors, self.fontName, WHITE, 16,
             (int(WIDTH/2.1)), (int(HEIGHT/1.2)) )
 
             # Generate start button
@@ -88,13 +88,13 @@ class Menu:
             if DEBUG_MENU:
                 print(gr_x, gr_y)
 
-            play_active = self.checkMousePos((WIDTH/2 - 125, start_y - 20), 250, 51)
-            play = self.checkMouseClicks((WIDTH/2 - 125, start_y - 20), 250, 51)
-            if play or play_active:
-                self.screen.blit(play_btn_active, (WIDTH/2 -125, start_y - 20))
-            else:
-                self.screen.blit(play_btn_inactive, (WIDTH/2 -125, start_y - 20))
-            self.generateText("PLAY", self.fontName, WHITE, 20, WIDTH/2, start_y)
+            # play_active = self.checkMousePos((WIDTH/2 - 125, start_y - 20), 250, 51)
+            # play = self.checkMouseClicks((WIDTH/2 - 125, start_y - 20), 250, 51)
+            # if play or play_active:
+            #     self.screen.blit(play_btn_active, (WIDTH/2 -125, start_y - 20))
+            # else:
+            #     self.screen.blit(play_btn_inactive, (WIDTH/2 -125, start_y - 20))
+            # self.generateText("PLAY", self.fontName, WHITE, 20, WIDTH/2, start_y)
             # Display the light changes
             self.screen.blit(self.bl_light, (bl_x, bl_y))
             self.screen.blit(self.rd_light, (rd_x, rd_y))
