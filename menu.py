@@ -17,7 +17,7 @@ class Menu:
         self.authors = "(c) 2018 Jarret Edelen, Shane Klumpp, and Tiffany Warner"
         self.quitText = "Press Escape to quit"
         self.helpText = "Press H to access help tutorial"
-        self.volumeBarImgs = images[3:]
+        self.volumeBarImgs = images[3:7]
         self.bl_light = images[0]
         self.bl_light.set_colorkey(BLACK)
         self.rd_light = images[1]
@@ -27,7 +27,6 @@ class Menu:
         self.bl_x_y_Spawn = (-30, 100)
         self.rd_x_y_Spawn = (-30, 250)
         self.gr_x_y_Spawn = (WIDTH + 30, 50)
-        self.images[-1].set_colorkey(BLACK) #Frame
 
     def startScreen(self):
         """
@@ -36,6 +35,15 @@ class Menu:
         Returns: x and y coordinates of the light
         """
         openMenu = True
+
+        frame_img = self.images[-1]
+        frame_img.set_colorkey(BLACK)
+
+        play_btn_inactive = self.images[7]
+        play_btn_inactive.set_colorkey(BLACK)
+
+        play_btn_active = self.images[8]
+        play_btn_active.set_colorkey(BLACK)
 
         # Faster y-speed gives lights "bouncy" effect
         x_speed, y_speed = (3, 8)
@@ -80,11 +88,19 @@ class Menu:
             if DEBUG_MENU:
                 print(gr_x, gr_y)
 
+            play_active = self.checkMousePos((WIDTH/2 - 125, start_y - 20), 250, 51)
+            play = self.checkMouseClicks((WIDTH/2 - 125, start_y - 20), 250, 51)
+            if play or play_active:
+                self.screen.blit(play_btn_active, (WIDTH/2 -125, start_y - 20))
+            else:
+                self.screen.blit(play_btn_inactive, (WIDTH/2 -125, start_y - 20))
+            self.generateText("PLAY", self.fontName, WHITE, 20, WIDTH/2, start_y)
             # Display the light changes
             self.screen.blit(self.bl_light, (bl_x, bl_y))
             self.screen.blit(self.rd_light, (rd_x, rd_y))
             self.screen.blit(self.gr_light, (gr_x, rd_y))
             self.screen.blit(self.images[-1], (0, 0))
+
 
             # Show changes
             pygame.display.flip()
@@ -218,6 +234,16 @@ class Menu:
             ):
             if btn_click[0] == 1:
                 return True
+        return False
+
+    def checkMousePos(self, start_coords, width, height):
+        x, y = start_coords
+        mouse_pos = pygame.mouse.get_pos()
+
+        if( x < mouse_pos[0] < x + width and
+            y < mouse_pos[1] < y + height
+            ):
+            return True
         return False
 
     def checkBoundaries(self, lightColor, curCoords, spawnCoords):
