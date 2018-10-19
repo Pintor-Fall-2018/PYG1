@@ -32,7 +32,7 @@ class Game:
         self.sky_blocks = pygame.sprite.Group()         # Moving blocks
         self.ground_blocks = pygame.sprite.Group()  # Ground blocks don't move!
         self.all_blocks = pygame.sprite.Group()
-        self.light_object = pygame.sprite.Group()
+        self.lights = pygame.sprite.Group()
 
         # Create Game Objects and add to their Groups()
         self.spec = Spec()
@@ -57,8 +57,8 @@ class Game:
 
         # Create Light Object that wins the game and adds it to its Groups()
         self.light = Light()
-        #self.sprites.add(self.light)
-        self.light_object.add(self.light)
+        self.sprites.add(self.light)
+        self.lights.add(self.light)
 
         if DEBUG:
             print('Pygame Version: ' + pygame.version.ver)
@@ -130,6 +130,10 @@ class Game:
             if self.spec.jump == False:
                 self.spec.falling = True
 
+        collide_light = pygame.sprite.spritecollide(self.spec, self.lights, False)
+        if len(collide_light) != 0:
+            print('I am colliding with the light object now')
+
         # Moving the Blocks based on time
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
         if self.timeSinceInit - self.blockTimer > 50: # Check if it has been 1000ms
@@ -149,11 +153,13 @@ class Game:
 
         # Scrolling happens in the updateSprites part of game
         if (self.spec.rect.x > WIDTH - 120) and self.spec.speed[0] is not 0:
-            #self.spec.rect.y -= 100
+            #Move Everthing based on speed of Spec
             self.spec.rect.x -= self.spec.speed[0]
-            #self.block.rect.y -=100
+            # Move Sky Blocks
             for block in self.sky_blocks:
                 block.rect.x -= self.spec.speed[0]
+            # Move Game ending light Object
+            self.light.rect.x -= self.spec.speed[0]
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
@@ -257,13 +263,13 @@ class Block(pygame.sprite.Sprite):
         self.rect.y = y
 
 class Light(pygame.sprite.Sprite):
-    def __init_(self):
+    def __init__(self):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
-        self.image = pygame.Surface((30,40))
+        self.image = pygame.Surface([30, 30])
         self.image.fill(YELLOW)
         self.rect = self.image.get_rect()
-        self.rect.x = 200
-        self.rect.y = 250
+        self.rect.x = MAX_RIGHT_WIDTH   # put it at the end of the level
+        self.rect.y = 320
 
 
 game = Game()
@@ -290,7 +296,7 @@ count = 0
 music_vol = 0.5
 
 while(openGame):
-    print("Starting outer loop...")
+    #print("Starting outer loop...")
     if count == 0:
         menu.startScreen()
         music_vol = menu.mainMenu()
@@ -306,8 +312,8 @@ while(openGame):
 
     # Main Game Loop
     while(active):
-        print("Active: ", active)
-        print("openGame: ", openGame)
+        #print("Active: ", active)
+        #print("openGame: ", openGame)
         #increment time
         time.tick(FRAMES)
         #print (time.tick(FRAMES)) prints how many frames of seconds has been passed
@@ -329,7 +335,7 @@ while(openGame):
         game.drawScreen()
 
     count += 1
-    print("openGame", openGame)
+    #print("openGame", openGame)
 
 
 game.shutdown()
