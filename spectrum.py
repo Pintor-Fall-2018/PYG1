@@ -119,15 +119,15 @@ class Game:
                 self.spec.rect.bottom = collisions[0].rect.top + 1 #reposition spec to above object
                 self.spec.falling = False
                 self.spec.fallTimer = 0  # reset falltimer
-            elif self.spec.rect.top - collisions[0].rect.bottom <= 10 and self.spec.rect.top - collisions[0].rect.bottom >= -10:  #top collision
+            elif self.spec.rect.top - collisions[0].rect.bottom <= 0 and self.spec.rect.top - collisions[0].rect.bottom >= -10:  #top collision
                 self.spec.rect.top = collisions[0].rect.bottom  #reposition spec to bottom of object
                 self.spec.jump = False
                 self.spec.jumpTimer = 40
                 self.spec.falling = True
-            elif self.spec.rect.right - collisions[0].rect.left <= 10 and self.spec.rect.right - collisions[0].rect.left >= -10: #right collision
+            elif self.spec.rect.right - collisions[0].rect.left <= 10 and self.spec.rect.right - collisions[0].rect.left >= 0: #right collision
                 self.spec.rect.right = collisions[0].rect.left #reposition spec to left side of object
                 self.spec.speed[0] = 0 #stop all forward movement
-            elif self.spec.rect.left - collisions[0].rect.right <= 10 and self.spec.rect.left - collisions[0].rect.right >= -10: #left collision
+            elif self.spec.rect.left - collisions[0].rect.right <= 0 and self.spec.rect.left - collisions[0].rect.right >= -10: #left collision
                 self.spec.rect.left = collisions[0].rect.right #reposition spec to right side of object
                 self.spec.speed[1] = 0 #stop all backward movement
             if DEBUG:
