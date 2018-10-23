@@ -132,9 +132,6 @@ class Game:
                 self.spec.speed[1] = 0 #stop all backward movement
             if DEBUG:
                 print(collisions)
-        else:
-            if self.spec.jump == False:
-                self.spec.falling = True
 
         collide_light = pygame.sprite.spritecollide(self.spec, self.lights, False)
         if len(collide_light) != 0:
@@ -241,6 +238,8 @@ class Spec(pygame.sprite.Sprite):
             self.jump = False
             self.jumpTimer = 40  # reset timer
             self.jumpThreshold = 20
+        if self.jump == False:  #constant downward pull
+            self.falling = True
 
     #Sprite acceleration & deceleration
     def speedlimiter(self, direction):
