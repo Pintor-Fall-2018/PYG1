@@ -29,8 +29,9 @@ class Game:
 
         # Create Groups()
         self.sprites = pygame.sprite.Group()
-        self.sky_blocks = pygame.sprite.Group()         # Moving blocks
-        self.ground_blocks = pygame.sprite.Group()  # Ground blocks don't move!
+        self.sky_blocks = pygame.sprite.Group()             # Moving blocks
+        self.ground_blocks = pygame.sprite.Group()          # Ground blocks don't move!
+        self.invisible_wall_block = pygame.sprite.Group()   # Invisible wall block (left screen limiter)
         self.all_blocks = pygame.sprite.Group()
         self.lights = pygame.sprite.Group()
 
@@ -43,7 +44,7 @@ class Game:
         for block in BLOCK_LIST:
             print ('printing block ', block_counter)
             block_counter += 1
-            b = Block(*block) # explode list from block in BLOCK_LIST
+            b = Block(*block)       # explode list from block in BLOCK_LIST
             self.sprites.add(b)
             self.sky_blocks.add(b)
             self.all_blocks.add(b)
@@ -54,6 +55,12 @@ class Game:
             self.sprites.add(gb)
             self.ground_blocks.add(gb)
             self.all_blocks.add(gb)
+
+        # Initalize left "Invisible" Wall Blocks
+        for invisible_block in INVISIBLE_BLOCK_LIST:
+            ib = Block(*invisible_block)
+            self.sprites.add(ib)
+            self.invisible_wall_block.add(ib)
 
         # Create Light Object that wins the game and adds it to its Groups()
         self.light = Light()
@@ -88,9 +95,7 @@ class Game:
                     pygame.event.post(event) #places keydown event back into queue
             if event.key == pygame.K_UP:
                 if self.spec.falling is not True:
-                    self.spec.jumpTimeElapsed = pygame.time.get_ticks() #initial store of milliseconds to evaluate length of keypress
                     self.spec.jump = True
-
             if event.key == pygame.K_ESCAPE:
                 status = menu.pauseScreen()
                 if status == "restart":
@@ -103,10 +108,6 @@ class Game:
             if event.key == pygame.K_LEFT:   #left arrow
                 self.spec.backward = False
                 self.spec.slowBackward = True
-            if event.key == pygame.K_UP: #up arrow
-                if self.spec.falling is not True:
-                    if pygame.time.get_ticks() - self.spec.jumpTimeElapsed < 200: #if up key was tapped
-                        self.spec.jumpThreshold = 30 #raise threshold for smaller jump
 
     def updateSprites(self):
         self.sprites.update()
@@ -119,23 +120,33 @@ class Game:
                 self.spec.rect.bottom = collisions[0].rect.top + 1 #reposition spec to above object
                 self.spec.falling = False
                 self.spec.fallTimer = 0  # reset falltimer
-            elif self.spec.rect.top - collisions[0].rect.bottom <= 0 and self.spec.rect.top - collisions[0].rect.bottom >= -10:  #top collision
+            elif self.spec.rect.top - collisions[0].rect.bottom <= 10 and self.spec.rect.top - collisions[0].rect.bottom >= -10:  #top collision
                 self.spec.rect.top = collisions[0].rect.bottom  #reposition spec to bottom of object
                 self.spec.jump = False
                 self.spec.jumpTimer = 40
                 self.spec.falling = True
-            elif self.spec.rect.right - collisions[0].rect.left <= 10 and self.spec.rect.right - collisions[0].rect.left >= 0: #right collision
+            elif self.spec.rect.right - collisions[0].rect.left <= 10 and self.spec.rect.right - collisions[0].rect.left >= -10: #right collision
                 self.spec.rect.right = collisions[0].rect.left #reposition spec to left side of object
                 self.spec.speed[0] = 0 #stop all forward movement
-            elif self.spec.rect.left - collisions[0].rect.right <= 0 and self.spec.rect.left - collisions[0].rect.right >= -10: #left collision
+            elif self.spec.rect.left - collisions[0].rect.right <= 10 and self.spec.rect.left - collisions[0].rect.right >= -10: #left collision
                 self.spec.rect.left = collisions[0].rect.right #reposition spec to right side of object
                 self.spec.speed[1] = 0 #stop all backward movement
             if DEBUG:
                 print(collisions)
+        else:
+            if self.spec.jump == False:
+                self.spec.falling = True
 
+        # Check if there is a collision with spec and the light object
         collide_light = pygame.sprite.spritecollide(self.spec, self.lights, False)
         if len(collide_light) != 0:
             print('I am colliding with the light object now')
+
+        # Check for a collision between the invisible wall block and the sky blocks
+        for block in self.sky_blocks:
+            wall_collide = pygame.sprite.spritecollide(self.spec, self.invisible_wall_block, False)
+            if wall_collide:
+                print ('Wall collides')
 
         # Moving the Blocks based on time
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
@@ -193,10 +204,8 @@ class Spec(pygame.sprite.Sprite):
         self.slowBackward = False  #slowing backward movement
         self.falling = True
         self.jumpTimer = 40
-        self.jumpThreshold = 20 #two-stage jump height
         self.fallTimer = 0
         self.jump = False
-        self.jumpTimeElapsed = 0
         self.speed = [0,0]  #[forward, backward]
 
     def update(self):
@@ -230,16 +239,13 @@ class Spec(pygame.sprite.Sprite):
             self.speed = [0,0]
 
         #Jump mechanics
-        if self.jump == True and self.jumpTimer > self.jumpThreshold:  #upward arc
+        if self.jump == True and self.jumpTimer > 20:  #upward arc
             self.rect.y -= self.jumpTimer / 5
             self.jumpTimer -= 1
         elif self.jump == True:  #downward arc
             self.falling = True
             self.jump = False
             self.jumpTimer = 40  # reset timer
-            self.jumpThreshold = 20
-        if self.jump == False:  #constant downward pull
-            self.falling = True
 
     #Sprite acceleration & deceleration
     def speedlimiter(self, direction):
@@ -274,7 +280,7 @@ class Light(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
         self.image = pygame.Surface([30, 30])
-        self.image.fill(YELLOW)
+        self.image.fill(BLUE)
         self.rect = self.image.get_rect()
         self.rect.x = MAX_RIGHT_WIDTH   # put it at the end of the level
         self.rect.y = 320
