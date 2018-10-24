@@ -25,7 +25,7 @@ class Game:
         self.red_light_acquired = 0
         self.green_light_acquired = 0
         self.endCurrentLevel = 0
-
+        self.levelStatus = "none"
     def startup(self):
         #Create Start Up Game timers and counters
         self.block_movement_counter = 0
@@ -100,9 +100,7 @@ class Game:
                 if self.spec.falling is not True:
                     self.spec.jump = True
             if event.key == pygame.K_ESCAPE:
-                status = menu.pauseScreen()
-                if status == "restart":
-                    return status
+                self.levelStatus = menu.pauseScreen()
 
         for event in pygame.event.get(pygame.KEYUP):
             if event.key == pygame.K_RIGHT:  #right arrow
@@ -360,6 +358,7 @@ while(openMenu):
             menu.completeLevel()
             game.endCurrentLevel = 0
             break
+
         #print("Active: ", active)
         #print("openGame: ", openGame)
         #increment time
@@ -372,7 +371,8 @@ while(openMenu):
             openGame = False
 
         # Obtain keyboard inputs
-        status = game.getCommands()
+        game.getCommands()
+        status = game.status
         if status == "restart":
             break
 
