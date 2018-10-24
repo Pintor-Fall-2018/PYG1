@@ -39,6 +39,10 @@ MAX_RIGHT_WIDTH = 1500 # Maximum distance to the right that the map goes
 # Ground Blocks that don't move. This is the base platforms
 GROUND_BLOCK_LIST = [(-100, 350, MAX_RIGHT_WIDTH, 200, GREEN)]
 
+# Invisible block, acts as the left side of the screen. Destroys platforms and
+# Stops Spec from moving to the left
+INVISIBLE_BLOCK_LIST = [(-50, 0, 75, 600, WHITE)]
+
 # Block list Sky (Level 1)
 # This is currently the only level
 BLOCK_LIST = [(100, 250, 100, 20, GRAY),

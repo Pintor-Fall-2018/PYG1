@@ -23,7 +23,11 @@ class Game:
         #sets up screen resolution
         self.status = True
         self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)   #display settings
-
+        self.blue_light_acquired = 0
+        self.red_light_acquired = 0
+        self.green_light_acquired = 0
+        self.endCurrentLevel = 0
+        self.levelStatus = "none"
     def startup(self):
         #Create Start Up Game timers and counters
         self.block_movement_counter = 0
@@ -31,8 +35,9 @@ class Game:
 
         # Create Groups()
         self.sprites = pygame.sprite.Group()
-        self.sky_blocks = pygame.sprite.Group()         # Moving blocks
-        self.ground_blocks = pygame.sprite.Group()  # Ground blocks don't move!
+        self.sky_blocks = pygame.sprite.Group()             # Moving blocks
+        self.ground_blocks = pygame.sprite.Group()          # Ground blocks don't move!
+        self.invisible_wall_block = pygame.sprite.Group()   # Invisible wall block (left screen limiter)
         self.all_blocks = pygame.sprite.Group()
         self.lights = pygame.sprite.Group()
 
@@ -59,6 +64,11 @@ class Game:
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.sky_blocks.add(tile)
+
+        # Initalize left "Invisible" Wall Block
+        self.invisible_block = Block(-50, 0, 60, 600, WHITE)
+        self.sprites.add(self.invisible_block)
+        self.invisible_wall_block.add(self.invisible_block)
 
         # Create Light Object that wins the game and adds it to its Groups()
         self.light = Light()
@@ -93,13 +103,9 @@ class Game:
                     pygame.event.post(event) #places keydown event back into queue
             if event.key == pygame.K_UP:
                 if self.spec.falling is not True:
-                    self.spec.jumpTimeElapsed = pygame.time.get_ticks() #initial store of milliseconds to evaluate length of keypress
                     self.spec.jump = True
-
             if event.key == pygame.K_ESCAPE:
-                status = menu.pauseScreen()
-                if status == "restart":
-                    return status
+                self.levelStatus = menu.pauseScreen()
 
         for event in pygame.event.get(pygame.KEYUP):
             if event.key == pygame.K_RIGHT:  #right arrow
@@ -108,10 +114,6 @@ class Game:
             if event.key == pygame.K_LEFT:   #left arrow
                 self.spec.backward = False
                 self.spec.slowBackward = True
-            if event.key == pygame.K_UP: #up arrow
-                if self.spec.falling is not True:
-                    if pygame.time.get_ticks() - self.spec.jumpTimeElapsed < 200: #if up key was tapped
-                        self.spec.jumpThreshold = 30 #raise threshold for smaller jump
 
     def updateSprites(self):
         self.sprites.update()
@@ -124,23 +126,38 @@ class Game:
                 self.spec.rect.bottom = collisions[0].rect.top + 1 #reposition spec to above object
                 self.spec.falling = False
                 self.spec.fallTimer = 0  # reset falltimer
-            elif self.spec.rect.top - collisions[0].rect.bottom <= 0 and self.spec.rect.top - collisions[0].rect.bottom >= -10:  #top collision
+            elif self.spec.rect.top - collisions[0].rect.bottom <= 10 and self.spec.rect.top - collisions[0].rect.bottom >= -10:  #top collision
                 self.spec.rect.top = collisions[0].rect.bottom  #reposition spec to bottom of object
                 self.spec.jump = False
                 self.spec.jumpTimer = 40
                 self.spec.falling = True
-            elif self.spec.rect.right - collisions[0].rect.left <= 10 and self.spec.rect.right - collisions[0].rect.left >= 0: #right collision
+            elif self.spec.rect.right - collisions[0].rect.left <= 10 and self.spec.rect.right - collisions[0].rect.left >= -10: #right collision
                 self.spec.rect.right = collisions[0].rect.left #reposition spec to left side of object
                 self.spec.speed[0] = 0 #stop all forward movement
-            elif self.spec.rect.left - collisions[0].rect.right <= 0 and self.spec.rect.left - collisions[0].rect.right >= -10: #left collision
+            elif self.spec.rect.left - collisions[0].rect.right <= 10 and self.spec.rect.left - collisions[0].rect.right >= -10: #left collision
                 self.spec.rect.left = collisions[0].rect.right #reposition spec to right side of object
                 self.spec.speed[1] = 0 #stop all backward movement
             if DEBUG:
                 print(collisions)
+        else:
+            if self.spec.jump == False:
+                self.spec.falling = True
 
+        # Check if there is a collision with spec and the light object
         collide_light = pygame.sprite.spritecollide(self.spec, self.lights, False)
         if len(collide_light) != 0:
             print('I am colliding with the light object now')
+            self.setLightAcquired("blue")
+            self.endCurrentLevel = 1
+
+        # Check for a collision between the invisible wall block and the sky blocks
+        for block in self.sky_blocks:
+            # If midpoint of skyblock touches invisible wall center delete skyblock
+            if block.rect.midright <= self.invisible_block.rect.center:
+                print("Block should be deleted at this point")
+                block.kill()    #Remove block from its groups (Don't draw object anymore)
+
+
 
         # Moving the Blocks based on time
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
@@ -173,6 +190,23 @@ class Game:
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
             self.status = False
 
+    def setLightAcquired(self, light):
+        if light == "blue":
+            self.blue_light_acquired = 1
+        elif light == "red":
+            self.red_light_acquired = 1
+        else:
+            self.green_light_acquired = 1
+
+    def checkLightAcquired(self, light):
+        if light == "blue":
+            return self.blue_light_acquired
+        elif light == "red":
+            return self.red_light_acquired
+        else:
+            return self.green_light_acquired
+
+
 class Spec(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
@@ -198,10 +232,8 @@ class Spec(pygame.sprite.Sprite):
         self.slowBackward = False  #slowing backward movement
         self.falling = True
         self.jumpTimer = 40
-        self.jumpThreshold = 20 #two-stage jump height
         self.fallTimer = 0
         self.jump = False
-        self.jumpTimeElapsed = 0
         self.speed = [0,0]  #[forward, backward]
 
     def update(self):
@@ -235,16 +267,13 @@ class Spec(pygame.sprite.Sprite):
             self.speed = [0,0]
 
         #Jump mechanics
-        if self.jump == True and self.jumpTimer > self.jumpThreshold:  #upward arc
+        if self.jump == True and self.jumpTimer > 20:  #upward arc
             self.rect.y -= self.jumpTimer / 5
             self.jumpTimer -= 1
         elif self.jump == True:  #downward arc
             self.falling = True
             self.jump = False
             self.jumpTimer = 40  # reset timer
-            self.jumpThreshold = 20
-        if self.jump == False:  #constant downward pull
-            self.falling = True
 
     #Sprite acceleration & deceleration
     def speedlimiter(self, direction):
@@ -279,7 +308,7 @@ class Light(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
         self.image = pygame.Surface([30, 30])
-        self.image.fill(YELLOW)
+        self.image.fill(BLUE)
         self.rect = self.image.get_rect()
         self.rect.x = MAX_RIGHT_WIDTH   # put it at the end of the level
         self.rect.y = 320
@@ -304,11 +333,11 @@ menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar,
 
 # Create menu object
 menu = Menu(game.screen, time, menu_imgs)
-openGame = True
+openMenu = True
 count = 0
 music_vol = 0.5
 
-while(openGame):
+while(openMenu):
     #print("Starting outer loop...")
     if count == 0:
         menu.startScreen()
@@ -325,6 +354,16 @@ while(openGame):
 
     # Main Game Loop
     while(active):
+        #Check for acquired lights
+        blue_light = game.checkLightAcquired("blue")
+        red_light = game.checkLightAcquired("red")
+        green_light = game.checkLightAcquired("green")
+         #Check for end level status
+        if game.endCurrentLevel == 1:
+            menu.completeLevel()
+            game.endCurrentLevel = 0
+            break
+
         #print("Active: ", active)
         #print("openGame: ", openGame)
         #increment time
@@ -337,7 +376,8 @@ while(openGame):
             openGame = False
 
         # Obtain keyboard inputs
-        status = game.getCommands()
+        game.getCommands()
+        status = game.status
         if status == "restart":
             break
 
