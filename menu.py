@@ -153,7 +153,7 @@ class Menu:
             # Cover old screen
             self.screen.fill(MAINMENU_BG)
             # Check for events to see if user closed window
-            for event in pygame.event.get():
+            for event in pygame.event.get(pygame.QUIT):
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
@@ -236,7 +236,7 @@ class Menu:
         while openMenu:
             print("Start tutorial loop")
             # Check for events to see if user closed window
-            events = pygame.event.get()
+            events = pygame.event.get(pygame.QUIT)
             for event in events:
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -269,7 +269,7 @@ class Menu:
             # Cover old screen
             self.screen.fill(MAINMENU_BG)
             # Check for events to see if user closed window
-            for event in pygame.event.get():
+            for event in pygame.event.get(pygame.QUIT):
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
@@ -377,7 +377,7 @@ class Menu:
 
         while openMenu:
             self.time.tick(menuFPS)
-            for event in pygame.event.get():
+            for event in pygame.event.get(pygame.QUIT):
                 if event.type == pygame.QUIT:
                     pygame.quit()
 
