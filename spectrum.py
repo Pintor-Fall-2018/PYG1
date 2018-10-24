@@ -150,7 +150,7 @@ class Game:
         # Check for a collision between the invisible wall block and the sky blocks
         for block in self.sky_blocks:
             # If midpoint of skyblock touches invisible wall center delete skyblock
-            if block.rect.midright < self.invisible_block.rect.center:
+            if block.rect.midright <= self.invisible_block.rect.center:
                 print("Block should be deleted at this point")
                 block.kill()    #Remove block from its groups (Don't draw object anymore)
 
