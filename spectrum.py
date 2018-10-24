@@ -3,6 +3,7 @@ import pygame, sys, os
 import random
 from settings import *
 from menu import *
+from map_sandbox import *
 
 # Note: Initialize sound before game to prevent sound lag
 #       Especially import for sound effects
@@ -15,6 +16,7 @@ pygame.init()   #initialize imported pygame modules
 pygame.display.set_caption(TITLE)
 pygame.mouse.set_visible(1)   # Mouse visible == 1
 time = pygame.time.Clock()
+
 
 class Game:
     def __init__(self):
@@ -43,22 +45,25 @@ class Game:
         self.spec = Spec()
         self.sprites.add(self.spec)
 
-        #Initialize blocks by picking from BLOCK_LIST to use from settings and add to Groups
-        block_counter = 0
-        for block in BLOCK_LIST:
-            print ('printing block ', block_counter)
-            block_counter += 1
-            b = Block(*block)       # explode list from block in BLOCK_LIST
-            self.sprites.add(b)
-            self.sky_blocks.add(b)
-            self.all_blocks.add(b)
-
-        # Initalize ground blocks
-        for ground_block in GROUND_BLOCK_LIST:
-            gb = Block(*ground_block)
-            self.sprites.add(gb)
-            self.ground_blocks.add(gb)
-            self.all_blocks.add(gb)
+        #Initialize blocks from map and add to sprite groups
+        for row in range(len(sandbox)):
+            for column in range(len(sandbox[0])):
+                if sandbox[row][column] is not tiles['sky']:
+                    if sandbox[row][column] == tiles['earth']:
+                        tile = Tile(20 * column, 20 * row, 'images/earth.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                    elif sandbox[row][column] == tiles['grass']:
+                        tile = Tile(20 * column, 20 * row, 'images/grass.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                    elif sandbox[row][column] == tiles['platform']:
+                        tile = Tile(20 * column, 20 * row, 'images/platform.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.sky_blocks.add(tile)
 
         # Initalize left "Invisible" Wall Block
         self.invisible_block = Block(-50, 0, 60, 600, WHITE)
@@ -79,7 +84,7 @@ class Game:
         sys.exit()
 
     def drawScreen(self):
-        self.screen.fill(BLACK)
+        self.screen.fill(SKY_BLUE)
         self.sprites.draw(self.screen)
         pygame.display.flip()
 
@@ -299,6 +304,15 @@ class Block(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
         self.image = pygame.Surface([w, h]) #width x height
         self.image.fill(color)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+#Tiled blocks build environment
+class Tile(pygame.sprite.Sprite):
+    def __init__(self, x, y, image_path):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load(image_path).convert()
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
