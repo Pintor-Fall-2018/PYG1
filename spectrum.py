@@ -21,6 +21,10 @@ class Game:
         #sets up screen resolution
         self.status = True
         self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)   #display settings
+        self.blue_light_acquired = 0
+        self.red_light_acquired = 0
+        self.green_light_acquired = 0
+        self.endCurrentLevel = 0
 
     def startup(self):
         #Create Start Up Game timers and counters
@@ -140,6 +144,8 @@ class Game:
         collide_light = pygame.sprite.spritecollide(self.spec, self.lights, False)
         if len(collide_light) != 0:
             print('I am colliding with the light object now')
+            self.setLightAcquired("blue")
+            self.endCurrentLevel = 1
 
         # Check for a collision between the invisible wall block and the sky blocks
         for block in self.sky_blocks:
@@ -180,6 +186,23 @@ class Game:
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
             self.status = False
+
+    def setLightAcquired(self, light):
+        if light == "blue":
+            self.blue_light_acquired = 1
+        elif light == "red":
+            self.red_light_acquired = 1
+        else:
+            self.green_light_acquired = 1
+
+    def checkLightAcquired(self, light):
+        if light == "blue":
+            return self.blue_light_acquired
+        elif light == "red":
+            return self.red_light_acquired
+        else:
+            return self.green_light_acquired
+
 
 class Spec(pygame.sprite.Sprite):
     def __init__(self):
@@ -307,11 +330,11 @@ menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar,
 
 # Create menu object
 menu = Menu(game.screen, time, menu_imgs)
-openGame = True
+openMenu = True
 count = 0
 music_vol = 0.5
 
-while(openGame):
+while(openMenu):
     #print("Starting outer loop...")
     if count == 0:
         menu.startScreen()
@@ -328,6 +351,14 @@ while(openGame):
 
     # Main Game Loop
     while(active):
+        #Check for acquired lights
+        blue_light = game.checkLightAcquired("blue")
+        red_light = game.checkLightAcquired("red")
+        green_light = game.checkLightAcquired("green")
+         #Check for end level status
+        if game.endCurrentLevel == 1:
+            menu.completeLevel()
+            break
         #print("Active: ", active)
         #print("openGame: ", openGame)
         #increment time
