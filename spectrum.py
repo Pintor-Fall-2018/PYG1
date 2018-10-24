@@ -21,10 +21,6 @@ class Game:
         #sets up screen resolution
         self.status = True
         self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)   #display settings
-        self.blue_light_acquired = 0
-        self.red_light_acquired = 0
-        self.green_light_acquired = 0
-        self.endCurrentLevel = 0
 
     def startup(self):
         #Create Start Up Game timers and counters
@@ -60,11 +56,10 @@ class Game:
             self.ground_blocks.add(gb)
             self.all_blocks.add(gb)
 
-        # Initalize left "Invisible" Wall Blocks
-        for invisible_block in INVISIBLE_BLOCK_LIST:
-            ib = Block(*invisible_block)
-            self.sprites.add(ib)
-            self.invisible_wall_block.add(ib)
+        # Initalize left "Invisible" Wall Block
+        self.invisible_block = Block(-50, 0, 60, 600, WHITE)
+        self.sprites.add(self.invisible_block)
+        self.invisible_wall_block.add(self.invisible_block)
 
         # Create Light Object that wins the game and adds it to its Groups()
         self.light = Light()
@@ -145,15 +140,15 @@ class Game:
         collide_light = pygame.sprite.spritecollide(self.spec, self.lights, False)
         if len(collide_light) != 0:
             print('I am colliding with the light object now')
-            self.setLightAcquired("blue")
-            self.endCurrentLevel = 1
 
         # Check for a collision between the invisible wall block and the sky blocks
         for block in self.sky_blocks:
-            wall_collide = pygame.sprite.spritecollide(block, self.invisible_wall_block, False)
-            if wall_collide:
-                print ('Wall collides')
-                block.kill()
+            # If midpoint of skyblock touches invisible wall center delete skyblock
+            if block.rect.midright < self.invisible_block.rect.center:
+                print("Block should be deleted at this point")
+                block.kill()    #Remove block from its groups (Don't draw object anymore)
+
+
 
         # Moving the Blocks based on time
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
@@ -185,23 +180,6 @@ class Game:
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
             self.status = False
-
-    def setLightAcquired(self, light):
-        if light == "blue":
-            self.blue_light_acquired = 1
-        elif light == "red":
-            self.red_light_acquired = 1
-        else:
-            self.green_light_acquired = 1
-
-    def checkLightAcquired(self, light):
-        if light == "blue":
-            return self.blue_light_acquired
-        elif light == "red":
-            return self.red_light_acquired
-        else:
-            return self.green_light_acquired
-
 
 class Spec(pygame.sprite.Sprite):
     def __init__(self):
@@ -329,18 +307,12 @@ menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar,
 
 # Create menu object
 menu = Menu(game.screen, time, menu_imgs)
-openMenu = True
+openGame = True
 count = 0
 music_vol = 0.5
 
-while(openMenu):
+while(openGame):
     #print("Starting outer loop...")
-
-    #Set up end of game items variables for tracking
-    blue_light = 0
-    red_light = 0
-    green_light = 0
-
     if count == 0:
         menu.startScreen()
         music_vol = menu.mainMenu()
@@ -356,16 +328,6 @@ while(openMenu):
 
     # Main Game Loop
     while(active):
-
-        #Check for acquired lights
-        blue_light = game.checkLightAcquired("blue")
-        red_light = game.checkLightAcquired("red")
-        green_light = game.checkLightAcquired("green")
-
-        #Check for end level status
-        if game.endCurrentLevel == 1:
-            break
-
         #print("Active: ", active)
         #print("openGame: ", openGame)
         #increment time
