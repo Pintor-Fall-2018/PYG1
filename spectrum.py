@@ -150,9 +150,10 @@ class Game:
 
         # Check for a collision between the invisible wall block and the sky blocks
         for block in self.sky_blocks:
-            wall_collide = pygame.sprite.spritecollide(self.spec, self.invisible_wall_block, False)
+            wall_collide = pygame.sprite.spritecollide(block, self.invisible_wall_block, False)
             if wall_collide:
                 print ('Wall collides')
+                block.kill()
 
         # Moving the Blocks based on time
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
