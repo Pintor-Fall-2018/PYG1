@@ -101,6 +101,10 @@ class Game:
                     self.spec.jump = True
             if event.key == pygame.K_ESCAPE:
                 self.levelStatus = menu.pauseScreen()
+                if self.spec.forward == True:
+                    self.spec.forward = False
+                if self.spec.backward == True:
+                    self.spec.backward = False
 
         for event in pygame.event.get(pygame.KEYUP):
             if event.key == pygame.K_RIGHT:  #right arrow
