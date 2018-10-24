@@ -1,6 +1,7 @@
 import pygame, sys, os
 from settings import *
 import random as rand
+import time
 class Menu:
     def __init__(self, screen, time, images):
         """
@@ -257,6 +258,32 @@ class Menu:
                 print("Ending tutorial loop")
             #Show changes
             pygame.display.flip()
+
+    def completeLevel(self):
+        start_time = time.time()
+        openMenu = True
+
+        while openMenu:
+            end_time = time.time()
+            self.time.tick(FRAMES)
+            # Cover old screen
+            self.screen.fill(MAINMENU_BG)
+            # Check for events to see if user closed window
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            self.generateText("Level Completed!", self.fontName, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/3))
+
+            self.generateText("Good job!", self.fontName, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/2.2))
+
+            pygame.display.flip()
+
+            if (end_time - start_time) > 3:
+                openMenu = False
+
+
 
 
     #Check for mouse clicks within defined area.

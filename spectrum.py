@@ -336,11 +336,6 @@ music_vol = 0.5
 while(openMenu):
     #print("Starting outer loop...")
 
-    #Set up end of game items variables for tracking
-    blue_light = 0
-    red_light = 0
-    green_light = 0
-
     if count == 0:
         menu.startScreen()
         music_vol = menu.mainMenu()
@@ -358,12 +353,13 @@ while(openMenu):
     while(active):
 
         #Check for acquired lights
-        blue_light = game.checkLightAcquired("blue")
-        red_light = game.checkLightAcquired("red")
-        green_light = game.checkLightAcquired("green")
+        game.checkLightAcquired("blue")
+        game.checkLightAcquired("red")
+        game.checkLightAcquired("green")
 
         #Check for end level status
         if game.endCurrentLevel == 1:
+            menu.completeLevel()
             break
 
         #print("Active: ", active)
