@@ -178,10 +178,6 @@ class Menu:
             self.screen.blit(vol_arr_right, vol_arr_right_coords)
             self.screen.blit(vol_arr_left, vol_arr_left_coords)
 
-            if quit:
-                pygame.quit()
-                sys.exit()
-
             vol_inc = self.checkMouseClicks(vol_arr_right_coords, 40, 41)
             vol_dec = self.checkMouseClicks(vol_arr_left_coords, 40, 41)
 
@@ -215,11 +211,53 @@ class Menu:
 
             pygame.display.flip()
 
+            if quit:
+                pygame.quit()
+                sys.exit()
+
+            if tutorial:
+                self.tutorialScreen()
+                print ("Back in main menu loop from tutorial")
+                tutorial = False
             # Since blue will be the only level available right now. Only check blue
             if blue:
                 openMenu = False
         pygame.mixer.music.stop() #Stop menu music
         return self.volume
+
+    def tutorialScreen(self):
+        btn_w = 180
+        btn_h = 40
+        openMenu = True
+        quit = False
+        main_menu_coords = ((int(WIDTH/1.3), int(HEIGHT/3)))
+        quit_coords = ((int(WIDTH/1.3), int(HEIGHT/2)))
+        while openMenu:
+            print("Start tutorial loop")
+            # Check for events to see if user closed window
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+            # Cover old screen
+            self.screen.fill(BLACK)
+            # Generate text
+            self.generateText("Tutorial", self.titleFont , WHITE, 30,
+            (int(WIDTH/2)), (int(HEIGHT/6)) )
+
+            main_menu = self.button(WHITE, GRAY, btn_w, btn_h, main_menu_coords)
+            quit = self.button(WHITE, GRAY, btn_w, btn_h, quit_coords)
+            self.generateText("Main Menu", self.fontName , BLACK, 20,
+            main_menu_coords[0], main_menu_coords[1])
+            self.generateText("Quit", self.fontName , BLACK, 20,
+            quit_coords[0], quit_coords[1])
+            if main_menu:
+                openMenu = False
+                print("Ending tutorial loop")
+            #Show changes
+            pygame.display.flip()
+
 
     #Check for mouse clicks within defined area.
     #Set a start x, y, ar right top corner of area.
