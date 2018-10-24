@@ -358,6 +358,7 @@ while(openMenu):
          #Check for end level status
         if game.endCurrentLevel == 1:
             menu.completeLevel()
+            game.endCurrentLevel = 0
             break
         #print("Active: ", active)
         #print("openGame: ", openGame)
