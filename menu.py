@@ -122,6 +122,7 @@ class Menu:
             #Check if start button was pressed
             if start:
                 openMenu = False
+        time.sleep(0.1)
 
 
 
@@ -224,6 +225,7 @@ class Menu:
             if blue:
                 openMenu = False
         pygame.mixer.music.stop() #Stop menu music
+        time.sleep(0.1)
         return self.volume
 
     def tutorialScreen(self):
@@ -231,33 +233,19 @@ class Menu:
         btn_h = 40
         openMenu = True
         quit = False
+        title_coords = (int(WIDTH/2), int(HEIGHT/6))
         main_menu_coords = ((int(WIDTH/1.3), int(HEIGHT/3)))
         quit_coords = ((int(WIDTH/1.3), int(HEIGHT/2)))
-        while openMenu:
-            print("Start tutorial loop")
-            # Check for events to see if user closed window
-            events = pygame.event.get(pygame.QUIT)
-            for event in events:
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-            # Cover old screen
-            self.screen.fill(BLACK)
-            # Generate text
-            self.generateText("Tutorial", self.titleFont , WHITE, 30,
-            (int(WIDTH/2)), (int(HEIGHT/6)) )
+        textList = ["Tutorial", "Main Menu", "Quit"]
+        textCoords = [title_coords, main_menu_coords, quit_coords]
+        textAttr = [(WHITE, 30, self.titleFont), (BLACK, 20, self.fontName), (BLACK, 20, self.fontName)]
+        btnList = [(btn_w, btn_h), (btn_w, btn_h)]
+        btnCoords = [main_menu_coords, quit_coords]
+        btnColor = [(WHITE, GRAY), (WHITE, GRAY)]
+        btnActions = ["menu", "quit"]
 
-            main_menu = self.button(WHITE, GRAY, btn_w, btn_h, main_menu_coords)
-            quit = self.button(WHITE, GRAY, btn_w, btn_h, quit_coords)
-            self.generateText("Main Menu", self.fontName , BLACK, 20,
-            main_menu_coords[0], main_menu_coords[1])
-            self.generateText("Quit", self.fontName , BLACK, 20,
-            quit_coords[0], quit_coords[1])
-            if main_menu:
-                openMenu = False
-                print("Ending tutorial loop")
-            #Show changes
-            pygame.display.flip()
+        self.runMenuLoop(20, textList, textCoords, textAttr, btnList, btnCoords, btnColor, btnActions)
+        time.sleep(0.1)
 
     def completeLevel(self):
         start_time = time.time()
@@ -352,48 +340,81 @@ class Menu:
         Description: Generates the pause screen
         """
         paused_coords = (int(WIDTH/2), int(HEIGHT/4))
-        self.screen.fill(BLACK)
-
-        self.generateText("Paused", self.titleFont , WHITE, 100,
-        paused_coords[0], paused_coords[1])
-
-        # pygame.draw.rect(self.screen, RED, (350, 250, 100, 50))
-        # pygame.draw.rect(self.screen, GREEN,(150, 250, 100, 50))
-        pygame.display.flip()
-        status = self.runPauseMenu()
-        return status
-
-    def runPauseMenu(self):
-        """
-        Description: Loop that maintains the pause menu while
-                     waiting for user input
-        """
         openMenu = True
         menuFPS = 20
         btn_w = 220
         btn_h = 60
         resume_coords = (int(WIDTH/2)), int(HEIGHT/1.8)
         quit_coords = (int(WIDTH/2)), int(HEIGHT/1.2)
+        textList = ["Paused", "Resume", "Main Menu"]
+        textCoords = [paused_coords, resume_coords, quit_coords]
+        textAttr = [(WHITE, 100, self.titleFont), (BLACK, 30, self.fontName), (BLACK, 30, self.fontName)]
+        btnList = [(btn_w, btn_h), (btn_w, btn_h)]
+        btnCoords = [resume_coords, quit_coords]
+        btnColors = [(LIGHT_GREEN, GRAY), (LIGHT_RED, GRAY)]
+        btnActions = ["resume", "pause_return"]
+        status = self.runMenuLoop(menuFPS, textList, textCoords, textAttr, btnList, btnCoords, btnColors, btnActions)
+        time.sleep(0.1)
+        return status
 
+# fps = integer
+# textList = strings to be generated
+# textCoords = [(x,y)]
+# textAttr = [(color, fontsize, fontName)]
+# buttonList = [(width, height)]
+# buttonCoords = [(x, y)]
+# btnColor = Color
+# btnActions = list of strings naming the actions
+    def runMenuLoop(self, fps, textList, textCoords, textAttr, buttonList, buttonCoords, btnColors, btnActions):
+        openMenu = True
+        self.screen.fill(BLACK)
         while openMenu:
-            self.time.tick(menuFPS)
+            self.time.tick(fps)
+            buttons = []
+            text = []
             for event in pygame.event.get(pygame.QUIT):
                 if event.type == pygame.QUIT:
                     pygame.quit()
+                    sys.exit()
 
-            #Generate buttons
-            resume = self.button(LIGHT_GREEN, GRAY, btn_w, btn_h, resume_coords)
-            self.generateText("Resume", self.fontName, BLACK, 30, resume_coords[0], resume_coords[1])
-            quit = self.button(LIGHT_RED, GRAY, btn_w, btn_h, quit_coords)
-            self.generateText("Main Menu", self.fontName, BLACK, 30, quit_coords[0], quit_coords[1])
+            if len(buttonList) is not 0:
+                print("ButtonList ", buttonList)
+                k = 0
+                for button in buttonList:
+                    buttonName = self.button(btnColors[k][0], btnColors[k][1], buttonList[k][0], buttonList[k][1], buttonCoords[k])
+                    buttons.append(buttonName)
+                    k += 1
 
-            if resume:
-                openMenu = False
-            if quit:
-                return "restart"
-            #     pygame.quit()
-            #     sys.exit()        #exit() needed after pygame.quit() fixes video system not initialized issue
+            if len(textList) is not 0:
+                k = 0
+                for textString in textList:
+                    print("K", k)
+                    stringName = self.generateText(textList[k], textAttr[k][2], textAttr[k][0], textAttr[k][1], textCoords[k][0], textCoords[k][1])
+                    text.append(stringName)
+                    k += 1
+
+            if len(btnActions) is not 0:
+                #Check status of quit button
+                k = 0
+                for btn in btnActions:
+                    print("Button", btn)
+                    if btn == "resume":
+                        if buttons[k] == True:
+                            openMenu = False
+                    if btn == "quit":
+                        if buttons[k] == True:
+                            openMenu = False
+                    if btn == "menu":
+                        if buttons[k] == True:
+                            openMenu = False
+                    if btn == "pause_return":
+                        if buttons[k] == True:
+                            return "restart"
+                    k += 1
             pygame.display.flip()
+            text = []
+            buttons = []
+            pygame.event.clear
 
     # ---------------------------------------------------------------
     # The following code to create a button was made based on this

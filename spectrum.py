@@ -375,7 +375,7 @@ while(openMenu):
     game.startup()
 
     active = True
-
+    print("Active:", active)
     # Main Game Loop
     while(active):
         print("Starting inner loop")
@@ -403,8 +403,11 @@ while(openMenu):
         # Obtain keyboard inputs
         print("About to call getCommands")
         game.getCommands()
+        for event in pygame.event.get(pygame.QUIT):
+            if event.type == pygame.QUIT:
+                game.shutdown()
         print("Finished calling getCommands")
-        
+
         status = game.levelStatus
         print(status)
         if status == "restart":
