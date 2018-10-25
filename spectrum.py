@@ -91,6 +91,11 @@ class Game:
     def getCommands(self):
         #Hold Keys for fluid movement
         print("I'm in getCommands")
+
+        pygame.event.clear(pygame.MOUSEBUTTONUP)
+        pygame.event.clear(pygame.MOUSEBUTTONDOWN)
+        pygame.event.clear(pygame.MOUSEMOTION)
+
         for event in pygame.event.get(pygame.KEYDOWN):   # gets keydown events and clears queue
             print("Detected KEYDOWN")
             if event.key == pygame.K_RIGHT:  #right arrow
@@ -401,13 +406,10 @@ while(openMenu):
             openGame = False
 
         # Obtain keyboard inputs
-        print("About to call getCommands")
-        pygame.event.clear(pygame.MOUSEBUTTONUP)
-        pygame.event.clear(pygame.MOUSEBUTTONDOWN)
-        pygame.event.clear(pygame.MOUSEMOTION)
+        #print("About to call getCommands")
         game.getCommands()
 
-        print("Finished calling getCommands")
+        #print("Finished calling getCommands")
 
         status = game.levelStatus
         print(status)
