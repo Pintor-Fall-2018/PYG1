@@ -402,10 +402,11 @@ while(openMenu):
 
         # Obtain keyboard inputs
         print("About to call getCommands")
+        pygame.event.clear(pygame.MOUSEBUTTONUP)
+        pygame.event.clear(pygame.MOUSEBUTTONDOWN)
+        pygame.event.clear(pygame.MOUSEMOTION)
         game.getCommands()
-        for event in pygame.event.get(pygame.QUIT):
-            if event.type == pygame.QUIT:
-                game.shutdown()
+
         print("Finished calling getCommands")
 
         status = game.levelStatus
