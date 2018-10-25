@@ -27,7 +27,7 @@ class Game:
         self.red_light_acquired = 0
         self.green_light_acquired = 0
         self.endCurrentLevel = 0
-        self.levelStatus = "none"
+        self.levelStatus = ""
     def startup(self):
         #Create Start Up Game timers and counters
         self.block_movement_counter = 0
@@ -90,7 +90,9 @@ class Game:
 
     def getCommands(self):
         #Hold Keys for fluid movement
+        print("I'm in getCommands")
         for event in pygame.event.get(pygame.KEYDOWN):   # gets keydown events and clears queue
+            print("Detected KEYDOWN")
             if event.key == pygame.K_RIGHT:  #right arrow
                 if self.spec.speed[1] == 0:  #disallows immediately reversing direction
                     self.spec.forward = True
@@ -108,6 +110,7 @@ class Game:
                 self.levelStatus = menu.pauseScreen()
 
         for event in pygame.event.get(pygame.KEYUP):
+            print("Detected KEYUP")
             if event.key == pygame.K_RIGHT:  #right arrow
                 self.spec.forward = False
                 self.spec.slowForward = True
@@ -352,7 +355,7 @@ count = 0
 music_vol = 0.5
 
 while(openMenu):
-    #print("Starting outer loop...")
+    print("Starting outer loop...")
     if count == 0:
         menu.startScreen()
         music_vol = menu.mainMenu()
@@ -368,6 +371,7 @@ while(openMenu):
 
     # Main Game Loop
     while(active):
+        print("Starting inner loop")
         #Check for acquired lights
         blue_light = game.checkLightAcquired("blue")
         red_light = game.checkLightAcquired("red")
@@ -390,9 +394,14 @@ while(openMenu):
             openGame = False
 
         # Obtain keyboard inputs
+        print("About to call getCommands")
         game.getCommands()
-        status = game.status
+        print("Finished calling getCommands")
+        
+        status = game.levelStatus
+        print(status)
         if status == "restart":
+            game.levelStatus = ""
             break
 
         # Update sprites
