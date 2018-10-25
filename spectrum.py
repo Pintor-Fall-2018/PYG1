@@ -146,7 +146,7 @@ class Game:
         # Check if there is a collision with spec and the light object
         collide_light = pygame.sprite.spritecollide(self.spec, self.lights, False)
         if len(collide_light) != 0:
-            print('I am colliding with the light object now')
+            #print('I am colliding with the light object now')
             self.setLightAcquired("blue")
             self.endCurrentLevel = 1
 
@@ -154,7 +154,7 @@ class Game:
         for block in self.sky_blocks:
             # If midpoint of skyblock touches invisible wall center delete skyblock
             if block.rect.midright <= self.invisible_block.rect.center:
-                print("Block should be deleted at this point")
+                #print("Block should be deleted at this point")
                 block.kill()    #Remove block from its groups (Don't draw object anymore)
 
 
@@ -162,7 +162,9 @@ class Game:
         # Moving the Blocks based on time
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
         if self.timeSinceInit - self.blockTimer > 50: # Check if it has been 1000ms
-            #print("time should be above 1000 ms: ", self.timeSinceInit - self.blockTimer)
+            # print("time should be above 1000 ms: ", self.timeSinceInit - self.blockTimer)
+            # print("self.timeSinceInit: ", self.timeSinceInit)
+            # print("self.blockTimer: ", self.blockTimer)
             self.blockTimer = self.timeSinceInit
             self.timeSinceInit = 0
             if self.block_movement_counter < 50:
@@ -183,6 +185,9 @@ class Game:
             # Move Sky Blocks
             for block in self.sky_blocks:
                 block.rect.x -= self.spec.speed[0]
+            # Move Ground blocks now
+            for gb in self.ground_blocks:
+                gb.rect.x -= self.spec.speed[0]
             # Move Game ending light Object
             self.light.rect.x -= self.spec.speed[0]
 
@@ -377,7 +382,7 @@ while(openMenu):
         #print("openGame: ", openGame)
         #increment time
         time.tick(FRAMES)
-        #print (time.tick(FRAMES)) prints how many frames of seconds has been passed
+        #print ("Frames: ", time.tick(FRAMES)) #prints how many frames of seconds has been passed
 
         game.checkStatus()
         active = game.status #check if game is still active based on game status
