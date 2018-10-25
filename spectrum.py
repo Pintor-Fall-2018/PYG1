@@ -144,9 +144,6 @@ class Game:
                 self.spec.speed[1] = 0 #stop all backward movement
             if DEBUG:
                 print(collisions)
-        else:
-            if self.spec.jump == False:
-                self.spec.falling = True
 
         # Check if there is a collision with spec and the light object
         collide_light = pygame.sprite.spritecollide(self.spec, self.lights, False)
