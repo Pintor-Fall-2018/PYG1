@@ -73,6 +73,9 @@ class Spec(pygame.sprite.Sprite):
         if self.jump == False: #constant downward pull
             self.falling = True
 
+        # Print properties
+        self.printSpecProperties()
+
     #Sprite acceleration & deceleration
     def speedlimiter(self, direction):
         if direction == 'forward':
@@ -92,3 +95,8 @@ class Spec(pygame.sprite.Sprite):
 
     def resting(self):
         self.image = self.resting_spec
+
+    #Print spec properties from spec.update()
+    def printSpecProperties(self):
+        print ("self.speed[0]: ", self.speed[0])
+        print ("self.speed[1]: ", self.speed[1])
