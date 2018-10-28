@@ -211,10 +211,9 @@ class Game:
                 self.block_movement_counter = 0
 
         # Scrolling happens in the updateSprites part of game
-        #
-        if (self.spec.rect.x > WIDTH - 300) \
-            and self.spec.speed[0] is not 0 \
-            and self.light.rect.x > WIDTH-40:
+        if (self.spec.rect.x > WIDTH - 300) \ # If 300 pixels left of right screen == True
+            and self.spec.speed[0] is not 0 \ # If not standing still == True
+            and self.light.rect.x > WIDTH-40: # if Light object isn't 40 pixels of right screen == True
             #Move Everthing based on speed of Spec
             self.spec.rect.x -= self.spec.speed[0]
             # Move Sky Blocks
