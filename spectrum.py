@@ -73,7 +73,7 @@ class Game:
                         self.sky_blocks.add(tile)
 
         # Initalize left "Invisible" Wall Block
-        self.invisible_block = Block(-50, 0, 60, 600, WHITE)
+        self.invisible_block = Block(-50, 0, 50, 600, WHITE)
         self.sprites.add(self.invisible_block)
         self.invisible_wall_block.add(self.invisible_block)
 
@@ -97,14 +97,14 @@ class Game:
 
     def getCommands(self):
         #Hold Keys for fluid movement
-        print("I'm in getCommands")
+        #print("I'm in getCommands")
 
         pygame.event.clear(pygame.MOUSEBUTTONUP)
         pygame.event.clear(pygame.MOUSEBUTTONDOWN)
         pygame.event.clear(pygame.MOUSEMOTION)
 
         for event in pygame.event.get(pygame.KEYDOWN):   # gets keydown events and clears queue
-            print("Detected KEYDOWN")
+            #print("Detected KEYDOWN")
             if event.key == pygame.K_RIGHT:  #right arrow
                 if self.spec.speed[1] == 0:  #disallows immediately reversing direction
                     self.spec.forward = True
@@ -123,7 +123,7 @@ class Game:
                 self.levelStatus = menu.pauseScreen()
 
         for event in pygame.event.get(pygame.KEYUP):
-            print("Detected KEYUP")
+            #print("Detected KEYUP")
             if event.key == pygame.K_RIGHT:  #right arrow
                 self.spec.forward = False
                 self.spec.slowForward = True
@@ -138,8 +138,14 @@ class Game:
     def updateSprites(self):
         self.sprites.update()
 
+        # Test Spec for death below the map
+        if self.spec.rect.top >= HEIGHT:
+            print("I should be dying now")
+            self.levelStatus = "restart"    #go back to main menu for now
+            pass                            #leave game.updateSprites
+
         # Test Spec for collisions with environment
-        #collisions = pygame.sprite.spritecollide(self.spec, self.blocks, False)
+        # collisions = pygame.sprite.spritecollide(self.spec, self.blocks, False)
         collisions = pygame.sprite.spritecollide(self.spec, self.all_blocks, False)
         if len(collisions) != 0:
             if self.spec.rect.bottom <= collisions[0].rect.centery:
@@ -174,7 +180,12 @@ class Game:
                 #print("Block should be deleted at this point")
                 block.kill()    #Remove block from its groups (Don't draw object anymore)
 
-
+        # Check for a collision between the invisible_wall_block and spec
+        collide_invisible_wall = pygame.sprite.spritecollide(self.spec, self.invisible_wall_block, False)
+        if len(collide_invisible_wall) != 0:
+            print("spec is colliding with the invisible_wall_block")
+            self.spec.rect.x += 1       # Move Spec forward slightly so he is off the invisible_wall_block
+            self.spec.speed[1] = 0      # Set backward speed to 0 so Spec can't move backwards
 
         # Moving the Blocks based on time
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
@@ -322,7 +333,7 @@ while(openMenu):
 
         #print("Finished calling getCommands")
         status = game.levelStatus
-        print(status)
+        #print(status)
         if status == "restart":
             game.levelStatus = ""
             break
