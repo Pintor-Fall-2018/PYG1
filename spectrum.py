@@ -142,7 +142,7 @@ class Game:
         if self.spec.rect.top >= HEIGHT:
             print("I should be dying now")
             self.levelStatus = "restart"    #go back to main menu for now
-            pass                            #leave game.updateSprites
+            menu.gameOverScreen()            #leave game.updateSprites
 
         # Test Spec for collisions with environment
         # collisions = pygame.sprite.spritecollide(self.spec, self.blocks, False)

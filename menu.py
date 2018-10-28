@@ -271,6 +271,30 @@ class Menu:
             if (end_time - start_time) > 3:
                 openMenu = False
 
+    def gameOverScreen(self):
+        start_time = time.time()
+        openMenu = True
+
+        while openMenu:
+            end_time = time.time()
+            self.time.tick(FRAMES)
+            # Cover old screen
+            self.screen.fill(MAINMENU_BG)
+            # Check for events to see if user closed window
+            for event in pygame.event.get(pygame.QUIT):
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            self.generateText("Oh no! Spec died...", self.fontName, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/3))
+
+            self.generateText("Game Over", self.fontName, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/2.2))
+
+            pygame.display.flip()
+
+            if (end_time - start_time) > 3:
+                openMenu = False
+
 
 
 
@@ -455,12 +479,6 @@ class Menu:
 
     def btnOutline(self, btnRect, color, size):
         pygame.draw.rect(self.screen, color, btnRect, size)
-
-
-
-    def gameoverScreen(self):
-        pass
-
 
     def generateText(self, text, font, color, textSize, x_coord, y_coord):
         """
