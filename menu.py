@@ -200,14 +200,14 @@ class Menu:
             if vol_dec:
                 vol_slider_coords[0] -= 5
                 self.volume = self.volume - 0.1
-                print("Slider x:", vol_slider_coords[0])
-                print("Bar x:", vol_bar_coords[0])
+                #print("Slider x:", vol_slider_coords[0])
+                #print("Bar x:", vol_bar_coords[0])
                 if vol_slider_coords[0] < vol_bar_coords[0]:
                     vol_slider_coords[0] = vol_bar_coords[0]
                     self.volume = 0
                 if self.volume < 0:
                     self.volume = 0
-                print("Volume:", self.volume)
+                #print("Volume:", self.volume)
                 pygame.mixer.music.set_volume(self.volume)
                 vol_dec = False
 
@@ -219,7 +219,7 @@ class Menu:
 
             if tutorial:
                 self.tutorialScreen()
-                print ("Back in main menu loop from tutorial")
+                #print ("Back in main menu loop from tutorial")
                 tutorial = False
             # Since blue will be the only level available right now. Only check blue
             if blue:
@@ -378,7 +378,7 @@ class Menu:
                     sys.exit()
 
             if len(buttonList) is not 0:
-                print("ButtonList ", buttonList)
+                #print("ButtonList ", buttonList)
                 k = 0
                 for button in buttonList:
                     buttonName = self.button(btnColors[k][0], btnColors[k][1], buttonList[k][0], buttonList[k][1], buttonCoords[k])
@@ -388,7 +388,7 @@ class Menu:
             if len(textList) is not 0:
                 k = 0
                 for textString in textList:
-                    print("K", k)
+                    #print("K", k)
                     stringName = self.generateText(textList[k], textAttr[k][2], textAttr[k][0], textAttr[k][1], textCoords[k][0], textCoords[k][1])
                     text.append(stringName)
                     k += 1
@@ -397,7 +397,7 @@ class Menu:
                 #Check status of quit button
                 k = 0
                 for btn in btnActions:
-                    print("Button", btn)
+                    #print("Button", btn)
                     if btn == "resume":
                         if buttons[k] == True:
                             openMenu = False

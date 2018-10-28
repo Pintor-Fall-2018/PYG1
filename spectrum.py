@@ -96,14 +96,14 @@ class Game:
 
     def getCommands(self):
         #Hold Keys for fluid movement
-        print("I'm in getCommands")
+        #print("I'm in getCommands")
 
         pygame.event.clear(pygame.MOUSEBUTTONUP)
         pygame.event.clear(pygame.MOUSEBUTTONDOWN)
         pygame.event.clear(pygame.MOUSEMOTION)
 
         for event in pygame.event.get(pygame.KEYDOWN):   # gets keydown events and clears queue
-            print("Detected KEYDOWN")
+            #print("Detected KEYDOWN")
             if event.key == pygame.K_RIGHT:  #right arrow
                 if self.spec.speed[1] == 0:  #disallows immediately reversing direction
                     self.spec.forward = True
@@ -122,7 +122,7 @@ class Game:
                 self.levelStatus = menu.pauseScreen()
 
         for event in pygame.event.get(pygame.KEYUP):
-            print("Detected KEYUP")
+            #print("Detected KEYUP")
             if event.key == pygame.K_RIGHT:  #right arrow
                 self.spec.forward = False
                 self.spec.slowForward = True
@@ -137,8 +137,14 @@ class Game:
     def updateSprites(self):
         self.sprites.update()
 
+        # Test Spec for death below the map
+        if self.spec.rect.top >= HEIGHT:
+            print("I should be dying now")
+            self.levelStatus = "restart"    #go back to main menu for now
+            pass
+
         # Test Spec for collisions with environment
-        #collisions = pygame.sprite.spritecollide(self.spec, self.blocks, False)
+        # collisions = pygame.sprite.spritecollide(self.spec, self.blocks, False)
         collisions = pygame.sprite.spritecollide(self.spec, self.all_blocks, False)
         if len(collisions) != 0:
             if self.spec.rect.bottom <= collisions[0].rect.centery:
@@ -281,7 +287,7 @@ count = 0
 music_vol = 0.5
 
 while(openMenu):
-    print("Starting outer loop...")
+    #print("Starting outer loop...")
     if count == 0:
         menu.startScreen()
         music_vol = menu.mainMenu()
@@ -294,10 +300,10 @@ while(openMenu):
     game.startup()
 
     active = True
-    print("Active:", active)
+    #print("Active:", active)
     # Main Game Loop
     while(active):
-        print("Starting inner loop")
+        #print("Starting inner loop")
         #Check for acquired lights
         blue_light = game.checkLightAcquired("blue")
         red_light = game.checkLightAcquired("red")
@@ -326,7 +332,7 @@ while(openMenu):
         #print("Finished calling getCommands")
 
         status = game.levelStatus
-        print(status)
+        #print(status)
         if status == "restart":
             game.levelStatus = ""
             break
