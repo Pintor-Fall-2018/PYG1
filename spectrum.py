@@ -72,7 +72,7 @@ class Game:
                         self.sky_blocks.add(tile)
 
         # Initalize left "Invisible" Wall Block
-        self.invisible_block = Block(-50, 0, 60, 600, WHITE)
+        self.invisible_block = Block(-50, 0, 50, 600, WHITE)
         self.sprites.add(self.invisible_block)
         self.invisible_wall_block.add(self.invisible_block)
 
@@ -141,7 +141,7 @@ class Game:
         if self.spec.rect.top >= HEIGHT:
             print("I should be dying now")
             self.levelStatus = "restart"    #go back to main menu for now
-            pass
+            pass                            #leave game.updateSprites
 
         # Test Spec for collisions with environment
         # collisions = pygame.sprite.spritecollide(self.spec, self.blocks, False)
@@ -179,7 +179,12 @@ class Game:
                 #print("Block should be deleted at this point")
                 block.kill()    #Remove block from its groups (Don't draw object anymore)
 
-
+        # Check for a collision between the invisible_wall_block and spec
+        collide_invisible_wall = pygame.sprite.spritecollide(self.spec, self.invisible_wall_block, False)
+        if len(collide_invisible_wall) != 0:
+            print("spec is colliding with the invisible_wall_block")
+            self.spec.rect.x += 1       # Move Spec forward slightly so he is off the invisible_wall_block
+            self.spec.speed[1] = 0      # Set backward speed to 0 so Spec can't move backwards
 
         # Moving the Blocks based on time
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
