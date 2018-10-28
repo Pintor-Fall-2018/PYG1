@@ -23,5 +23,4 @@ class Light(pygame.sprite.Sprite):
         self.animation_frames += 1
         if self.animation_frames > 10:
             self.animation_frames = 0
-            print("Calling animate")
             self.animate()

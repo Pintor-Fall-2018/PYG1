@@ -90,6 +90,12 @@ class Game:
         pygame.quit()
         sys.exit()
 
+    def resetScreenSize(self, size):
+        if size == 1:
+            self.screen = pygame.display.set_mode(RESOLUTION, pygame.FULLSCREEN)
+        else:
+            self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZEABLE)
+
     def drawScreen(self):
         self.screen.fill(SKY_BLUE)
         self.sprites.draw(self.screen)
@@ -172,6 +178,12 @@ class Game:
             #print('I am colliding with the light object now')
             self.setLightAcquired("blue")
             self.endCurrentLevel = 1
+            # Check if there is a collision with spec and the mob object
+        collide_mob = pygame.sprite.spritecollide(self.spec, self.mobs, False)
+        if len(collide_mob) != 0:
+            print("I should be dying by hitting a mob")
+            self.levelStatus = "restart"    #go back to main menu for now
+            menu.gameOverScreen()
 
         # Check for a collision between the invisible wall block and the sky blocks
         for block in self.sky_blocks:
@@ -292,12 +304,16 @@ while(openMenu):
     # print("Starting outer loop...")
     if count == 0:
         menu.startScreen()
-        music_vol = menu.mainMenu()
+        music_vol, fullScreen = menu.mainMenu()
     else:
         pygame.mixer.music.load(MENU_BG_MUSIC)
         pygame.mixer.music.set_volume(music_vol)
         pygame.mixer.music.play(-1) # -1 = loop the song
-        music_vol = menu.mainMenu()
+        music_vol, fullScreen  = menu.mainMenu()
+        if fullScreen:
+            game.screen = pygame.display.set_mode(RESOLUTION, pygame.FULLSCREEN)
+        else:
+            game.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)
 
     game.startup()
 

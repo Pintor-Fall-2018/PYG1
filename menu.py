@@ -28,6 +28,7 @@ class Menu:
         self.bl_x_y_Spawn = (-30, 100)
         self.rd_x_y_Spawn = (-30, 250)
         self.gr_x_y_Spawn = (WIDTH + 30, 50)
+        self.fullScreen = 0
 
     def startScreen(self):
         """
@@ -173,7 +174,18 @@ class Menu:
             quit = self.button(WHITE, GRAY, btn_w, btn_h, (int(WIDTH/1.3), HEIGHT/1.2) )
             self.generateText("Quit", self.fontName, BLACK, 30, (int(WIDTH/1.3)), int(HEIGHT/1.2))
 
+            fullScreen_btn = self.button(WHITE, GRAY, btn_w, btn_h,  (int(WIDTH/4), int(HEIGHT/1.2)) )
+            self.generateText("FullScreen", self.fontName, BLACK, 30, (int(WIDTH/4)), int(HEIGHT/1.2))
+            coords = (int(WIDTH/4), int(HEIGHT/1.2))
+            fullS_btn = self.checkMouseClicks(coords, btn_w, btn_h)
 
+            # if fullS_btn == True and self.fullScreen == 1:
+            #     self.fullScreen = 0
+            #
+            # elif fullS_btn == True and self.fullScreen == 0:
+            #     self.fullScreen = 1
+
+            print(self.fullScreen)
             #Load Volume bar
             self.screen.blit(vol_bar, vol_bar_coords)
             self.screen.blit(vol_slider, vol_slider_coords)
@@ -226,7 +238,8 @@ class Menu:
                 openMenu = False
         pygame.mixer.music.stop() #Stop menu music
         time.sleep(0.1)
-        return self.volume
+        return self.volume, self.fullScreen
+
 
     def tutorialScreen(self):
         btn_w = 180
@@ -294,9 +307,6 @@ class Menu:
 
             if (end_time - start_time) > 3:
                 openMenu = False
-
-
-
 
     #Check for mouse clicks within defined area.
     #Set a start x, y, ar right top corner of area.
