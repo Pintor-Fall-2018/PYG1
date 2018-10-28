@@ -8,8 +8,8 @@ class Light(pygame.sprite.Sprite):
         self.image = self.bl_images[self.index]
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
-        self.rect.x = MAX_RIGHT_WIDTH - 500  # put it at the end of the level
-        self.rect.y = 320
+        self.rect.x = MAX_RIGHT_WIDTH     # put it at the end of the level
+        self.rect.y = 200
         self.animation_frames = 0
 
     def animate(self):
@@ -23,5 +23,5 @@ class Light(pygame.sprite.Sprite):
         self.animation_frames += 1
         if self.animation_frames > 10:
             self.animation_frames = 0
-            print("Calling animate")
+            #print("Calling animate")
             self.animate()

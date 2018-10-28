@@ -140,7 +140,7 @@ class Game:
 
         # Test Spec for death below the map
         if self.spec.rect.top >= HEIGHT:
-            print("I should be dying now")
+            print("I should be dying by being below the map now")
             self.levelStatus = "restart"    #go back to main menu for now
             pass                            #leave game.updateSprites
 
@@ -207,7 +207,7 @@ class Game:
                 self.block_movement_counter = 0
 
         # Scrolling happens in the updateSprites part of game
-        if (self.spec.rect.x > WIDTH - 120) and self.spec.speed[0] is not 0:
+        if (self.spec.rect.x > WIDTH - 300) and self.spec.speed[0] is not 0:
             #Move Everthing based on speed of Spec
             self.spec.rect.x -= self.spec.speed[0]
             # Move Sky Blocks
