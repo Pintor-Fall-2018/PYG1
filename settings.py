@@ -37,6 +37,12 @@ MAX_RIGHT_WIDTH = 2250 # Maximum distance to the right that the map goes
 # Stops Spec from moving to the left
 INVISIBLE_BLOCK_LIST = [(-50, 0, 75, 600, WHITE)]
 
+MOBS_SKY_LIST = [(400,320),
+                 (800,320),
+                 (1600,300),
+                 (1800,340),
+                 (1950,300)]
+
 # Menu Colors
 MAINMENU_BG = BLACK
 MENU_BG_MUSIC = "sounds/acción.ogg"

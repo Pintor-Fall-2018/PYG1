@@ -48,9 +48,12 @@ class Game:
         # Create Game Objects and add to their Groups()
         self.spec = Spec()
         self.sprites.add(self.spec)
-        self.uv1 = Mob(400,320)
-        self.sprites.add(self.uv1)
-        self.mobs.add(self.uv1)
+
+        # Create Mobs and add to its Groups()
+        for mob in MOBS_SKY_LIST:
+            m = Mob(*mob)
+            self.sprites.add(m)
+            self.mobs.add(m)
 
         #Initialize blocks from map and add to sprite groups
         for row in range(len(sandbox)):
@@ -138,9 +141,10 @@ class Game:
     def updateSprites(self):
         self.sprites.update()
 
-        # Test Spec for death below the map
-        if self.spec.rect.top >= HEIGHT:
-            print("I should be dying by being below the map now")
+        # Test Spec for death below the map or collisions with a mob
+        collision_mob = pygame.sprite.spritecollide(self.spec, self.mobs, False)
+        if self.spec.rect.top >= HEIGHT or len(collision_mob) != 0:
+            print("I should be dying now")
             self.levelStatus = "restart"    #go back to main menu for now
             menu.gameOverScreen()            #leave game.updateSprites
 
@@ -207,7 +211,10 @@ class Game:
                 self.block_movement_counter = 0
 
         # Scrolling happens in the updateSprites part of game
-        if (self.spec.rect.x > WIDTH - 300) and self.spec.speed[0] is not 0:
+        #
+        if (self.spec.rect.x > WIDTH - 300) \
+            and self.spec.speed[0] is not 0 \
+            and self.light.rect.x > WIDTH-40:
             #Move Everthing based on speed of Spec
             self.spec.rect.x -= self.spec.speed[0]
             # Move Sky Blocks
@@ -216,8 +223,9 @@ class Game:
             # Move Ground blocks now
             for gb in self.ground_blocks:
                 gb.rect.x -= self.spec.speed[0]
-            for gb in self.mobs:
-                gb.rect.x -= self.spec.speed[0]
+            # Scroll Mobs
+            for m in self.mobs:
+                m.rect.x -= self.spec.speed[0]
             # Move Game ending light Object
             self.light.rect.x -= self.spec.speed[0]
 
