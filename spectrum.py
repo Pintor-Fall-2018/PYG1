@@ -182,16 +182,13 @@ class Game:
             #print('I am colliding with the light object now')
             self.setLightAcquired("blue")
             self.endCurrentLevel = 1
+
         # Check if there is a collision with spec and the mob object
         collide_mob = pygame.sprite.spritecollide(self.spec, self.mobs, False)
         if len(collide_mob) != 0:
-            if self.spec.rect.bottom <= collide_mob[0].rect.centery:
-                self.mobs.remove(collide_mob[0])
-                self.sprites.remove(collide_mob[0])
-            else:
-                print("I should be dying by hitting a mob")
-                self.levelStatus = "restart"    #go back to main menu for now
-                menu.gameOverScreen()
+            print("I should be dying by hitting a mob")
+            self.levelStatus = "restart"    #go back to main menu for now
+            menu.gameOverScreen()
 
         # Check for a collision between the invisible wall block and the sky blocks
         for block in self.sky_blocks:
@@ -322,10 +319,10 @@ while(openMenu):
         pygame.mixer.music.set_volume(music_vol)
         pygame.mixer.music.play(-1) # -1 = loop the song
         music_vol, fullScreen  = menu.mainMenu()
-        if fullScreen:
-            game.screen = pygame.display.set_mode(RESOLUTION, pygame.FULLSCREEN)
-        else:
-            game.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)
+        # if fullScreen:
+        #     game.screen = pygame.display.set_mode(RESOLUTION, pygame.FULLSCREEN)
+        # else:
+        #     game.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)
 
     game.startup()
 
