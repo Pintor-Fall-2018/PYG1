@@ -31,33 +31,17 @@ LIGHT_GREEN = (0, 255, 0)
 DARK_GREEN = (0, 105, 1)
 
 # Map Settings
-MAX_RIGHT_WIDTH = 1500 # Maximum distance to the right that the map goes
-
-# Block Lists. These lists will be the platform lists for the entire levels 1-3
-# Block __init__(self, x, y, w, h, color):
-
-# Ground Blocks that don't move. This is the base platforms
-GROUND_BLOCK_LIST = [(-100, 350, MAX_RIGHT_WIDTH, 200, GREEN)]
+MAX_RIGHT_WIDTH = 2250 # Maximum distance to the right that the map goes
 
 # Invisible block, acts as the left side of the screen. Destroys platforms and
 # Stops Spec from moving to the left
 INVISIBLE_BLOCK_LIST = [(-50, 0, 75, 600, WHITE)]
 
-# Block list Sky (Level 1)
-# This is currently the only level
-BLOCK_LIST = [(100, 250, 100, 20, GRAY),
-              (200, 125, 100, 20, RED),
-              (350, 125, 100, 20, RED),
-              (500, 125, 100, 20, RED),
-              (650, 125, 100, 20, RED),
-              (800, 125, 100, 20, RED),
-              (600, 275, 100, 20, BLUE),
-              (900, 275, 100, 20, DARK_RED)
-              ]
-
-# Block List Forest (Level 2)
-
-# Block List Desert (Level 3)
+MOBS_SKY_LIST = [(400,320),
+                 (800,320),
+                 (1600,300),
+                 (1800,340),
+                 (1950,300)]
 
 # Menu Colors
 MAINMENU_BG = BLACK
