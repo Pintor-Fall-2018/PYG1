@@ -106,6 +106,7 @@ class Game:
         pygame.event.clear(pygame.MOUSEBUTTONDOWN)
         pygame.event.clear(pygame.MOUSEMOTION)
 
+
         for event in pygame.event.get(pygame.KEYDOWN):   # gets keydown events and clears queue
             #print("Detected KEYDOWN")
             if event.key == pygame.K_RIGHT:  #right arrow
@@ -187,7 +188,7 @@ class Game:
         # Check for a collision between the invisible_wall_block and spec
         collide_invisible_wall = pygame.sprite.spritecollide(self.spec, self.invisible_wall_block, False)
         if len(collide_invisible_wall) != 0:
-            print("spec is colliding with the invisible_wall_block")
+            #print("spec is colliding with the invisible_wall_block")
             self.spec.rect.x += 1       # Move Spec forward slightly so he is off the invisible_wall_block
             self.spec.speed[1] = 0      # Set backward speed to 0 so Spec can't move backwards
 
@@ -211,9 +212,9 @@ class Game:
                 self.block_movement_counter = 0
 
         # Scrolling happens in the updateSprites part of game
-        if (self.spec.rect.x > WIDTH - 300) \ # If 300 pixels left of right screen == True
-            and self.spec.speed[0] is not 0 \ # If not standing still == True
-            and self.light.rect.x > WIDTH-40: # if Light object isn't 40 pixels of right screen == True
+        if (self.spec.rect.x > WIDTH - 300) \
+            and self.spec.speed[0] is not 0 \
+            and self.light.rect.x > WIDTH-40:
             #Move Everthing based on speed of Spec
             self.spec.rect.x -= self.spec.speed[0]
             # Move Sky Blocks
