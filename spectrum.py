@@ -5,6 +5,7 @@ from settings import *
 from menu import *
 from spec import *
 from mob import *
+from light import *
 from map_sandbox import *
 
 # Note: Initialize sound before game to prevent sound lag
@@ -77,7 +78,7 @@ class Game:
         self.invisible_wall_block.add(self.invisible_block)
 
         # Create Light Object that wins the game and adds it to its Groups()
-        self.light = Light()
+        self.light = Light(bl_light_endGame_imgs)
         self.sprites.add(self.light)
         self.lights.add(self.light)
 
@@ -247,16 +248,6 @@ class Tile(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-class Light(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self) #sprite constructor
-        self.image = pygame.Surface([30, 30])
-        self.image.fill(BLUE)
-        self.rect = self.image.get_rect()
-        self.rect.x = MAX_RIGHT_WIDTH   # put it at the end of the level
-        self.rect.y = 320
-
-
 game = Game()
 
 # Load Menu images
@@ -274,6 +265,12 @@ frame_img = pygame.image.load('images/frame.png').convert()
 menu_imgs = []
 menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar, vol_arr_right, vol_arr_left, play_btn_inactive, play_btn_active, frame_img))
 
+
+bl_light_1 = pygame.image.load('images/bl_light_endGame1.png').convert()
+bl_light_2 = pygame.image.load('images/bl_light_endGame2.png').convert()
+
+bl_light_endGame_imgs = []
+bl_light_endGame_imgs.extend((bl_light_1, bl_light_2))
 # Create menu object
 menu = Menu(game.screen, time, menu_imgs)
 openMenu = True
@@ -281,7 +278,7 @@ count = 0
 music_vol = 0.5
 
 while(openMenu):
-    print("Starting outer loop...")
+    # print("Starting outer loop...")
     if count == 0:
         menu.startScreen()
         music_vol = menu.mainMenu()
@@ -294,10 +291,10 @@ while(openMenu):
     game.startup()
 
     active = True
-    print("Active:", active)
+    game.status = True
     # Main Game Loop
     while(active):
-        print("Starting inner loop")
+        # print("Starting inner loop")
         #Check for acquired lights
         blue_light = game.checkLightAcquired("blue")
         red_light = game.checkLightAcquired("red")
@@ -324,7 +321,6 @@ while(openMenu):
         game.getCommands()
 
         #print("Finished calling getCommands")
-
         status = game.levelStatus
         print(status)
         if status == "restart":
