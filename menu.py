@@ -249,9 +249,26 @@ class Menu:
         title_coords = (int(WIDTH/2), int(HEIGHT/6))
         main_menu_coords = ((int(WIDTH/1.3), int(HEIGHT/3)))
         quit_coords = ((int(WIDTH/1.3), int(HEIGHT/2)))
-        textList = ["Tutorial", "Main Menu", "Quit"]
-        textCoords = [title_coords, main_menu_coords, quit_coords]
-        textAttr = [(WHITE, 30, self.titleFont), (BLACK, 20, self.fontName), (BLACK, 20, self.fontName)]
+        obj_title_coords = ((int(WIDTH/5.5), int(HEIGHT/4)))
+        obj1_coords = ((int(WIDTH/4), int(HEIGHT/3)))
+        obj2_coords = ((int(WIDTH/3.5), int(HEIGHT/2.6)))
+        obj3_coords = ((int(WIDTH/4), int(HEIGHT/2.3)))
+        obj4_coords = ((int(WIDTH/4), int(HEIGHT/2.1)))
+        control_title_coords = ((int(WIDTH/6), int(HEIGHT/1.7)))
+        ctrl1_coords = ((int(WIDTH/5.5), int(HEIGHT/1.5)))
+        ctrl2_coords = ((int(WIDTH/5.5), int(HEIGHT/1.4)))
+        ctrl3_coords = ((int(WIDTH/5.5), int(HEIGHT/1.3)))
+        obj1 = "Spec travels the world in search of light!"
+        obj2 = "Help Spec navigate through this perilous world"
+        obj3 = "and acquire the blue, red, and green light"
+        obj4 =" to save... the light of the world"
+        control1 ="Left Arrow = Move Left"
+        control2 ="Right Arrow = Move Right"
+        control3 ="Up Arrow = Jump"
+        textList = ["Tutorial", "Main Menu", "Quit", "Objectives:", "Controls:", obj1, obj2, obj3, obj4, control1, control2, control3]
+        textCoords = [title_coords, main_menu_coords, quit_coords, obj_title_coords, control_title_coords, obj1_coords, obj2_coords, obj3_coords, obj4_coords, ctrl1_coords, ctrl2_coords, ctrl3_coords]
+        instr_attr = (WHITE, 16, self.fontName)
+        textAttr = [(WHITE, 40, self.titleFont), (BLACK, 20, self.fontName), (BLACK, 20, self.fontName), (WHITE, 20, self.fontName), (WHITE, 20, self.fontName), instr_attr, instr_attr, instr_attr, instr_attr, instr_attr, instr_attr, instr_attr]
         btnList = [(btn_w, btn_h), (btn_w, btn_h)]
         btnCoords = [main_menu_coords, quit_coords]
         btnColor = [(WHITE, GRAY), (WHITE, GRAY)]
@@ -438,6 +455,8 @@ class Menu:
                     if btn == "quit":
                         if buttons[k] == True:
                             openMenu = False
+                            pygame.quit()
+                            sys.exit()
                     if btn == "menu":
                         if buttons[k] == True:
                             openMenu = False
