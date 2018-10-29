@@ -26,6 +26,7 @@ class Game:
         #sets up screen resolution
         self.status = True
         self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)   #display settings
+        self.background_x = 0  # rate of background scrolling (calculated at runtime)
         self.blue_light_acquired = 0
         self.red_light_acquired = 0
         self.green_light_acquired = 0
@@ -35,6 +36,9 @@ class Game:
         #Create Start Up Game timers and counters
         self.block_movement_counter = 0
         self.blockTimer = pygame.time.get_ticks()
+
+        #Background image
+        self.background = pygame.image.load('images/background.png').convert()
 
         # Create Groups()
         self.sprites = pygame.sprite.Group()
@@ -101,6 +105,7 @@ class Game:
 
     def drawScreen(self):
         self.screen.fill(SKY_BLUE)
+        self.screen.blit(self.background, (self.background_x,0))
         self.sprites.draw(self.screen)
         pygame.display.flip()
 
@@ -241,6 +246,8 @@ class Game:
                 m.rect.x -= self.spec.speed[0]
             # Move Game ending light Object
             self.light.rect.x -= self.spec.speed[0]
+            # Scroll Background image
+            self.background_x -= len(sandbox[0]) * 20 / self.background.get_width() # map pixels / background image pixels
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
@@ -363,8 +370,9 @@ while(openMenu):
             game.levelStatus = ""
             break
 
-        # Update sprites
+        # Update sprites and background
         game.updateSprites()
+
 
         # Print to screen
         game.drawScreen()
