@@ -30,16 +30,16 @@
 * Blue Light - Sky level
 * Green Light - Forest level
 * Red Light - Desert level
-* Avoid dangerous mobs and falling.
-* Upon acquiring all 3 lights, all 3 levels will be complete and you have won the game.
+* Avoid dangerous mobs and falling
+* Upon acquiring all 3 lights, all 3 levels will be complete and you have won the game
 
 
-## Current playthrough demo instructions
-1. Start the game - Title Screen Appears
-2. Click Start - Switches to Main Menu
-3. Adjust volume slider to desired volume
-4. Choose tutorial to quickly review game Instructions
-5. Choose main menu to return to the menu
+## Current Playthrough Demo Instructions
+1. Start the game - Title Screen Appears.
+2. Click Start - Switches to Main Menu.
+3. Adjust volume slider to desired volume.
+4. Choose tutorial to quickly review game instructions.
+5. Choose main menu to return to the menu.
 6. Click on the blue block on the menu to start the Sky Level.
 7. Traverse the sky level and avoid touching mobs or falling.
 8. You can press Esc to Pause the game at any time.
