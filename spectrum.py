@@ -26,7 +26,6 @@ class Game:
         #sets up screen resolution
         self.status = True
         self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)   #display settings
-        self.background_x = 0  # rate of background scrolling (calculated at runtime)
         self.blue_light_acquired = 0
         self.red_light_acquired = 0
         self.green_light_acquired = 0
@@ -34,6 +33,7 @@ class Game:
         self.levelStatus = ""
     def startup(self):
         #Create Start Up Game timers and counters
+        self.background_x = 0  # rate of background scrolling (calculated at runtime)
         self.block_movement_counter = 0
         self.blockTimer = pygame.time.get_ticks()
 
