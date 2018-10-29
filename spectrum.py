@@ -247,7 +247,7 @@ class Game:
             # Move Game ending light Object
             self.light.rect.x -= self.spec.speed[0]
             # Scroll Background image
-            self.background_x -= len(sandbox[0]) * 20 / self.background.get_width() # map pixels / background image pixels
+            self.background_x -= (len(sandbox[0]) * 20 / self.background.get_width()) * .90  # map pixels / background image pixels
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
