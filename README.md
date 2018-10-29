@@ -35,13 +35,13 @@
 
 
 ## Current playthrough demo instructions
-* 1. Start the game - Title Screen Appears
-* 2. Click Start - Switches to Main Menu
-* 3. Adjust volume slider to desired volume
-* 4. Choose tutorial to quickly review game Instructions
-* 5. Choose main menu to return to the menu
-* 6. Click on the blue block on the menu to start the Sky Level.
-* 7. Traverse the sky level and avoid touching mobs or falling.
-* 8. You can press Esc to Pause the game at any time.
-* 9. Click Resume to resume the game.
-* 10. At the end of the level, jump to touch the blue light to win the game.
+1. Start the game - Title Screen Appears
+2. Click Start - Switches to Main Menu
+3. Adjust volume slider to desired volume
+4. Choose tutorial to quickly review game Instructions
+5. Choose main menu to return to the menu
+6. Click on the blue block on the menu to start the Sky Level.
+7. Traverse the sky level and avoid touching mobs or falling.
+8. You can press Esc to Pause the game at any time.
+9. Click Resume to resume the game.
+10. At the end of the level, jump to touch the blue light to win the game.
