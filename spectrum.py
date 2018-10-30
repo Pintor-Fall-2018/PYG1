@@ -119,7 +119,7 @@ class Game:
 
 
         for event in pygame.event.get(pygame.KEYDOWN):   # gets keydown events and clears queue
-            print("Detected KEYDOWN")
+            #print("Detected KEYDOWN")
             if event.key == pygame.K_RIGHT:  #right arrow
                 if self.spec.speed[1] == 0:  #disallows immediately reversing direction
                     self.spec.forward = True
@@ -138,7 +138,7 @@ class Game:
                 self.levelStatus = menu.pauseScreen()
 
         for event in pygame.event.get(pygame.KEYUP):
-            print("Detected KEYUP")
+            #print("Detected KEYUP")
             if event.key == pygame.K_RIGHT:  #right arrow
                 self.spec.forward = False
                 self.spec.slowForward = True

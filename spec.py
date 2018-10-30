@@ -74,7 +74,7 @@ class Spec(pygame.sprite.Sprite):
             self.falling = True
 
         # Print properties
-        self.printSpecProperties()
+        #self.printSpecProperties()
 
     #Sprite acceleration & deceleration
     def speedlimiter(self, direction):
