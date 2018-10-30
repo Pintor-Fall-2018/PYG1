@@ -5,10 +5,10 @@ class Mob(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
         self.step = 0
         self.animations = []
-        for animation in self.animations:
-            animation.set_colorkey([34,177,76])
         self.animations.append(pygame.image.load('images/uv0.png').convert())
         self.animations.append(pygame.image.load('images/uv1.png').convert())
+        for animation in self.animations:
+            animation.set_colorkey([34,177,76])
         self.image = self.animations[0]
         self.rect = self.image.get_rect()
         self.rect.x = x
