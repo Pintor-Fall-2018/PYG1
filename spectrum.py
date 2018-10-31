@@ -135,14 +135,12 @@ class Game:
             #print("Detected KEYUP")
             if event.key == pygame.K_RIGHT:  #right arrow
                 self.spec.forward = False
-                #self.spec.slowForward = True
             if event.key == pygame.K_LEFT:   #left arrow
                 self.spec.backward = False
-                #self.spec.slowBackward = True
             if event.key == pygame.K_UP: #up arrow
                 if self.spec.falling is not True:
                     if pygame.time.get_ticks() - self.spec.jumpTimeElapsed < 200: #if up key was tapped
-                        self.spec.jumpThreshold = 30 #raise threshold for smaller jump
+                        self.spec.jumpThreshold = 5 #raise threshold for smaller jump
 
     def updateSprites(self):
         self.sprites.update()

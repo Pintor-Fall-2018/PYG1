@@ -21,23 +21,22 @@ class Spec(pygame.sprite.Sprite):
         self.rect.y = 200
         self.forward = False  #sprite forward movement
         self.backward = False #sprite backward movement
-        self.slowForward = False  #slowing forward movement
-        self.slowBackward = False  #slowing backward movement
         self.falling = True
-        self.jumpTimer = 40
+        self.jumpTimer = 0
         self.jumpThreshold = 20 #two-stage jump height
         self.fallTimer = 0
         self.jump = False
         self.jumpTimeElapsed = 0
-        self.speed = [0,0]  #[forward, backward]
+        self.speed = [0,0]  # [forward, backward]
+        self.vertical = [8,8,7,7,6,6,5,5,4.5,4.5,4.5,4.5,3.5,2.5,2.5,2,1.5,1.5,1,1]
 
     def update(self):
         self.rect.x += self.speedCalc() #calculate sprite direction and speed
         if self.falling:  #gravity increases velocity
-            self.rect.y += self.fallTimer
-            self.fallTimer += .5
-            if self.fallTimer > 6:
-                self.fallTimer = 6
+            self.rect.y += self.vertical[19-self.fallTimer]
+            self.fallTimer += 1
+            if self.fallTimer > len(self.vertical) - 1:
+                self.fallTimer = len(self.vertical) - 1
         if self.forward:  #speeds up sprite in right direction
             self.speedControl()
             self.animate()
@@ -54,15 +53,13 @@ class Spec(pygame.sprite.Sprite):
                 self.speed[1] = 0
         if not self.forward and not self.backward:  #sprite at rest
             self.resting()
-
-        #Jump mechanics
-        if self.jump == True and self.jumpTimer > self.jumpThreshold:  #upward arc
-            self.rect.y -= self.jumpTimer / 5
-            self.jumpTimer -= 1
+        if self.jump == True and self.jumpTimer < self.jumpThreshold:  #upward arc
+            self.rect.y -= self.vertical[self.jumpTimer]
+            self.jumpTimer += 1
         elif self.jump == True:  #downward arc
             self.falling = True
             self.jump = False
-            self.jumpTimer = 40  # reset timer
+            self.jumpTimer = 0  # reset timer
             self.jumpThreshold = 20
         if self.jump == False: #constant downward pull
             self.falling = True
