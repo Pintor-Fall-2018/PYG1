@@ -121,15 +121,9 @@ class Game:
         for event in pygame.event.get(pygame.KEYDOWN):   # gets keydown events and clears queue
             #print("Detected KEYDOWN")
             if event.key == pygame.K_RIGHT:  #right arrow
-                if self.spec.speed[1] == 0:  #disallows immediately reversing direction
-                    self.spec.forward = True
-                else:  #permits player to hold down opposite direction key
-                    pygame.event.post(event) #places keydown event back to queue
+                self.spec.forward = True
             if event.key == pygame.K_LEFT:   #left arrow
-                if self.spec.speed[0] == 0: #disallows immediately reversing direction
-                    self.spec.backward = True
-                else: #permits player to hold down opposite direction key
-                    pygame.event.post(event) #places keydown event back into queue
+                self.spec.backward = True
             if event.key == pygame.K_UP:
                 if self.spec.falling is not True:
                     self.spec.jumpTimeElapsed = pygame.time.get_ticks() #initial store of milliseconds to evaluate length of keypress
@@ -141,10 +135,10 @@ class Game:
             #print("Detected KEYUP")
             if event.key == pygame.K_RIGHT:  #right arrow
                 self.spec.forward = False
-                self.spec.slowForward = True
+                #self.spec.slowForward = True
             if event.key == pygame.K_LEFT:   #left arrow
                 self.spec.backward = False
-                self.spec.slowBackward = True
+                #self.spec.slowBackward = True
             if event.key == pygame.K_UP: #up arrow
                 if self.spec.falling is not True:
                     if pygame.time.get_ticks() - self.spec.jumpTimeElapsed < 200: #if up key was tapped
@@ -247,7 +241,7 @@ class Game:
             # Move Game ending light Object
             self.light.rect.x -= self.spec.speed[0]
             # Scroll Background image
-            self.background_x -= (len(sandbox[0]) * 20 / self.background.get_width()) * .90  # map pixels / background image pixels
+            self.background_x -= (len(sandbox[0]) * 20 / self.background.get_width()) * .60  # map pixels / background image pixels
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game

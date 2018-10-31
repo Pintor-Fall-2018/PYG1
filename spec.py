@@ -32,34 +32,28 @@ class Spec(pygame.sprite.Sprite):
         self.speed = [0,0]  #[forward, backward]
 
     def update(self):
+        self.rect.x += self.speedCalc() #calculate sprite direction and speed
         if self.falling:  #gravity increases velocity
             self.rect.y += self.fallTimer
             self.fallTimer += .5
             if self.fallTimer > 6:
                 self.fallTimer = 6
         if self.forward:  #speeds up sprite in right direction
-            self.rect.x += self.speed[0]
-            self.speedlimiter('forward')
+            self.speedControl()
             self.animate()
-        elif self.backward: #speeds up sprite in left direction
-            self.rect.x -= self.speed[1]
-            self.speedlimiter('backward')
-            self.animate()
-        elif self.slowForward:  #slows down sprite in right direction
-            self.speed[0] -= .5
-            self.rect.x += self.speed[0]
+        elif self.speed[0] is not 0: #decelerate in forward direction
+            self.speed[0] -= .35
             if self.speed[0] < 0:
-                self.slowForward = False
                 self.speed[0] = 0
-        elif self.slowBackward:  #slows down sprite in left direction
-            self.speed[1] -= .5
-            self.rect.x -= self.speed[1]
+        if self.backward: #speeds up sprite in left direction
+            self.speedControl()
+            self.animate()
+        elif self.speed[1] is not 0:  #decelerate in backward direction
+            self.speed[1] -= .35
             if self.speed[1] < 0:
-                self.slowBackward = False
                 self.speed[1] = 0
-        else:  #sprite at rest
+        if not self.forward and not self.backward:  #sprite at rest
             self.resting()
-            self.speed = [0,0]
 
         #Jump mechanics
         if self.jump == True and self.jumpTimer > self.jumpThreshold:  #upward arc
@@ -76,16 +70,20 @@ class Spec(pygame.sprite.Sprite):
         # Print properties
         #self.printSpecProperties()
 
-    #Sprite acceleration & deceleration
-    def speedlimiter(self, direction):
-        if direction == 'forward':
+    #Returns difference between forward and backward speeds
+    def speedCalc(self):
+        return self.speed[0] - self.speed[1]
+
+    #Sprite acceleration
+    def speedControl(self):
+        if self.forward and self.speed[1] == 0: #speedup if no backward momentum
             self.speed[0] += .25
-            if self.speed[0] > 6:
-                self.speed[0] = 6
-        if direction == 'backward':
+            if self.speed[0] > 4:
+                self.speed[0] = 4
+        if self.backward and self.speed[0] == 0: #speedup if no forward momentum
             self.speed[1] += .25
-            if self.speed[1] > 6:
-                self.speed[1] = 6
+            if self.speed[1] > 4:
+                self.speed[1] = 4
 
     def animate(self):
         self.step += 1
@@ -100,3 +98,7 @@ class Spec(pygame.sprite.Sprite):
     def printSpecProperties(self):
         print ("self.speed[0]: ", self.speed[0])
         print ("self.speed[1]: ", self.speed[1])
+        print("Speed: " + str(self.speedCalc()))
+        print("FWD: " + str(self.forward))
+        print("BWD: " + str(self.backward))
+        print()
