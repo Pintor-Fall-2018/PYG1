@@ -5,7 +5,7 @@ WIDTH = 600
 HEIGHT = 400
 RESOLUTION = (WIDTH, HEIGHT)  # width x height
 FRAMES = 60   # Frames per second
-TITLE = "Spectrum v1.0"
+TITLE = "Spectrum v2.0"
 
 #Debug Mode 1 == On 0 == Off
 DEBUG = 0
