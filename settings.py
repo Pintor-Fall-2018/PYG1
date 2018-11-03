@@ -10,7 +10,7 @@ TITLE = "Spectrum v2.0"
 #Debug Mode 1 == On 0 == Off
 DEBUG = 0
 DEBUG_MENU = 0
-DEBUG_MOBS_OFF = 1
+DEBUG_MOBS_NO_SPAWN = 1
 
 BLACK = (0, 0, 0)
 GRAY = (192,192,192)
