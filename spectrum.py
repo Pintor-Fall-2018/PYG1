@@ -227,7 +227,7 @@ class Game:
             if event.key == pygame.K_LEFT:   #left arrow
                 self.spec.backward = True
             if event.key == pygame.K_UP:
-                if self.spec.falling is not True:
+                if self.spec.falling is False:
                     self.spec.jumpTimeElapsed = pygame.time.get_ticks() #initial store of milliseconds to evaluate length of keypress
                     self.spec.jump = True
             if event.key == pygame.K_ESCAPE:
@@ -257,22 +257,34 @@ class Game:
         # Test Spec for collisions with environment
         collisions = pygame.sprite.spritecollide(self.spec, self.all_blocks, False)
         if len(collisions) != 0:
+            rightmost = leftmost = highest = lowest = collisions[0]
             for collision in collisions:
-                if self.spec.rect.bottom <= collision.rect.centery:  #bottom collision
-                    self.spec.rect.bottom = collision.rect.top + 1 #reposition spec to above object
-                    self.spec.falling = False
-                    self.spec.fallTimer = 0  # reset falltimer
-                elif self.spec.rect.top - collision.rect.bottom <= 0 and self.spec.rect.top - collision.rect.bottom >= -10:  #top collision
-                    self.spec.rect.top = collision.rect.bottom  #reposition spec to bottom of object
-                    self.spec.jump = False
-                    self.spec.jumpTimer = 0
-                    self.spec.falling = True
-                elif self.spec.rect.right - collision.rect.left <= 10 and self.spec.rect.right - collision.rect.left >= 0: #right collision
-                    self.spec.rect.right = collision.rect.left #reposition spec to left side of object
-                    self.spec.speed[0] = 0 #stop all forward movement
-                elif self.spec.rect.left - collision.rect.right <= 0 and self.spec.rect.left - collision.rect.right >= -10: #left collision
-                    self.spec.rect.left = collision.rect.right #reposition spec to right side of object
-                    self.spec.speed[1] = 0 #stop all backward movement
+                if collision.rect.left < leftmost.rect.left:
+                    leftmost = collision
+                if collision.rect.right > rightmost.rect.right:
+                    rightmost = collision
+                if collision.rect.bottom > lowest.rect.bottom:
+                    lowest = collision
+                if collision.rect.top < highest.rect.top:
+                    highest = collision
+            if self.spec.rect.bottom <= lowest.rect.bottom: #bottom collision
+                self.spec.rect.bottom = lowest.rect.top + 1 #reposition spec slightly below top of object
+                self.spec.falling = False
+                self.spec.fallTimer = 0  # reset falltimer
+            elif self.spec.rect.top - highest.rect.bottom <= 0 and self.spec.rect.top - highest.rect.bottom >= -10:  #top collision
+                self.spec.rect.top = highest.rect.bottom  #reposition spec to bottom of object
+                self.spec.jump = False
+                self.spec.jumpTimer = 0
+                self.spec.falling = True
+            if self.spec.rect.right - rightmost.rect.left <= 10 and self.spec.rect.right - rightmost.rect.left >= 0 and rightmost.rect.top < self.spec.rect.bottom - 1: #right collision
+                self.spec.rect.right = rightmost.rect.left #reposition spec to left side of object
+                self.spec.speed[0] = 0 #stop all forward movement
+            elif self.spec.rect.left - leftmost.rect.right <= 0 and self.spec.rect.left - leftmost.rect.right >= -10 and leftmost.rect.top < self.spec.rect.bottom - 1:  #left collision
+                self.spec.rect.left = leftmost.rect.right #reposition spec to right side of object
+                self.spec.speed[1] = 0 #stop all backward movement
+        elif len(collisions) == 0:
+            if self.spec.jump == False:
+                self.spec.falling = True
 
         # Check if there is a collision with spec and the light object
         collide_light = pygame.sprite.spritecollide(self.spec, self.lights, False)
