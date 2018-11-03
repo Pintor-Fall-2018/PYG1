@@ -1,11 +1,11 @@
 import pygame
 from settings import *
 class Light(pygame.sprite.Sprite):
-    def __init__(self, bl_light_images):
+    def __init__(self, light_images):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
-        self.bl_images = bl_light_images
+        self.images = light_images
         self.index = 0
-        self.image = self.bl_images[self.index]
+        self.image = self.images[self.index]
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         self.rect.x = MAX_RIGHT_WIDTH     # put it at the end of the level
@@ -14,9 +14,9 @@ class Light(pygame.sprite.Sprite):
 
     def animate(self):
         self.index = (self.index + 1)
-        if self.index >= len(self.bl_images):
+        if self.index >= len(self.images):
             self.index = 0
-        self.image = self.bl_images[self.index]
+        self.image = self.images[self.index]
         self.image.set_colorkey(BLACK)
 
     def update(self):
