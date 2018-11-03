@@ -59,6 +59,7 @@ class Game:
         self.sprites.add(self.spec)
 
         # Create Level based on user selection from menu.MainMenu()
+        # Levels create level specific map, mobs, EOG light object
         if self.whichLevelToPlay == "BLUE":
             print("game.startUp: starting game.playBlue")
             game.playBlue()
@@ -119,7 +120,6 @@ class Game:
                 m = Mob(*mob)
                 self.sprites.add(m)
                 self.mobs.add(m)
-
 
     def playGreen(self):
         print ("game.playGreen: Creating the Forest level")
@@ -278,7 +278,14 @@ class Game:
         collide_light = pygame.sprite.spritecollide(self.spec, self.lights, False)
         if len(collide_light) != 0:
             #print('I am colliding with the light object now')
-            self.setLightAcquired("blue")
+            if self.whichLevelToPlay == "BLUE":
+                self.setLightAcquired("blue")
+            elif self.whichLevelToPlay == "GREEN":
+                self.setLightAcquired("green")
+            elif self.whichLevelToPlay == "RED":
+                self.setLightAcquired("red")
+            else:
+                print("game.updateSprites: ERROR IN SETTING LIGHT ACQUIRED")
             self.endCurrentLevel = 1
 
         # Check if there is a collision with spec and the mob object
@@ -351,12 +358,15 @@ class Game:
             self.status = False
 
     def setLightAcquired(self, light):
+        print("setLightAcquired: Trying to set acquired light: ", light)
         if light == "blue":
             self.blue_light_acquired = 1
         elif light == "red":
             self.red_light_acquired = 1
-        else:
+        elif light == "green":
             self.green_light_acquired = 1
+        else:
+            print("game.setLightAcquired: ERROR IN SETTING LIGHT ACQUIRED")
 
     def checkLightAcquired(self, light):
         if light == "blue":
@@ -406,13 +416,15 @@ bl_light_1 = pygame.image.load('images/bl_light_endGame1.png').convert()
 bl_light_2 = pygame.image.load('images/bl_light_endGame2.png').convert()
 green_light_1 = pygame.image.load('images/green_light_endGame1.png').convert()
 green_light_2 = pygame.image.load('images/green_light_endGame2.png').convert()
+red_light_1 = pygame.image.load('images/red_light_endGame1.png').convert()
+red_light_2 = pygame.image.load('images/red_light_endGame2.png').convert()
 
 bl_light_endGame_imgs = []
 bl_light_endGame_imgs.extend((bl_light_1, bl_light_2))
 green_light_endGame_imgs = []
 green_light_endGame_imgs.extend((green_light_1, green_light_2))
 red_light_endGame_imgs = []
-red_light_endGame_imgs.extend((bl_light_1, bl_light_2))
+red_light_endGame_imgs.extend((red_light_1, red_light_2))
 # Create menu object
 menu = Menu(game.screen, time, menu_imgs)
 openMenu = True
@@ -428,7 +440,7 @@ while(openMenu):
         pygame.mixer.music.load(MENU_BG_MUSIC)
         pygame.mixer.music.set_volume(music_vol)
         pygame.mixer.music.play(-1) # -1 = loop the song
-        music_vol, fullScreen, levelSelect  = menu.mainMenu()
+        music_vol, fullScreen, levelSelect = menu.mainMenu()
         # if fullScreen:
         #     game.screen = pygame.display.set_mode(RESOLUTION, pygame.FULLSCREEN)
         # else:
