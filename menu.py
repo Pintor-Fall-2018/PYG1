@@ -136,6 +136,9 @@ class Menu:
         gr_lvl_coords = (int(WIDTH/2), int(HEIGHT/5))
         rd_lvl_coords = (int(WIDTH/1.2), int(HEIGHT/5))
 
+        # Variable that holds which level has been selected. Set by button select
+        self.levelSelectButton = ""
+
         # Get volume images
         vol_slider = self.volumeBarImgs[0]
         vol_bar = self.volumeBarImgs[1]
@@ -185,7 +188,7 @@ class Menu:
             # elif fullS_btn == True and self.fullScreen == 0:
             #     self.fullScreen = 1
 
-            print(self.fullScreen)
+            #print(self.fullScreen)
             #Load Volume bar
             self.screen.blit(vol_bar, vol_bar_coords)
             self.screen.blit(vol_slider, vol_slider_coords)
@@ -235,10 +238,18 @@ class Menu:
                 tutorial = False
             # Since blue will be the only level available right now. Only check blue
             if blue:
+                self.levelSelectButton = "BLUE"
                 openMenu = False
+            if green:
+                self.levelSelectButton = "GREEN"
+                openMenu = False
+            if red:
+                self.levelSelectButton = "RED"
+                openMenu = False
+
         pygame.mixer.music.stop() #Stop menu music
         time.sleep(0.1)
-        return self.volume, self.fullScreen
+        return self.volume, self.fullScreen, self.levelSelectButton
 
 
     def tutorialScreen(self):

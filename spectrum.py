@@ -6,7 +6,9 @@ from menu import *
 from spec import *
 from mob import *
 from light import *
-from map_sandbox import *
+from map_Blue import *
+from map_Green import *
+from map_Red import *
 
 # Note: Initialize sound before game to prevent sound lag
 #       Especially import for sound effects
@@ -31,11 +33,14 @@ class Game:
         self.green_light_acquired = 0
         self.endCurrentLevel = 0
         self.levelStatus = ""
-    def startup(self):
+
+    # Startup function. Responsible for creating the map and all objects
+    def startup(self, levelSelect):
         #Create Start Up Game timers and counters
         self.background_x = 0  # rate of background scrolling (calculated at runtime)
         self.block_movement_counter = 0
         self.blockTimer = pygame.time.get_ticks()
+        self.whichLevelToPlay = levelSelect # assign map to play based on levelSelect String
 
         #Background image
         self.background = pygame.image.load('images/background.png').convert()
@@ -53,45 +58,142 @@ class Game:
         self.spec = Spec()
         self.sprites.add(self.spec)
 
-        # Create Mobs and add to its Groups()
-        for mob in MOBS_SKY_LIST:
-            m = Mob(*mob)
-            self.sprites.add(m)
-            self.mobs.add(m)
-
-        #Initialize blocks from map and add to sprite groups
-        for row in range(len(sandbox)):
-            for column in range(len(sandbox[0])):
-                if sandbox[row][column] is not tiles['sky']:
-                    if sandbox[row][column] == tiles['earth']:
-                        tile = Tile(20 * column, 20 * row, 'images/earth.png')
-                        self.sprites.add(tile)
-                        self.all_blocks.add(tile)
-                        self.ground_blocks.add(tile)
-                    elif sandbox[row][column] == tiles['grass']:
-                        tile = Tile(20 * column, 20 * row, 'images/grass.png')
-                        self.sprites.add(tile)
-                        self.all_blocks.add(tile)
-                        self.ground_blocks.add(tile)
-                    elif sandbox[row][column] == tiles['platform']:
-                        tile = Tile(20 * column, 20 * row, 'images/platform.png')
-                        self.sprites.add(tile)
-                        self.all_blocks.add(tile)
-                        self.sky_blocks.add(tile)
+        # Create Level based on user selection from menu.MainMenu()
+        if self.whichLevelToPlay == "BLUE":
+            print("game.startUp: starting game.playBlue")
+            game.playBlue()
+        elif self.whichLevelToPlay == "GREEN":
+            print("game.startUp: starting game.playGreen")
+            game.playGreen()
+        elif self.whichLevelToPlay == "RED":
+            print("game.startUp: starting game.playRed")
+            game.playRed()
+        else:
+            print("You shouldn't ever seen this. Level selection ERROR")
+            #exit safely
+            pygame.quit()
+            sys.exit()
 
         # Initalize left "Invisible" Wall Block
         self.invisible_block = Block(-50, 0, 50, 600, WHITE)
         self.sprites.add(self.invisible_block)
         self.invisible_wall_block.add(self.invisible_block)
 
-        # Create Light Object that wins the game and adds it to its Groups()
+        if DEBUG:
+            print('Pygame Version: ' + pygame.version.ver)
+            print('Platform: ' + sys.platform)
+
+    def playBlue(self):
+        print ("game.playBlue: Creating the Sky level")
+        # Create Blue Level from tile map
+        for row in range(len(bluebox)):
+            for column in range(len(bluebox[0])):
+                if bluebox[row][column] is not tiles['sky']:
+                    if bluebox[row][column] == tiles['earth']:
+                        tile = Tile(20 * column, 20 * row, 'images/earth.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                    elif bluebox[row][column] == tiles['grass']:
+                        tile = Tile(20 * column, 20 * row, 'images/grass.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                    elif bluebox[row][column] == tiles['platform']:
+                        tile = Tile(20 * column, 20 * row, 'images/platform.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.sky_blocks.add(tile)
+
+        # Create Blue Light Object that wins the blue level and adds it to its Groups()
         self.light = Light(bl_light_endGame_imgs)
         self.sprites.add(self.light)
         self.lights.add(self.light)
 
-        if DEBUG:
-            print('Pygame Version: ' + pygame.version.ver)
-            print('Platform: ' + sys.platform)
+        # Set DEBUG_MOBS_OFF to 1 to not spawn mobs
+        if DEBUG_MOBS_OFF:
+            print("Playing without mobs")
+        else:
+            # Create Mobs and add to its Groups()
+            for mob in MOBS_SKY_LIST:
+                m = Mob(*mob)
+                self.sprites.add(m)
+                self.mobs.add(m)
+
+
+    def playGreen(self):
+        print ("game.playGreen: Creating the Forest level")
+        # Create Green Level from tile map
+        for row in range(len(greenbox)):
+            for column in range(len(greenbox[0])):
+                if greenbox[row][column] is not tiles['sky']:
+                    if greenbox[row][column] == tiles['earth']:
+                        tile = Tile(20 * column, 20 * row, 'images/earth.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                    elif greenbox[row][column] == tiles['grass']:
+                        tile = Tile(20 * column, 20 * row, 'images/grass.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                    elif greenbox[row][column] == tiles['platform']:
+                        tile = Tile(20 * column, 20 * row, 'images/platform.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.sky_blocks.add(tile)
+
+        # Create Green Light Object that wins the green level and adds it to its Groups()
+        self.light = Light(green_light_endGame_imgs)
+        self.sprites.add(self.light)
+        self.lights.add(self.light)
+
+        # Set DEBUG_MOBS_OFF to 1 to not spawn mobs
+        if DEBUG_MOBS_OFF:
+            print("Playing without mobs")
+        else:
+            # Create Mobs and add to its Groups()
+            for mob in MOBS_SKY_LIST:
+                m = Mob(*mob)
+                self.sprites.add(m)
+                self.mobs.add(m)
+
+    def playRed(self):
+        print ("game.playRed: Creating the Desert level")
+        # Create Green Level from tile map
+        for row in range(len(redbox)):
+            for column in range(len(redbox[0])):
+                if redbox[row][column] is not tiles['sky']:
+                    if redbox[row][column] == tiles['earth']:
+                        tile = Tile(20 * column, 20 * row, 'images/earth.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                    elif redbox[row][column] == tiles['grass']:
+                        tile = Tile(20 * column, 20 * row, 'images/grass.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                    elif redbox[row][column] == tiles['platform']:
+                        tile = Tile(20 * column, 20 * row, 'images/platform.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.sky_blocks.add(tile)
+
+        # Create Red Light Object that wins the red level and adds it to its Groups()
+        self.light = Light(red_light_endGame_imgs)
+        self.sprites.add(self.light)
+        self.lights.add(self.light)
+
+        # Set DEBUG_MOBS_OFF to 1 to not spawn mobs
+        if DEBUG_MOBS_OFF:
+            print("Playing without mobs")
+        else:
+            # Create Mobs and add to its Groups()
+            for mob in MOBS_SKY_LIST:
+                m = Mob(*mob)
+                self.sprites.add(m)
+                self.mobs.add(m)
 
     def shutdown(self):
         pygame.quit()
@@ -248,8 +350,13 @@ class Game:
                 m.rect.x -= self.spec.speed[0]
             # Move Game ending light Object
             self.light.rect.x -= self.spec.speed[0]
-            # Scroll Background image
-            self.background_x -= (len(sandbox[0]) * 20 / self.background.get_width()) * .60  # map pixels / background image pixels
+            # Scroll Background image based on which level we're playing
+            if self.whichLevelToPlay == "BLUE":
+                self.background_x -= (len(bluebox[0]) * 20 / self.background.get_width()) * .60  # map pixels / background image pixels
+            elif self.whichLevelToPlay == "GREEN":
+                self.background_x -= (len(greenbox[0]) * 20 / self.background.get_width()) * .60  # map pixels / background image pixels
+            elif self.whichLevelToPlay == "RED":
+                self.background_x -= (len(redbox[0]) * 20 / self.background.get_width()) * .60  # map pixels / background image pixels
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
@@ -309,9 +416,15 @@ menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar,
 
 bl_light_1 = pygame.image.load('images/bl_light_endGame1.png').convert()
 bl_light_2 = pygame.image.load('images/bl_light_endGame2.png').convert()
+green_light_1 = pygame.image.load('images/green_light_endGame1.png').convert()
+green_light_2 = pygame.image.load('images/green_light_endGame2.png').convert()
 
 bl_light_endGame_imgs = []
 bl_light_endGame_imgs.extend((bl_light_1, bl_light_2))
+green_light_endGame_imgs = []
+green_light_endGame_imgs.extend((green_light_1, green_light_2))
+red_light_endGame_imgs = []
+red_light_endGame_imgs.extend((bl_light_1, bl_light_2))
 # Create menu object
 menu = Menu(game.screen, time, menu_imgs)
 openMenu = True
@@ -322,18 +435,18 @@ while(openMenu):
     # print("Starting outer loop...")
     if count == 0:
         menu.startScreen()
-        music_vol, fullScreen = menu.mainMenu()
+        music_vol, fullScreen, levelSelect = menu.mainMenu()
     else:
         pygame.mixer.music.load(MENU_BG_MUSIC)
         pygame.mixer.music.set_volume(music_vol)
         pygame.mixer.music.play(-1) # -1 = loop the song
-        music_vol, fullScreen  = menu.mainMenu()
+        music_vol, fullScreen, levelSelect  = menu.mainMenu()
         # if fullScreen:
         #     game.screen = pygame.display.set_mode(RESOLUTION, pygame.FULLSCREEN)
         # else:
         #     game.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)
 
-    game.startup()
+    game.startup(levelSelect)
 
     active = True
     game.status = True
