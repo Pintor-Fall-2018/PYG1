@@ -46,4 +46,4 @@ MOBS_SKY_LIST = [(400,320),
 # Menu Colors
 MAINMENU_BG = BLACK
 MENU_BG_MUSIC = "sounds/acción.ogg"
-MUSIC_VOL = 1.0
+MUSIC_VOL = 0.0

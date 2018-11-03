@@ -3,7 +3,7 @@ import pygame
 class Spec(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
-        #self.image = pygame.Surface((30,30)) #width x height
+        #self.image = pygame.Surface((20,20)) #width x height
         #self.image.fill((100,100,0))
         self.step = 0
         self.resting_spec = pygame.image.load('images/spec0.png').convert()
@@ -29,8 +29,10 @@ class Spec(pygame.sprite.Sprite):
         self.jumpTimeElapsed = 0
         self.speed = [0,0]  # [forward, backward]
         self.vertical = [8,8,7,7,6,6,5,5,4.5,4.5,4.5,4.5,3.5,2.5,2.5,2,1.5,1.5,1,1]
+        self.shadow = {"top":0.0, "bottom":0.0, "left":0.0, "right":0.0}
 
     def update(self):
+        self.snapShot()  #capture position from last frame
         self.rect.x += self.speedCalc() #calculate sprite direction and speed
         if self.falling:  #gravity increases velocity
             self.rect.y += self.vertical[19-self.fallTimer]
@@ -61,8 +63,6 @@ class Spec(pygame.sprite.Sprite):
             self.jump = False
             self.jumpTimer = 0  # reset timer
             self.jumpThreshold = 20
-        if self.jump == False: #constant downward pull
-            self.falling = True
 
         # Print properties
         #self.printSpecProperties()
@@ -89,7 +89,15 @@ class Spec(pygame.sprite.Sprite):
         self.image = self.animations[int(self.step/10)]
 
     def resting(self):
+        pass
         self.image = self.resting_spec
+
+    #captures position of last frame into dictionary
+    def snapShot(self):
+        self.shadow["top"] = self.rect.top
+        self.shadow["bottom"] = self.rect.bottom
+        self.shadow["right"] = self.rect.right
+        self.shadow["left"] = self.rect.left
 
     #Print spec properties from spec.update()
     def printSpecProperties(self):
