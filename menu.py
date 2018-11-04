@@ -127,7 +127,7 @@ class Menu:
 
 
 
-    def mainMenu(self):
+    def mainMenu(self, game):
         lvl_btn_w = 160
         lvl_btn_h = 120
         btn_w = 220
@@ -164,12 +164,26 @@ class Menu:
                     sys.exit()
 
             # Colored level panels for main menu
+            # Generate text over button based on level completion checkStatus
             #---Blue----
             blue = self.button(LIGHT_BLUE, PASTEL_BLUE, lvl_btn_w, lvl_btn_h, bl_lvl_coords, True, PASTEL_BLUE_2)
+            if game.checkLightAcquired("blue"):
+                self.generateText("COMPLETED", self.fontName, BLACK, 30, (int(WIDTH/6)), (int(HEIGHT/5)))
+            else:
+                self.generateText("PLAY", self.fontName, BLACK, 30, (int(WIDTH/6)), (int(HEIGHT/5)))
+
             #---Green----
             green = self.button(LIGHT_GREEN, GREEN, lvl_btn_w, lvl_btn_h, gr_lvl_coords, True, DARK_GREEN)
+            if game.checkLightAcquired("green"):
+                self.generateText("COMPLETED", self.fontName, BLACK, 30, (int(WIDTH/2)), (int(HEIGHT/5)))
+            else:
+                self.generateText("PLAY", self.fontName, BLACK, 30, (int(WIDTH/2)), (int(HEIGHT/5)))
             #---Red----
             red = self.button(LIGHT_RED, RED, lvl_btn_w, lvl_btn_h, rd_lvl_coords, True, DARK_RED)
+            if game.checkLightAcquired("red"):
+                self.generateText("COMPLETED", self.fontName, BLACK, 30, (int(WIDTH/1.2)), (int(HEIGHT/5)))
+            else:
+                self.generateText("PLAY", self.fontName, BLACK, 30, (int(WIDTH/1.2)), (int(HEIGHT/5)))
 
             tutorial = self.button(WHITE, GRAY, btn_w, btn_h, (int(WIDTH/1.3), HEIGHT/1.6) )
             self.generateText("Tutorial", self.fontName, BLACK, 30, (int(WIDTH/1.3)), int(HEIGHT/1.6))
@@ -236,7 +250,7 @@ class Menu:
                 self.tutorialScreen()
                 #print ("Back in main menu loop from tutorial")
                 tutorial = False
-            # Since blue will be the only level available right now. Only check blue
+
             if blue:
                 self.levelSelectButton = "BLUE"
                 openMenu = False
@@ -336,10 +350,42 @@ class Menu:
             if (end_time - start_time) > 3:
                 openMenu = False
 
-    #Check for mouse clicks within defined area.
-    #Set a start x, y, ar right top corner of area.
-    # Will check boundaries for width, height.
+    def gameCompletedScreen(self):
+
+        text1 = "YOU WON OMG"
+        text2 = "PLAY ME AGAIN? I BET YOU WON'T"
+        menuFPS = 20
+        btn_w = 220
+        btn_h = 60
+        replay_coords = (int(WIDTH/2)), int(HEIGHT/1.8)
+        quit_coords = (int(WIDTH/2)), int(HEIGHT/1.2)
+
+        textList = [text1, text2, "Replay Game", "Quit"]
+        textCoords = [((int(WIDTH/2)), int(HEIGHT/5)), \
+                      ((int(WIDTH/2)), int(HEIGHT/3)), \
+                      ((int(WIDTH/2)), int(HEIGHT/1.8)), \
+                      ((int(WIDTH/2)), int(HEIGHT/1.2))]
+        textAttr = [(WHITE, 30, self.fontName), \
+                    (WHITE, 30, self.fontName), \
+                    (BLACK, 30, self.fontName), \
+                    (BLACK, 30, self.fontName)]
+        btnList = [(btn_w, btn_h), (btn_w, btn_h)]
+        btnCoords = [replay_coords, quit_coords]
+        btnColors = [(LIGHT_GREEN, GRAY), (LIGHT_RED, GRAY)]
+        btnActions = ["replay", "quit"]
+
+        status = self.runMenuLoop(menuFPS, textList, textCoords, textAttr, btnList, btnCoords, btnColors, btnActions)
+        time.sleep(0.1)
+        return status
+
+
+
     def checkMouseClicks(self, start_coords, width, height):
+        """
+        #Check for mouse clicks within defined area.
+        #Set a start x, y, ar right top corner of area.
+        # Will check boundaries for width, height.
+        """
         x, y = start_coords
         mouse_pos = pygame.mouse.get_pos()
         btn_click = pygame.mouse.get_pressed()
@@ -474,6 +520,9 @@ class Menu:
                     if btn == "pause_return":
                         if buttons[k] == True:
                             return "restart"
+                    if btn == "replay":
+                        if buttons[k] == True:
+                            return "replay"
                     k += 1
             pygame.display.flip()
             text = []

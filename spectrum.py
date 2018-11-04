@@ -34,6 +34,14 @@ class Game:
         self.endCurrentLevel = 0
         self.levelStatus = ""
 
+    def resetGame(self):
+        # resets game attributes
+        self.blue_light_acquired = 0
+        self.red_light_acquired = 0
+        self.green_light_acquired = 0
+        self.endCurrentLevel = 0
+        self.levelStatus = ""
+
     # Startup function. Responsible for creating the map and all objects
     def startup(self, levelSelect):
         #Create Start Up Game timers and counters
@@ -447,12 +455,12 @@ while(openMenu):
     # print("Starting outer loop...")
     if count == 0:
         menu.startScreen()
-        music_vol, fullScreen, levelSelect = menu.mainMenu()
+        music_vol, fullScreen, levelSelect = menu.mainMenu(game)
     else:
         pygame.mixer.music.load(MENU_BG_MUSIC)
         pygame.mixer.music.set_volume(music_vol)
         pygame.mixer.music.play(-1) # -1 = loop the song
-        music_vol, fullScreen, levelSelect = menu.mainMenu()
+        music_vol, fullScreen, levelSelect = menu.mainMenu(game)
         # if fullScreen:
         #     game.screen = pygame.display.set_mode(RESOLUTION, pygame.FULLSCREEN)
         # else:
@@ -465,10 +473,13 @@ while(openMenu):
     # Main Game Loop
     while(active):
         # print("Starting inner loop")
-        #Check for acquired lights
-        blue_light = game.checkLightAcquired("blue")
-        red_light = game.checkLightAcquired("red")
-        green_light = game.checkLightAcquired("green")
+        # Check if all lights have been acquired ; End game if true
+        if game.checkLightAcquired("blue") \
+        and game.checkLightAcquired("red") \
+        and game.checkLightAcquired("green"):
+            menu.gameCompletedScreen()
+            game.resetGame()
+            break
          #Check for end level status
         if game.endCurrentLevel == 1:
             menu.completeLevel()
