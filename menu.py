@@ -14,6 +14,7 @@ class Menu:
         self.volume = MUSIC_VOL
         self.fontName = pygame.font.match_font('arial')
         self.titleFont = os.path.join("fonts", "VT323-Regular.ttf")
+        self.fontPM = os.path.join("fonts", "PermanentMarker-Regular.ttf")
         self.titleText = "Spectrum"
         self.authors = "(c) 2018 Jarret Edelen, Shane Klumpp, and Tiffany Warner"
         self.quitText = "Press Escape to quit"
@@ -28,7 +29,7 @@ class Menu:
         self.bl_x_y_Spawn = (-30, 100)
         self.rd_x_y_Spawn = (-30, 250)
         self.gr_x_y_Spawn = (WIDTH + 30, 50)
-        self.fullScreen = 0
+        self.fullScreen = False
 
     def startScreen(self):
         """
@@ -145,12 +146,27 @@ class Menu:
         vol_arr_right = self.volumeBarImgs[2]
         vol_arr_left = self.volumeBarImgs[3]
 
+        #Full screen button images
+        fs_btn_inactive = self.images[9]
+        fs_btn_inactive.set_colorkey(BLACK)
+
+        fs_btn_active = self.images[10]
+        fs_btn_active.set_colorkey(BLACK)
+
         #Bar is 200 pixels wide
-        vol_bar_coords = (int(WIDTH/10), int(HEIGHT/1.8))
+        vol_bar_coords = (int(WIDTH/10), int(HEIGHT/1.6))
+
         #Slider 15 x 40
         vol_slider_coords = [vol_bar_coords[0] + 90, vol_bar_coords[1] - 7]
-        vol_arr_right_coords = (vol_bar_coords[0] + 210, vol_bar_coords[1] - 5)
-        vol_arr_left_coords = (vol_bar_coords[0] - 50, vol_bar_coords[1] - 5)
+        vol_arr_right_coords = (vol_bar_coords[0] + 190, vol_bar_coords[1] - 5)
+        vol_arr_left_coords = (vol_bar_coords[0] - 20, vol_bar_coords[1]- 3)
+
+        fs_coords = [int(WIDTH/2.5), int(HEIGHT/1.23)]
+        fs_img_size = (25, 26)
+
+        skylevel_inactive = self.images[11]
+        skylevel_active = self.images[12]
+
         openMenu = True
 
         while openMenu:
@@ -167,43 +183,59 @@ class Menu:
             # Generate text over button based on level completion checkStatus
             #---Blue----
             blue = self.button(LIGHT_BLUE, PASTEL_BLUE, lvl_btn_w, lvl_btn_h, bl_lvl_coords, True, PASTEL_BLUE_2)
-            if game.checkLightAcquired("blue"):
-                self.generateText("COMPLETED", self.fontName, BLACK, 30, (int(WIDTH/6)), (int(HEIGHT/5)))
+            sky_rect = skylevel_inactive.get_rect()
+            sky_rect.center = bl_lvl_coords
+            bl_lvl_active = self.checkMousePos((int(bl_lvl_coords[0]/4),int(bl_lvl_coords[1]/4)) , lvl_btn_w, lvl_btn_h)
+            if bl_lvl_active:
+                self.screen.blit(skylevel_active, sky_rect)
             else:
-                self.generateText("PLAY", self.fontName, BLACK, 30, (int(WIDTH/6)), (int(HEIGHT/5)))
+                self.screen.blit(skylevel_inactive, sky_rect)
+            self.btnOutline(sky_rect, WHITE, 5)
+
+            if game.checkLightAcquired("blue"):
+                self.generateText("COMPLETED", self.fontPM, BLACK, 30, (int(WIDTH/6)), (int(HEIGHT/5)))
+            else:
+                self.generateText("PLAY", self.fontPM, BLACK, 30, (int(WIDTH/6)), (int(HEIGHT/5)))
 
             #---Green----
             green = self.button(LIGHT_GREEN, GREEN, lvl_btn_w, lvl_btn_h, gr_lvl_coords, True, DARK_GREEN)
             if game.checkLightAcquired("green"):
-                self.generateText("COMPLETED", self.fontName, BLACK, 30, (int(WIDTH/2)), (int(HEIGHT/5)))
+                self.generateText("COMPLETED", self.fontPM, BLACK, 30, (int(WIDTH/2)), (int(HEIGHT/5)))
             else:
-                self.generateText("PLAY", self.fontName, BLACK, 30, (int(WIDTH/2)), (int(HEIGHT/5)))
+                self.generateText("PLAY", self.fontPM, BLACK, 30, (int(WIDTH/2)), (int(HEIGHT/5)))
             #---Red----
             red = self.button(LIGHT_RED, RED, lvl_btn_w, lvl_btn_h, rd_lvl_coords, True, DARK_RED)
             if game.checkLightAcquired("red"):
-                self.generateText("COMPLETED", self.fontName, BLACK, 30, (int(WIDTH/1.2)), (int(HEIGHT/5)))
+                self.generateText("COMPLETED", self.fontPM, BLACK, 30, (int(WIDTH/1.2)), (int(HEIGHT/5)))
             else:
-                self.generateText("PLAY", self.fontName, BLACK, 30, (int(WIDTH/1.2)), (int(HEIGHT/5)))
+                self.generateText("PLAY", self.fontPM, BLACK, 30, (int(WIDTH/1.2)), (int(HEIGHT/5)))
 
             tutorial = self.button(WHITE, GRAY, btn_w, btn_h, (int(WIDTH/1.3), HEIGHT/1.6) )
-            self.generateText("Tutorial", self.fontName, BLACK, 30, (int(WIDTH/1.3)), int(HEIGHT/1.6))
+            self.generateText("Tutorial", self.fontPM, BLACK, 30, (int(WIDTH/1.3)), int(HEIGHT/1.6))
 
             quit = self.button(WHITE, GRAY, btn_w, btn_h, (int(WIDTH/1.3), HEIGHT/1.2) )
-            self.generateText("Quit", self.fontName, BLACK, 30, (int(WIDTH/1.3)), int(HEIGHT/1.2))
+            self.generateText("Quit", self.fontPM, BLACK, 30, (int(WIDTH/1.3)), int(HEIGHT/1.2))
 
-            fullScreen_btn = self.button(WHITE, GRAY, btn_w, btn_h,  (int(WIDTH/4), int(HEIGHT/1.2)) )
-            self.generateText("FullScreen", self.fontName, BLACK, 30, (int(WIDTH/4)), int(HEIGHT/1.2))
+            #Set up full-screen button
+            # fullScreen_active = self.checkMousePos((fs_coords[0], fs_coords[1]), fs_img_size[0], fs_img_size[1])
+            fullScreen_clicked = self.checkMouseClicks((fs_coords[0], fs_coords[1]), fs_img_size[0], fs_img_size[1])
+            time.sleep(0.1)
+            if fullScreen_clicked and self.fullScreen is False:
+                self.fullScreen = True
+            elif fullScreen_clicked and self.fullScreen is True:
+                self.fullScreen = False
+
+            if self.fullScreen is False:
+                self.screen.blit(fs_btn_inactive, (fs_coords[0], fs_coords[1]))
+            else:
+                self.screen.blit(fs_btn_active, (fs_coords[0], fs_coords[1]))
+
+            self.generateText("FullScreen:", self.fontPM, WHITE, 30, (int(WIDTH/5)), int(HEIGHT/1.2))
             coords = (int(WIDTH/4), int(HEIGHT/1.2))
             fullS_btn = self.checkMouseClicks(coords, btn_w, btn_h)
 
-            # if fullS_btn == True and self.fullScreen == 1:
-            #     self.fullScreen = 0
-            #
-            # elif fullS_btn == True and self.fullScreen == 0:
-            #     self.fullScreen = 1
-
-            #print(self.fullScreen)
             #Load Volume bar
+            self.generateText("Volume:", self.fontPM, WHITE, 30, vol_bar_coords[0] + 30, vol_bar_coords[1] - 30)
             self.screen.blit(vol_bar, vol_bar_coords)
             self.screen.blit(vol_slider, vol_slider_coords)
             self.screen.blit(vol_arr_right, vol_arr_right_coords)
@@ -217,8 +249,8 @@ class Menu:
             if vol_inc:
                 vol_slider_coords[0] += 5
                 self.volume = self.volume + 0.1
-                if vol_slider_coords[0] > vol_bar_coords[0] + 180:
-                    vol_slider_coords[0] = vol_bar_coords[0] + 180
+                if vol_slider_coords[0] > vol_bar_coords[0] + 160:
+                    vol_slider_coords[0] = vol_bar_coords[0] + 160
                     self.volume = 2.0
                 if self.volume > 2.0:
                     self.volume = 2.0
@@ -231,8 +263,8 @@ class Menu:
                 self.volume = self.volume - 0.1
                 #print("Slider x:", vol_slider_coords[0])
                 #print("Bar x:", vol_bar_coords[0])
-                if vol_slider_coords[0] < vol_bar_coords[0]:
-                    vol_slider_coords[0] = vol_bar_coords[0]
+                if vol_slider_coords[0] < vol_bar_coords[0] + 20:
+                    vol_slider_coords[0] = vol_bar_coords[0] + 20
                     self.volume = 0
                 if self.volume < 0:
                     self.volume = 0
@@ -456,7 +488,7 @@ class Menu:
         quit_coords = (int(WIDTH/2)), int(HEIGHT/1.2)
         textList = ["Paused", "Resume", "Main Menu"]
         textCoords = [paused_coords, resume_coords, quit_coords]
-        textAttr = [(WHITE, 100, self.titleFont), (BLACK, 30, self.fontName), (BLACK, 30, self.fontName)]
+        textAttr = [(WHITE, 100, self.titleFont), (BLACK, 30, self.fontPM), (BLACK, 30, self.fontPM)]
         btnList = [(btn_w, btn_h), (btn_w, btn_h)]
         btnCoords = [resume_coords, quit_coords]
         btnColors = [(LIGHT_GREEN, GRAY), (LIGHT_RED, GRAY)]

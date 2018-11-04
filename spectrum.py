@@ -439,10 +439,15 @@ vol_arr_right = pygame.image.load('images/vol_arrowRight.png').convert()
 vol_arr_left = pygame.image.load('images/vol_arrowLeft.png').convert()
 play_btn_inactive = pygame.image.load('images/pl_btn_inactive.png').convert()
 play_btn_active = pygame.image.load('images/pl_btn_active.png').convert()
+fullscreen_inactive = pygame.image.load('images/fullscreen_inactive.png').convert()
+fullscreen_active = pygame.image.load('images/fullscreen_active.png').convert()
+skylevel_inactive = pygame.image.load('images/skylevel_inactive.png').convert()
+skylevel_active = pygame.image.load('images/skylevel_active.png').convert()
 frame_img = pygame.image.load('images/frame.png').convert()
 
+
 menu_imgs = []
-menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar, vol_arr_right, vol_arr_left, play_btn_inactive, play_btn_active, frame_img))
+menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar, vol_arr_right, vol_arr_left, play_btn_inactive, play_btn_active, fullscreen_inactive, fullscreen_active, skylevel_inactive, skylevel_active, frame_img))
 
 
 bl_light_1 = pygame.image.load('images/bl_light_endGame1.png').convert()
@@ -474,10 +479,11 @@ while(openMenu):
         pygame.mixer.music.set_volume(music_vol)
         pygame.mixer.music.play(-1) # -1 = loop the song
         music_vol, fullScreen, levelSelect = menu.mainMenu(game)
-        # if fullScreen:
-        #     game.screen = pygame.display.set_mode(RESOLUTION, pygame.FULLSCREEN)
-        # else:
-        #     game.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)
+
+    if fullScreen:
+        game.screen = pygame.display.set_mode(RESOLUTION, pygame.FULLSCREEN)
+    else:
+        game.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)
 
     game.startup(levelSelect)
 
