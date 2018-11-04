@@ -263,6 +263,7 @@ class Game:
             menu.gameOverScreen()            #leave game.updateSprites
 
         # Test Spec for collisions with environment
+        top_collision = False
         collisions = pygame.sprite.spritecollide(self.spec, self.all_blocks, False)
         if len(collisions) != 0:
             rightmost = leftmost = highest = lowest = collisions[0]
@@ -271,25 +272,37 @@ class Game:
                     leftmost = collision
                 if collision.rect.right > rightmost.rect.right:
                     rightmost = collision
-                if collision.rect.bottom > lowest.rect.bottom:
+                if lowest is not None and collision.rect.bottom > lowest.rect.bottom:
                     lowest = collision
                 if collision.rect.top < highest.rect.top:
                     highest = collision
-            if self.spec.rect.bottom <= lowest.rect.bottom: #bottom collision
-                self.spec.rect.bottom = lowest.rect.top + 1 #reposition spec slightly below top of object
-                self.spec.falling = False
-                self.spec.fallTimer = 0  # reset falltimer
-            elif self.spec.rect.top - highest.rect.bottom <= 0 and self.spec.rect.top - highest.rect.bottom >= -10:  #top collision
-                self.spec.rect.top = highest.rect.bottom  #reposition spec to bottom of object
-                self.spec.jump = False
-                self.spec.jumpTimer = 0
-                self.spec.falling = True
-            if self.spec.rect.right - rightmost.rect.left <= 10 and self.spec.rect.right - rightmost.rect.left >= 0 and rightmost.rect.top < self.spec.rect.bottom - 1: #right collision
-                self.spec.rect.right = rightmost.rect.left #reposition spec to left side of object
-                self.spec.speed[0] = 0 #stop all forward movement
-            elif self.spec.rect.left - leftmost.rect.right <= 0 and self.spec.rect.left - leftmost.rect.right >= -10 and leftmost.rect.top < self.spec.rect.bottom - 1:  #left collision
-                self.spec.rect.left = leftmost.rect.right #reposition spec to right side of object
-                self.spec.speed[1] = 0 #stop all backward movement
+            #prohibits assignment of rightmost/leftmost blocks to bottom collision logic
+            if self.spec.forward and (self.spec.jump or self.spec.falling) and rightmost.rect.bottom <= self.spec.rect.bottom:
+                lowest = None
+            if self.spec.backward and (self.spec.jump or self.spec.falling) and leftmost.rect.bottom <= self.spec.rect.bottom:
+                lowest = None
+            if (self.spec.forward or self.spec.backward) and self.spec.jump is False:
+                highest = None
+            if lowest is not None:
+                if self.spec.rect.bottom <= lowest.rect.bottom and self.spec.rect.bottom > lowest.rect.top: #bottom collision
+                    self.spec.rect.bottom = lowest.rect.top + 1 #reposition spec slightly below top of object
+                    self.spec.falling = False
+                    self.spec.fallTimer = 0  # reset falltimer
+            if highest is not None:
+                if self.spec.rect.top - highest.rect.bottom <= 0 and self.spec.rect.top - highest.rect.bottom >= -10:  #top collision
+                    self.spec.rect.top = highest.rect.bottom  #reposition spec to bottom of object
+                    self.spec.jump = False
+                    self.spec.jumpTimer = 0
+                    self.spec.falling = True
+                    top_collision = True
+            if rightmost is not None:
+                if not top_collision and self.spec.rect.right - rightmost.rect.left <= 10 and self.spec.rect.right - rightmost.rect.left >= 0 and rightmost.rect.top < self.spec.rect.bottom - 1: #right collision
+                    self.spec.rect.right = rightmost.rect.left #reposition spec to left side of object
+                    self.spec.speed[0] = 0 #stop all forward movement
+            if leftmost is not None:
+                if not top_collision and self.spec.rect.left - leftmost.rect.right <= 0 and self.spec.rect.left - leftmost.rect.right >= -10 and leftmost.rect.top < self.spec.rect.bottom - 1:  #left collision
+                    self.spec.rect.left = leftmost.rect.right #reposition spec to right side of object
+                    self.spec.speed[1] = 0 #stop all backward movement
         elif len(collisions) == 0:
             if self.spec.jump == False:
                 self.spec.falling = True

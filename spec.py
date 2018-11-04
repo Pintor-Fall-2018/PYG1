@@ -89,7 +89,6 @@ class Spec(pygame.sprite.Sprite):
         self.image = self.animations[int(self.step/10)]
 
     def resting(self):
-        pass
         self.image = self.resting_spec
 
     #captures position of last frame into dictionary
