@@ -10,7 +10,7 @@ TITLE = "Spectrum v2.0"
 #Debug Mode 1 == On 0 == Off
 DEBUG = 0
 DEBUG_MENU = 0
-DEBUG_MOBS_NO_SPAWN = 1
+DEBUG_MOBS_NO_SPAWN = 0
 
 BLACK = (0, 0, 0)
 GRAY = (192,192,192)
@@ -43,6 +43,10 @@ MOBS_SKY_LIST = [(400,320),
                  (1600,300),
                  (1800,340),
                  (1950,300)]
+
+MOBS_FOREST_LIST = [(400,320),
+                 (800,320),
+                 (1400,320)]
 
 # Menu Colors
 MAINMENU_BG = BLACK
