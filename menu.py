@@ -182,7 +182,8 @@ class Menu:
             # Colored level panels for main menu
             # Generate text over button based on level completion checkStatus
             #---Blue----
-            blue = self.button(LIGHT_BLUE, PASTEL_BLUE, lvl_btn_w, lvl_btn_h, bl_lvl_coords, True, PASTEL_BLUE_2)
+            blue = self.checkMouseClicks(bl_lvl_coords, lvl_btn_w, lvl_btn_h)
+            # blue = self.button(LIGHT_BLUE, PASTEL_BLUE, lvl_btn_w, lvl_btn_h, bl_lvl_coords, True, PASTEL_BLUE_2)
             sky_rect = skylevel_inactive.get_rect()
             sky_rect.center = bl_lvl_coords
             bl_lvl_active = self.checkMousePos((int(bl_lvl_coords[0]/4),int(bl_lvl_coords[1]/4)) , lvl_btn_w, lvl_btn_h)
