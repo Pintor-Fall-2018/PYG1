@@ -3,13 +3,14 @@ from settings import *
 import random as rand
 import time
 class Menu:
-    def __init__(self, screen, time, images):
+    def __init__(self, screen, time, images, sounds):
         """
         Description: Initiates Menu Class Instance... to be continued
         """
         self.screen = screen
         self.time = time
         self.fps = FRAMES
+        self.sounds = sounds
         self.images = images
         self.volume = MUSIC_VOL
         self.fontName = pygame.font.match_font('arial')
@@ -74,7 +75,7 @@ class Menu:
             start_x = (int(WIDTH/2))
             start_y = (int(HEIGHT/1.8))
             start = self.button(LIGHT_GREEN, GRAY, 200, 50, (start_x, start_y) )
-            self.generateText("Start", self.fontName, BLACK, 30, start_x, start_y)
+            self.generateText("Start", self.fontPM, BLACK, 30, start_x, start_y)
 
             if DEBUG_MENU:
                 print("Tick")
@@ -121,6 +122,7 @@ class Menu:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         openMenu = False
+                        self.sounds[0].play()
             #Check if start button was pressed
             if start:
                 openMenu = False
@@ -360,6 +362,7 @@ class Menu:
                 openMenu = False
 
     def gameOverScreen(self):
+        self.sounds[1].play()
         start_time = time.time()
         openMenu = True
 
@@ -374,14 +377,26 @@ class Menu:
                     pygame.quit()
                     sys.exit()
 
-            self.generateText("Oh no! Spec died...", self.fontName, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/3))
-
-            self.generateText("Game Over", self.fontName, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/2.2))
+            self.generateText("Game Over", self.titleFont, WHITE, 50, (int(WIDTH/2)), int(HEIGHT/5))
+            if (end_time - start_time) > 0.5 and (end_time - start_time) < 2:
+                self.generateText("Oh no!", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/2.2))
+            elif (end_time - start_time) > 2 and (end_time - start_time) < 3:
+                self.generateText("Oh no!", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/2.2))
+                self.generateText("Spec died", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.8))
+            elif (end_time - start_time) > 3  and (end_time - start_time) < 4 :
+                self.generateText("Oh no!", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/2.2))
+                self.generateText("Spec died", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.8))
+                self.generateText("...", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.4))
+            elif (end_time - start_time) > 4:
+                self.generateText("Oh no!", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/2.2))
+                self.generateText("Spec died", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.8))
+                self.generateText("...   :(", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.4))
 
             pygame.display.flip()
 
-            if (end_time - start_time) > 3:
+            if (end_time - start_time) > 6:
                 openMenu = False
+                # self.sounds[1].set_volume(0)
 
     def gameCompletedScreen(self):
 
@@ -427,6 +442,7 @@ class Menu:
             y < mouse_pos[1] < y + height
             ):
             if btn_click[0] == 1:
+                self.sounds[0].play()
                 return True
         return False
 
@@ -594,6 +610,7 @@ class Menu:
             btn.fill(active_color)
             self.screen.blit(btn, btn_rect)
             if btn_click[0] == 1:
+                self.sounds[0].play()
                 return True
         else:
             btn.fill(inactive_color)
