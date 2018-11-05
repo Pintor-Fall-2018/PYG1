@@ -46,7 +46,7 @@ MOBS_SKY_LIST = [(400,320),
 
 MOBS_FOREST_LIST = [(400,320),
                  (800,320),
-                 (1400,320)]
+                 (1500,320)]
 
 # Menu Colors
 MAINMENU_BG = BLACK

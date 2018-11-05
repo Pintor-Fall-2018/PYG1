@@ -152,7 +152,7 @@ class Game:
                         self.all_blocks.add(tile)
                         self.ground_blocks.add(tile)
                     elif greenbox[row][column] == tiles_green['platform']:
-                        tile = Tile(20 * column, 20 * row, 'images/platform.png')
+                        tile = Tile(20 * column, 20 * row, 'images/green_platform.png')
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.sky_blocks.add(tile)
@@ -183,6 +183,11 @@ class Game:
                         self.ground_blocks.add(tile)
                     elif greenbox[row][column] == tiles_green['grass_edge_left']:
                         tile = Tile(20 * column, 20 * row, 'images/green_grass02.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                    elif greenbox[row][column] == tiles_green['grass_edge_overlap_right']:
+                        tile = Tile(20 * column, 20 * row, 'images/green_grass03.png')
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.ground_blocks.add(tile)
