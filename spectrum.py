@@ -50,9 +50,6 @@ class Game:
         self.blockTimer = pygame.time.get_ticks()
         self.whichLevelToPlay = levelSelect # assign map to play based on levelSelect String
 
-        #Background image
-        self.background = pygame.image.load('images/background.png').convert()
-
         # Create Groups()
         self.sprites = pygame.sprite.Group()
         self.sky_blocks = pygame.sprite.Group()             # Moving blocks
@@ -94,6 +91,7 @@ class Game:
 
     def playBlue(self):
         print ("game.playBlue: Creating the Sky level")
+        self.background = pygame.image.load('images/background.png').convert() #load background image
         # Create Blue Level from tile map
         for row in range(len(bluebox)):
             for column in range(len(bluebox[0])):
@@ -131,25 +129,56 @@ class Game:
 
     def playGreen(self):
         print ("game.playGreen: Creating the Forest level")
+        self.background = pygame.image.load('images/green_background.png').convert() #load background image
         # Create Green Level from tile map
         for row in range(len(greenbox)):
             for column in range(len(greenbox[0])):
-                if greenbox[row][column] is not tiles['sky']:
-                    if greenbox[row][column] == tiles['earth']:
-                        tile = Tile(20 * column, 20 * row, 'images/earth.png')
+                if greenbox[row][column] is not tiles_green['sky']:
+                    if greenbox[row][column] == tiles_green['earth']:
+                        tile = Tile(20 * column, 20 * row, 'images/green_earth.png')
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.ground_blocks.add(tile)
-                    elif greenbox[row][column] == tiles['grass']:
-                        tile = Tile(20 * column, 20 * row, 'images/grass.png')
+                    elif greenbox[row][column] == tiles_green['grass']:
+                        tile = Tile(20 * column, 20 * row, 'images/green_grass.png')
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.ground_blocks.add(tile)
-                    elif greenbox[row][column] == tiles['platform']:
+                    elif greenbox[row][column] == tiles_green['platform']:
                         tile = Tile(20 * column, 20 * row, 'images/platform.png')
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.sky_blocks.add(tile)
+                    elif greenbox[row][column] == tiles_green['earth1']:
+                        tile = Tile(20 * column, 20 * row, 'images/green_earth01.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                    elif greenbox[row][column] == tiles_green['earth2']:
+                        tile = Tile(20 * column, 20 * row, 'images/green_earth02.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                    elif greenbox[row][column] == tiles_green['water_surface']:
+                        tile = Tile(20 * column, 20 * row, 'images/green_water.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                    elif greenbox[row][column] == tiles_green['water']:
+                        tile = Tile(20 * column, 20 * row, 'images/green_water1.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                    elif greenbox[row][column] == tiles_green['grass_edge_right']:
+                        tile = Tile(20 * column, 20 * row, 'images/green_grass01.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                    elif greenbox[row][column] == tiles_green['grass_edge_left']:
+                        tile = Tile(20 * column, 20 * row, 'images/green_grass02.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
 
         # Create Green Light Object that wins the green level and adds it to its Groups()
         self.light = Light(green_light_endGame_imgs)
@@ -161,13 +190,14 @@ class Game:
             print("Playing without mobs")
         else:
             # Create Mobs and add to its Groups()
-            for mob in MOBS_SKY_LIST:
+            for mob in MOBS_FOREST_LIST:
                 m = Mob(*mob)
                 self.sprites.add(m)
                 self.mobs.add(m)
 
     def playRed(self):
         print ("game.playRed: Creating the Desert level")
+        self.background = pygame.image.load('images/background.png').convert() #load background image
         # Create Green Level from tile map
         for row in range(len(redbox)):
             for column in range(len(redbox[0])):
@@ -187,6 +217,7 @@ class Game:
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.sky_blocks.add(tile)
+
 
         # Create Red Light Object that wins the red level and adds it to its Groups()
         self.light = Light(red_light_endGame_imgs)
@@ -423,6 +454,8 @@ class Tile(pygame.sprite.Sprite):
     def __init__(self, x, y, image_path):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(image_path).convert()
+        #self.image = pygame.transform.scale(self.image, (20,20))  #testing
+        #self.image.set_colorkey([255,255,255])   #testing
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
