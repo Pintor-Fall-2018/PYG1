@@ -196,20 +196,20 @@ class Menu:
             self.btnOutline(sky_rect, WHITE, 5)
 
             if game.checkLightAcquired("blue"):
-                self.generateText("COMPLETED", self.fontPM, BLACK, 30, (int(WIDTH/6)), (int(HEIGHT/5)))
+                self.generateText("COMPLETED", self.fontPM, BLACK, 25, (int(WIDTH/6)), (int(HEIGHT/5)))
             else:
                 self.generateText("PLAY", self.fontPM, BLACK, 30, (int(WIDTH/6)), (int(HEIGHT/5)))
 
             #---Green----
             green = self.button(LIGHT_GREEN, GREEN, lvl_btn_w, lvl_btn_h, gr_lvl_coords, True, DARK_GREEN)
             if game.checkLightAcquired("green"):
-                self.generateText("COMPLETED", self.fontPM, BLACK, 30, (int(WIDTH/2)), (int(HEIGHT/5)))
+                self.generateText("COMPLETED", self.fontPM, BLACK, 25, (int(WIDTH/2)), (int(HEIGHT/5)))
             else:
                 self.generateText("PLAY", self.fontPM, BLACK, 30, (int(WIDTH/2)), (int(HEIGHT/5)))
             #---Red----
             red = self.button(LIGHT_RED, RED, lvl_btn_w, lvl_btn_h, rd_lvl_coords, True, DARK_RED)
             if game.checkLightAcquired("red"):
-                self.generateText("COMPLETED", self.fontPM, BLACK, 30, (int(WIDTH/1.2)), (int(HEIGHT/5)))
+                self.generateText("COMPLETED", self.fontPM, BLACK, 25, (int(WIDTH/1.2)), (int(HEIGHT/5)))
             else:
                 self.generateText("PLAY", self.fontPM, BLACK, 30, (int(WIDTH/1.2)), (int(HEIGHT/5)))
 
@@ -338,6 +338,7 @@ class Menu:
         time.sleep(0.1)
 
     def completeLevel(self):
+        self.sounds[2].play()
         start_time = time.time()
         openMenu = True
 
@@ -352,13 +353,17 @@ class Menu:
                     pygame.quit()
                     sys.exit()
 
-            self.generateText("Level Completed!", self.fontName, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/3))
-
-            self.generateText("Good job!", self.fontName, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/2.2))
+            self.generateText("Level Completed!", self.titleFont, WHITE, 60, (int(WIDTH/2)), int(HEIGHT/4))
+            if (end_time - start_time) > 0.5:
+                self.generateText("Spec Obtained a light!", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/2.0))
+            if (end_time - start_time) > 1:
+                self.generateText("Good job!", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.6))
+            if (end_time - start_time) > 2:
+                self.generateText(":)", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.4))
 
             pygame.display.flip()
 
-            if (end_time - start_time) > 3:
+            if (end_time - start_time) > 4.5:
                 openMenu = False
 
     def gameOverScreen(self):
@@ -377,20 +382,15 @@ class Menu:
                     pygame.quit()
                     sys.exit()
 
-            self.generateText("Game Over", self.titleFont, WHITE, 50, (int(WIDTH/2)), int(HEIGHT/5))
-            if (end_time - start_time) > 0.5 and (end_time - start_time) < 2:
+            self.generateText("Game Over", self.titleFont, WHITE, 70, (int(WIDTH/2)), int(HEIGHT/5))
+            if (end_time - start_time) > 0.5:
                 self.generateText("Oh no!", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/2.2))
-            elif (end_time - start_time) > 2 and (end_time - start_time) < 3:
-                self.generateText("Oh no!", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/2.2))
+            if (end_time - start_time) > 2:
                 self.generateText("Spec died", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.8))
-            elif (end_time - start_time) > 3  and (end_time - start_time) < 4 :
-                self.generateText("Oh no!", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/2.2))
-                self.generateText("Spec died", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.8))
+            if (end_time - start_time) > 3:
                 self.generateText("...", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.4))
-            elif (end_time - start_time) > 4:
-                self.generateText("Oh no!", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/2.2))
-                self.generateText("Spec died", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.8))
-                self.generateText("...   :(", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.4))
+            if (end_time - start_time) > 4:
+                self.generateText(":(", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.2))
 
             pygame.display.flip()
 

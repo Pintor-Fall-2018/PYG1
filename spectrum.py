@@ -430,9 +430,10 @@ class Tile(pygame.sprite.Sprite):
 game = Game()
 
 #Load menu sounds
-click = pygame.mixer.Sound('sounds/click2.wav')
-click.set_volume(0.2)
+click = pygame.mixer.Sound('sounds/click.ogg')
+click.set_volume(0.5)
 lose_music = pygame.mixer.Sound('sounds/lose_music.ogg')
+win_music = pygame.mixer.Sound('sounds/win_music.ogg')
 
 # Load Menu images
 bl_light_img = pygame.image.load('images/blueLight.png').convert()
@@ -454,7 +455,7 @@ frame_img = pygame.image.load('images/frame.png').convert()
 menu_imgs = []
 menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar, vol_arr_right, vol_arr_left, play_btn_inactive, play_btn_active, fullscreen_inactive, fullscreen_active, skylevel_inactive, skylevel_active, frame_img))
 
-menu_sounds = [click, lose_music]
+menu_sounds = [click, lose_music, win_music]
 
 bl_light_1 = pygame.image.load('images/bl_light_endGame1.png').convert()
 bl_light_2 = pygame.image.load('images/bl_light_endGame2.png').convert()
