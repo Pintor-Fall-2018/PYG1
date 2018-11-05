@@ -33,6 +33,7 @@ class Game:
         self.green_light_acquired = 0
         self.endCurrentLevel = 0
         self.levelStatus = ""
+        self.lives = 7
 
     def resetGame(self):
         # resets game attributes
@@ -41,6 +42,7 @@ class Game:
         self.green_light_acquired = 0
         self.endCurrentLevel = 0
         self.levelStatus = ""
+        self.lives = 7
 
     # Startup function. Responsible for creating the map and all objects
     def startup(self, levelSelect):
@@ -58,6 +60,11 @@ class Game:
         self.all_blocks = pygame.sprite.Group()
         self.lights = pygame.sprite.Group()
         self.mobs = pygame.sprite.Group()
+
+        # Life bar images
+        self.lives_imgs = []
+        self.lives_imgs.append(pygame.image.load('images/life.png').convert())
+        self.lives_imgs.append(pygame.image.load('images/life_gone.png').convert())
 
         # Create Game Objects and add to their Groups()
         self.spec = Spec()
@@ -234,6 +241,74 @@ class Game:
                 self.sprites.add(m)
                 self.mobs.add(m)
 
+    def displayLifeBars(self):
+        self.lives_imgs[0].set_colorkey(BLACK)
+        coords = [10, 10, 35, 10, 60, 10, 85, 10, 110, 10, 135, 10, 160, 10]
+        if self.lives > 6:
+            self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
+            self.screen.blit(self.lives_imgs[0], (coords[2], coords[3]))
+            self.screen.blit(self.lives_imgs[0], (coords[4], coords[5]))
+            self.screen.blit(self.lives_imgs[0], (coords[6], coords[7]))
+            self.screen.blit(self.lives_imgs[0], (coords[8], coords[9]))
+            self.screen.blit(self.lives_imgs[0], (coords[10], coords[11]))
+            self.screen.blit(self.lives_imgs[0], (coords[12], coords[13]))
+        elif self.lives > 5:
+            self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
+            self.screen.blit(self.lives_imgs[0], (coords[2], coords[3]))
+            self.screen.blit(self.lives_imgs[0], (coords[4], coords[5]))
+            self.screen.blit(self.lives_imgs[0], (coords[6], coords[7]))
+            self.screen.blit(self.lives_imgs[0], (coords[8], coords[9]))
+            self.screen.blit(self.lives_imgs[0], (coords[10], coords[11]))
+            self.screen.blit(self.lives_imgs[1], (coords[12], coords[13]))
+        elif self.lives > 4:
+            self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
+            self.screen.blit(self.lives_imgs[0], (coords[2], coords[3]))
+            self.screen.blit(self.lives_imgs[0], (coords[4], coords[5]))
+            self.screen.blit(self.lives_imgs[0], (coords[6], coords[7]))
+            self.screen.blit(self.lives_imgs[0], (coords[8], coords[9]))
+            self.screen.blit(self.lives_imgs[1], (coords[10], coords[11]))
+            self.screen.blit(self.lives_imgs[1], (coords[12], coords[13]))
+        elif self.lives > 3:
+            self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
+            self.screen.blit(self.lives_imgs[0], (coords[2], coords[3]))
+            self.screen.blit(self.lives_imgs[0], (coords[4], coords[5]))
+            self.screen.blit(self.lives_imgs[0], (coords[6], coords[7]))
+            self.screen.blit(self.lives_imgs[1], (coords[8], coords[9]))
+            self.screen.blit(self.lives_imgs[1], (coords[10], coords[11]))
+            self.screen.blit(self.lives_imgs[1], (coords[12], coords[13]))
+        elif self.lives > 2:
+            self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
+            self.screen.blit(self.lives_imgs[0], (coords[2], coords[3]))
+            self.screen.blit(self.lives_imgs[0], (coords[4], coords[5]))
+            self.screen.blit(self.lives_imgs[1], (coords[6], coords[7]))
+            self.screen.blit(self.lives_imgs[1], (coords[8], coords[9]))
+            self.screen.blit(self.lives_imgs[1], (coords[10], coords[11]))
+            self.screen.blit(self.lives_imgs[1], (coords[12], coords[13]))
+        elif self.lives > 1:
+            self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
+            self.screen.blit(self.lives_imgs[0], (coords[2], coords[3]))
+            self.screen.blit(self.lives_imgs[1], (coords[4], coords[5]))
+            self.screen.blit(self.lives_imgs[1], (coords[6], coords[7]))
+            self.screen.blit(self.lives_imgs[1], (coords[8], coords[9]))
+            self.screen.blit(self.lives_imgs[1], (coords[10], coords[11]))
+            self.screen.blit(self.lives_imgs[1], (coords[12], coords[13]))
+        elif self.lives > 0:
+            self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
+            self.screen.blit(self.lives_imgs[1], (coords[2], coords[3]))
+            self.screen.blit(self.lives_imgs[1], (coords[4], coords[5]))
+            self.screen.blit(self.lives_imgs[1], (coords[6], coords[7]))
+            self.screen.blit(self.lives_imgs[1], (coords[8], coords[9]))
+            self.screen.blit(self.lives_imgs[1], (coords[10], coords[11]))
+            self.screen.blit(self.lives_imgs[1], (coords[12], coords[13]))
+        else:
+            self.screen.blit(self.lives_imgs[1], (coords[0], coords[1]))
+            self.screen.blit(self.lives_imgs[1], (coords[2], coords[3]))
+            self.screen.blit(self.lives_imgs[1], (coords[4], coords[5]))
+            self.screen.blit(self.lives_imgs[1], (coords[6], coords[7]))
+            self.screen.blit(self.lives_imgs[1], (coords[8], coords[9]))
+            self.screen.blit(self.lives_imgs[1], (coords[10], coords[11]))
+            self.screen.blit(self.lives_imgs[1], (coords[12], coords[13]))
+
     def shutdown(self):
         pygame.quit()
         sys.exit()
@@ -248,6 +323,7 @@ class Game:
         self.screen.fill(SKY_BLUE)
         self.screen.blit(self.background, (self.background_x,0))
         self.sprites.draw(self.screen)
+        self.displayLifeBars()
         pygame.display.flip()
 
     def getCommands(self):
@@ -291,6 +367,10 @@ class Game:
         if self.spec.rect.top >= HEIGHT or len(collision_mob) != 0:
             print("I should be dying now")
             self.levelStatus = "restart"    #go back to main menu for now
+
+            if self.lives > 0:   #Prevent negative lives for now. Update later
+                self.lives -= 1                 #Subtract one life
+
             menu.gameOverScreen()            #leave game.updateSprites
 
         # Test Spec for collisions with environment
