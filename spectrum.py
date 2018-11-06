@@ -388,7 +388,7 @@ class Game:
                     leftmost = collision
                 if collision.rect.right > rightmost.rect.right:
                     rightmost = collision
-                if lowest is not None and collision.rect.bottom > lowest.rect.bottom:
+                if collision.rect.bottom > lowest.rect.bottom:
                     lowest = collision
                 if collision.rect.top < highest.rect.top:
                     highest = collision
@@ -397,6 +397,7 @@ class Game:
                 lowest = None
             if self.spec.backward and (self.spec.jump or self.spec.falling) and leftmost.rect.bottom <= self.spec.rect.bottom:
                 lowest = None
+            #prohibits "sticking" to the wall
             if (self.spec.forward or self.spec.backward) and self.spec.jump is False:
                 highest = None
             if lowest is not None:
