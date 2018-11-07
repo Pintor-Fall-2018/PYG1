@@ -157,7 +157,7 @@ class Game:
         else:
             # Create Mobs and add to its Groups()
             for mob in MOBS_SKY_LIST:
-                m = Mob(*mob)
+                m = Ultraviolet(*mob)
                 self.sprites.add(m)
                 self.mobs.add(m)
 
@@ -236,10 +236,13 @@ class Game:
             print("Playing without mobs")
         else:
             # Create Mobs and add to its Groups()
-            for mob in MOBS_FOREST_LIST:
-                m = Mob(*mob)
+            for mob in ULTRAVIOLET_FOREST_LIST:
+                m = Ultraviolet(*mob)
                 self.sprites.add(m)
                 self.mobs.add(m)
+            g = Gamma(1900,320)
+            self.sprites.add(g)
+            self.mobs.add(g)
 
         # Create Powerup if active on green level
         if self.greenPowerUp == 1:
@@ -283,7 +286,7 @@ class Game:
         # else:
             # # Create Mobs and add to its Groups()
             # for mob in MOBS_SKY_LIST:
-            #     m = Mob(*mob)
+            #     m = Ultraviolet(*mob)
             #     self.sprites.add(m)
             #     self.mobs.add(m)
 
