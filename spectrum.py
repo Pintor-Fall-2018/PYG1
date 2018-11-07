@@ -6,6 +6,7 @@ from menu import *
 from spec import *
 from mob import *
 from light import *
+from powerup import *
 from map_Blue import *
 from map_Green import *
 from map_Red import *
@@ -34,6 +35,11 @@ class Game:
         self.endCurrentLevel = 0
         self.levelStatus = ""
         self.lives = 7
+        self.randomPowerUpLevel = random.randint(1, 3)
+        print ("randomPowerUpLevel = ", self.randomPowerUpLevel)
+        self.bluePowerUp = 0
+        self.greenPowerUp = 0
+        self.redPowerUp = 0
 
     def resetGame(self):
         # resets game attributes
@@ -43,14 +49,31 @@ class Game:
         self.endCurrentLevel = 0
         self.levelStatus = ""
         self.lives = 7
+        self.randomPowerUpLevel = random.randint(1, 3)
+        self.powerUpActive = False
+        print ("randomPowerUpLevel = ", self.randomPowerUpLevel)
+        self.bluePowerUp = 0
+        self.greenPowerUp = 0
+        self.redPowerUp = 0
 
     # Startup function. Responsible for creating the map and all objects
     def startup(self, levelSelect):
-        #Create Start Up Game timers and counters
+        #Create Start Up Game timers, counters and variables
         self.background_x = 0  # rate of background scrolling (calculated at runtime)
         self.block_movement_counter = 0
         self.blockTimer = pygame.time.get_ticks()
         self.whichLevelToPlay = levelSelect # assign map to play based on levelSelect String
+        self.powerUpActive = False
+
+        #assign power up level based on randomPowerUpLevel. 1 = spawn power up on that map
+        if self.randomPowerUpLevel == 1:
+            self.bluePowerUp = 1
+        elif self.randomPowerUpLevel == 2:
+            self.greenPowerUp = 1
+        elif self.randomPowerUpLevel == 3:
+            self.redPowerUp = 1
+        else:
+            print("game.startUp: ERROR setting level power up")
 
         # Create Groups()
         self.sprites = pygame.sprite.Group()
@@ -60,6 +83,7 @@ class Game:
         self.all_blocks = pygame.sprite.Group()
         self.lights = pygame.sprite.Group()
         self.mobs = pygame.sprite.Group()
+        self.powerUpGroup = pygame.sprite.Group()           # Power Up Group
 
         # Life bar images
         self.lives_imgs = []
@@ -134,6 +158,12 @@ class Game:
                 self.sprites.add(m)
                 self.mobs.add(m)
 
+        # Create Powerup if active on blue level
+        if self.bluePowerUp == 1:
+            self.powerUp = PowerUp(1000, 300, powerUp_image)
+            self.sprites.add(self.powerUp)
+            self.powerUpGroup.add(self.powerUp)
+
     def playGreen(self):
         print ("game.playGreen: Creating the Forest level")
         self.background = pygame.image.load('images/green_background.png').convert() #load background image
@@ -207,6 +237,12 @@ class Game:
                 self.sprites.add(m)
                 self.mobs.add(m)
 
+        # Create Powerup if active on green level
+        if self.greenPowerUp == 1:
+            self.powerUp = PowerUp(1000, 300, powerUp_image)
+            self.sprites.add(self.powerUp)
+            self.powerUpGroup.add(self.powerUp)
+
     def playRed(self):
         print ("game.playRed: Creating the Desert level")
         self.background = pygame.image.load('images/red_background.png').convert() #load background image
@@ -245,6 +281,12 @@ class Game:
             #     m = Mob(*mob)
             #     self.sprites.add(m)
             #     self.mobs.add(m)
+
+        # Create Powerup if active on red level
+        if self.redPowerUp == 1:
+            self.powerUp = PowerUp(1000, 300, powerUp_image)
+            self.sprites.add(self.powerUp)
+            self.powerUpGroup.add(self.powerUp)
 
     def displayLifeBars(self):
         self.lives_imgs[0].set_colorkey(BLACK)
@@ -384,6 +426,7 @@ class Game:
         collisions = pygame.sprite.spritecollide(self.spec, self.all_blocks, False)
         if len(collisions) != 0:
             rightmost = leftmost = highest = lowest = collisions[0]
+            #determine relative positioning of objects
             for collision in collisions:
                 if collision.rect.left < leftmost.rect.left:
                     leftmost = collision
@@ -401,10 +444,13 @@ class Game:
             #prohibits "sticking" to the wall
             if (self.spec.forward or self.spec.backward) and self.spec.jump is False:
                 highest = None
-            #if rightmost == highest:
-            #    highest = None
             if lowest is not None:
-                if self.spec.rect.bottom <= lowest.rect.bottom and self.spec.rect.bottom > lowest.rect.top: #bottom collision
+                grounded = False #indicates whether sprite is grounded
+                if self.spec.falling and self.spec.rect.bottom <= lowest.rect.bottom: #prohibits falling through floor while falling
+                    grounded = True
+                elif self.spec.rect.bottom <= lowest.rect.centery: #less forgiving threshold while walking
+                    grounded = True
+                if grounded:
                     self.spec.rect.bottom = lowest.rect.top + 1 #reposition spec slightly below top of object
                     self.spec.falling = False
                     self.spec.fallTimer = 0  # reset falltimer
@@ -451,6 +497,11 @@ class Game:
         if len(collide_mob) != 0:
             print("I should be dying by hitting a mob")
             self.levelStatus = "restart"    #go back to main menu for now
+
+        collide_powerUp = pygame.sprite.spritecollide(self.spec, self.powerUpGroup, True)
+        if len(collide_powerUp) != 0:
+            print("Coliding with Power Up now")
+            self.powerUpActive = True
 
         # Check for a collision between the invisible wall block and the sky blocks
         for block in self.sky_blocks:
@@ -502,6 +553,8 @@ class Game:
                 m.rect.x -= self.spec.speed[0]
             # Move Game ending light Object
             self.light.rect.x -= self.spec.speed[0]
+            # Move Power up if it exists
+            self.powerUp.rect.x -= self.spec.speed[0]
             # Scroll Background image based on which level we're playing
             if self.whichLevelToPlay == "BLUE":
                 self.background_x -= (len(bluebox[0]) * 20 / self.background.get_width()) * .60  # map pixels / background image pixels
@@ -553,6 +606,7 @@ class Tile(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+
 game = Game()
 
 #Load menu sounds
@@ -576,7 +630,7 @@ fullscreen_active = pygame.image.load('images/fullscreen_active.png').convert()
 skylevel_inactive = pygame.image.load('images/skylevel_inactive.png').convert()
 skylevel_active = pygame.image.load('images/skylevel_active.png').convert()
 frame_img = pygame.image.load('images/frame.png').convert()
-
+powerUp_image = pygame.image.load('images/power_up_img.png').convert()
 
 menu_imgs = []
 menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar, vol_arr_right, vol_arr_left, play_btn_inactive, play_btn_active, fullscreen_inactive, fullscreen_active, skylevel_inactive, skylevel_active, frame_img))
