@@ -254,18 +254,18 @@ class Game:
         # Create Green Level from tile map
         for row in range(len(redbox)):
             for column in range(len(redbox[0])):
-                if redbox[row][column] is not tiles['sky']:
-                    if redbox[row][column] == tiles['sand_center']:
+                if redbox[row][column] is not tiles_red['sky']:
+                    if redbox[row][column] == tiles_red['sand_center']:
                         tile = Tile(20 * column, 20 * row, 'images/sand_center.png')
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.ground_blocks.add(tile)
-                    elif redbox[row][column] == tiles['sand_top']:
+                    elif redbox[row][column] == tiles_red['sand_top']:
                         tile = Tile(20 * column, 20 * row, 'images/sand_top.png')
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.ground_blocks.add(tile)
-                    elif redbox[row][column] == tiles['platform']:
+                    elif redbox[row][column] == tiles_red['platform']:
                         tile = Tile(20 * column, 20 * row, 'images/platform.png')
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)

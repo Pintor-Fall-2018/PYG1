@@ -3,7 +3,7 @@
 # Game window is 30 blocks wide by 20 blocks tall
 
 # Lookup dictionary
-tiles = {
+tiles_red = {
                 'sky':0,
                 'sand_top':1,
                 'platform':2,
