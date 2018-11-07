@@ -401,6 +401,8 @@ class Game:
             #prohibits "sticking" to the wall
             if (self.spec.forward or self.spec.backward) and self.spec.jump is False:
                 highest = None
+            #if rightmost == highest:
+            #    highest = None
             if lowest is not None:
                 if self.spec.rect.bottom <= lowest.rect.bottom and self.spec.rect.bottom > lowest.rect.top: #bottom collision
                     self.spec.rect.bottom = lowest.rect.top + 1 #reposition spec slightly below top of object
@@ -408,11 +410,16 @@ class Game:
                     self.spec.fallTimer = 0  # reset falltimer
             if highest is not None:
                 if self.spec.rect.top - highest.rect.bottom <= 0 and self.spec.rect.top - highest.rect.bottom >= -10:  #top collision
-                    self.spec.rect.top = highest.rect.bottom  #reposition spec to bottom of object
-                    self.spec.jump = False
-                    self.spec.jumpTimer = 0
-                    self.spec.falling = True
-                    top_collision = True
+                    if self.spec.forward and highest.rect.centerx - self.spec.rect.centerx > 18.5: #permits spec to jump smoothly against walls
+                        pass
+                    elif self.spec.backward and self.spec.rect.centerx - highest.rect.centerx > 18.5: #permits spec to jump smoothly against walls
+                        pass
+                    else:
+                        self.spec.rect.top = highest.rect.bottom  #reposition spec to bottom of object
+                        self.spec.jump = False
+                        self.spec.jumpTimer = 0
+                        self.spec.falling = True
+                        top_collision = True
             if rightmost is not None:
                 if not top_collision and self.spec.rect.right - rightmost.rect.left <= 10 and self.spec.rect.right - rightmost.rect.left >= 0 and rightmost.rect.top < self.spec.rect.bottom - 1: #right collision
                     self.spec.rect.right = rightmost.rect.left #reposition spec to left side of object
