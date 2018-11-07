@@ -234,8 +234,6 @@ class Menu:
                 self.screen.blit(fs_btn_active, (fs_coords[0], fs_coords[1]))
 
             self.generateText("FullScreen:", self.fontPM, WHITE, 30, (int(WIDTH/5)), int(HEIGHT/1.2))
-            coords = (int(WIDTH/4), int(HEIGHT/1.2))
-            fullS_btn = self.checkMouseClicks(coords, btn_w, btn_h)
 
             #Load Volume bar
             self.generateText("Volume:", self.fontPM, WHITE, 30, vol_bar_coords[0] + 30, vol_bar_coords[1] - 30)

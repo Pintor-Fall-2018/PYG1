@@ -66,7 +66,7 @@ class Game:
 
         # Life bar images
         self.lives_imgs = []
-        self.lives_imgs.append(pygame.image.load('images/life.png').convert())
+        self.lives_imgs.append(pygame.image.load('images/life_heart.png').convert())
         self.lives_imgs.append(pygame.image.load('images/life_gone.png').convert())
 
         # Create Game Objects and add to their Groups()
@@ -212,7 +212,8 @@ class Game:
 
     def displayLifeBars(self):
         self.lives_imgs[0].set_colorkey(BLACK)
-        coords = [10, 10, 35, 10, 60, 10, 85, 10, 110, 10, 135, 10, 160, 10]
+        # self.lives_imgs[1].set_colorkey(BLACK)
+        coords = [-10, -10, 20, -10, 50, -10, 80, -10, 110, -10, 140, -10, 170, -10]
         if self.lives > 6:
             self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
             self.screen.blit(self.lives_imgs[0], (coords[2], coords[3]))
