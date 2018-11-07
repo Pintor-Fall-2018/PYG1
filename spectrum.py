@@ -64,7 +64,7 @@ class Game:
         # Life bar images
         self.lives_imgs = []
         self.lives_imgs.append(pygame.image.load('images/life_heart.png').convert())
-        self.lives_imgs.append(pygame.image.load('images/life_gone.png').convert())
+        self.lives_imgs.append(pygame.image.load('images/life_heart_gone.png').convert())
 
         # Create Game Objects and add to their Groups()
         self.spec = Spec()
@@ -248,7 +248,7 @@ class Game:
 
     def displayLifeBars(self):
         self.lives_imgs[0].set_colorkey(BLACK)
-        # self.lives_imgs[1].set_colorkey(BLACK)
+        self.lives_imgs[1].set_colorkey(BLACK)
         coords = [-10, -10, 20, -10, 50, -10, 80, -10, 110, -10, 140, -10, 170, -10]
         if self.lives > 6:
             self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
@@ -444,7 +444,6 @@ class Game:
         if len(collide_mob) != 0:
             print("I should be dying by hitting a mob")
             self.levelStatus = "restart"    #go back to main menu for now
-            menu.gameOverScreen()
 
         # Check for a collision between the invisible wall block and the sky blocks
         for block in self.sky_blocks:
