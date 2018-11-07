@@ -384,6 +384,7 @@ class Game:
         collisions = pygame.sprite.spritecollide(self.spec, self.all_blocks, False)
         if len(collisions) != 0:
             rightmost = leftmost = highest = lowest = collisions[0]
+            #determine relative positioning of objects
             for collision in collisions:
                 if collision.rect.left < leftmost.rect.left:
                     leftmost = collision
@@ -401,10 +402,13 @@ class Game:
             #prohibits "sticking" to the wall
             if (self.spec.forward or self.spec.backward) and self.spec.jump is False:
                 highest = None
-            #if rightmost == highest:
-            #    highest = None
             if lowest is not None:
-                if self.spec.rect.bottom <= lowest.rect.bottom and self.spec.rect.bottom > lowest.rect.top: #bottom collision
+                grounded = False #indicates whether sprite is grounded
+                if self.spec.falling and self.spec.rect.bottom <= lowest.rect.bottom: #prohibits falling through floor while falling
+                    grounded = True
+                elif self.spec.rect.bottom <= lowest.rect.centery: #less forgiving threshold while walking
+                    grounded = True
+                if grounded:
                     self.spec.rect.bottom = lowest.rect.top + 1 #reposition spec slightly below top of object
                     self.spec.falling = False
                     self.spec.fallTimer = 0  # reset falltimer
