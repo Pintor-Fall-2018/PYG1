@@ -40,6 +40,7 @@ class Game:
         self.bluePowerUp = 0
         self.greenPowerUp = 0
         self.redPowerUp = 0
+        self.powerUpOnMap = False
 
     def resetGame(self):
         # resets game attributes
@@ -55,6 +56,7 @@ class Game:
         self.bluePowerUp = 0
         self.greenPowerUp = 0
         self.redPowerUp = 0
+        self.powerUpOnMap = False
 
     # Startup function. Responsible for creating the map and all objects
     def startup(self, levelSelect):
@@ -64,6 +66,7 @@ class Game:
         self.blockTimer = pygame.time.get_ticks()
         self.whichLevelToPlay = levelSelect # assign map to play based on levelSelect String
         self.powerUpActive = False
+        self.powerUpOnMap = False
 
         #assign power up level based on randomPowerUpLevel. 1 = spawn power up on that map
         if self.randomPowerUpLevel == 1:
@@ -163,6 +166,7 @@ class Game:
             self.powerUp = PowerUp(1000, 300, powerUp_image)
             self.sprites.add(self.powerUp)
             self.powerUpGroup.add(self.powerUp)
+            self.powerUpOnMap = True
 
     def playGreen(self):
         print ("game.playGreen: Creating the Forest level")
@@ -242,6 +246,7 @@ class Game:
             self.powerUp = PowerUp(1000, 300, powerUp_image)
             self.sprites.add(self.powerUp)
             self.powerUpGroup.add(self.powerUp)
+            self.powerUpOnMap = True
 
     def playRed(self):
         print ("game.playRed: Creating the Desert level")
@@ -287,6 +292,7 @@ class Game:
             self.powerUp = PowerUp(1000, 300, powerUp_image)
             self.sprites.add(self.powerUp)
             self.powerUpGroup.add(self.powerUp)
+            self.powerUpOnMap = True
 
     def displayLifeBars(self):
         self.lives_imgs[0].set_colorkey(BLACK)
@@ -502,6 +508,7 @@ class Game:
         if len(collide_powerUp) != 0:
             print("Coliding with Power Up now")
             self.powerUpActive = True
+            self.powerUpOnMap = False
 
         # Check for a collision between the invisible wall block and the sky blocks
         for block in self.sky_blocks:
@@ -554,7 +561,8 @@ class Game:
             # Move Game ending light Object
             self.light.rect.x -= self.spec.speed[0]
             # Move Power up if it exists
-            self.powerUp.rect.x -= self.spec.speed[0]
+            if self.powerUpOnMap == True and self.powerUpActive == False:
+                self.powerUp.rect.x -= self.spec.speed[0]
             # Scroll Background image based on which level we're playing
             if self.whichLevelToPlay == "BLUE":
                 self.background_x -= (len(bluebox[0]) * 20 / self.background.get_width()) * .60  # map pixels / background image pixels
