@@ -2,6 +2,11 @@
 # Each block is 20x20
 # Game window is 30 blocks wide by 20 blocks tall
 
+#Ultraviolet Mobs
+ULTRAVIOLET_FOREST_LIST = [(400,320),
+                 (800,320),
+                 (1500,320)]
+
 # Lookup dictionary
 tiles_green = {
                 'sky':0,
