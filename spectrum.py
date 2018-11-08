@@ -269,7 +269,7 @@ class Game:
                         self.all_blocks.add(tile)
                         self.ground_blocks.add(tile)
                     elif redbox[row][column] == tiles_red['platform']:
-                        tile = Tile(20 * column, 20 * row, 'images/platform.png')
+                        tile = Tile(20 * column, 20 * row, 'images/red_platform.png')
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.sky_blocks.add(tile)
@@ -280,19 +280,23 @@ class Game:
         self.sprites.add(self.light)
         self.lights.add(self.light)
 
-        # Set DEBUG_MOBS_NO_SPAWN to 1 to not spawn mobs
-        # if DEBUG_MOBS_NO_SPAWN:
-        #     print("Playing without mobs")
-        # else:
-            # # Create Mobs and add to its Groups()
-            # for mob in MOBS_SKY_LIST:
-            #     m = Ultraviolet(*mob)
-            #     self.sprites.add(m)
-            #     self.mobs.add(m)
+        #Set DEBUG_MOBS_NO_SPAWN to 1 to not spawn mobs
+        if DEBUG_MOBS_NO_SPAWN:
+            print("Playing without mobs")
+        else:
+            # Create Mobs and add to its Groups()
+            for mob in ULTRAVIOLET_DESERT_LIST:
+                m = Ultraviolet(*mob)
+                self.sprites.add(m)
+                self.mobs.add(m)
+            for mob in GAMMA_DESERT_LIST:
+                g = Gamma(*mob)
+                self.sprites.add(g)
+                self.mobs.add(g)
 
         # Create Powerup if active on red level
         if self.redPowerUp == 1:
-            self.powerUp = PowerUp(1000, 300, powerUp_image)
+            self.powerUp = PowerUp(400, 300, powerUp_image)
             self.sprites.add(self.powerUp)
             self.powerUpGroup.add(self.powerUp)
             self.powerUpOnMap = True
