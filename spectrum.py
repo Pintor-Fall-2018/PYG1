@@ -504,12 +504,6 @@ class Game:
                 print("game.updateSprites: ERROR IN SETTING LIGHT ACQUIRED")
             self.endCurrentLevel = 1
 
-        # Check if there is a collision with spec and the mob object
-        # collide_mob = pygame.sprite.spritecollide(self.spec, self.mobs, False)
-        # if len(collide_mob) != 0:
-        #     print("I should be dying by hitting a mob")
-        #     self.levelStatus = "restart"    #go back to main menu for now
-
         # Check if collision between Spec and powerup
         collide_powerUp = pygame.sprite.spritecollide(self.spec, self.powerUpGroup, True)
         if len(collide_powerUp) != 0:
