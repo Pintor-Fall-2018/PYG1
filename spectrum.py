@@ -41,6 +41,7 @@ class Game:
         self.greenPowerUp = 0
         self.redPowerUp = 0
         self.powerUpOnMap = False
+        self.powerUpTimer = 0
 
     def resetGame(self):
         # resets game attributes
@@ -57,6 +58,7 @@ class Game:
         self.greenPowerUp = 0
         self.redPowerUp = 0
         self.powerUpOnMap = False
+        self.powerUpTimer = 0
 
     # Startup function. Responsible for creating the map and all objects
     def startup(self, levelSelect):
@@ -414,7 +416,11 @@ class Game:
                         self.spec.jumpThreshold = 5 #raise threshold for smaller jump
 
     def updateSprites(self):
-        self.sprites.update()
+        self.sprites.update(self.powerUpActive)
+
+        if self.powerUpActive == True:
+            print("game.updateSprites: reducing powerUpTimer: ", self.powerUpTimer)
+            self.powerUpTimer -= 1      #reduce timer
 
         # Test Spec for death below the map or collisions with a mob
         collision_mob = pygame.sprite.spritecollide(self.spec, self.mobs, False)
@@ -504,11 +510,13 @@ class Game:
             print("I should be dying by hitting a mob")
             self.levelStatus = "restart"    #go back to main menu for now
 
+        # Check if collision between Spec and powerup
         collide_powerUp = pygame.sprite.spritecollide(self.spec, self.powerUpGroup, True)
         if len(collide_powerUp) != 0:
             print("Coliding with Power Up now")
             self.powerUpActive = True
             self.powerUpOnMap = False
+            self.powerUpTimer = 1500
 
         # Check for a collision between the invisible wall block and the sky blocks
         for block in self.sky_blocks:

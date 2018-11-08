@@ -15,7 +15,7 @@ class Mob(pygame.sprite.Sprite):
         self.rect.y = y
         self.left = True  #True is left, False is right
 
-    def update(self):
+    def update(self, powerUp):
         if self.left:
             self.rect.x -= 1
             self.image = self.animations[0]
