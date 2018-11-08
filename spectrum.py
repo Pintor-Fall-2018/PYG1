@@ -275,6 +275,16 @@ class Game:
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.sky_blocks.add(tile)
+                    elif redbox[row][column] == tiles_red['red_metal']:
+                        tile = Tile(20 * column, 20 * row, 'images/red_platform2.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                    elif redbox[row][column] == tiles_red['red_metal_move']:
+                        tile = Tile(20 * column, 20 * row, 'images/red_platform2.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.sky_blocks.add(tile)
 
 
         # Create Red Light Object that wins the red level and adds it to its Groups()
