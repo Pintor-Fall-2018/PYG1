@@ -7,7 +7,9 @@ class Spec(pygame.sprite.Sprite):
         #self.image.fill((100,100,0))
         self.step = 0
         self.resting_spec = pygame.image.load('images/spec0.png').convert()
+        self.resting_spec_powerup = pygame.image.load('images/spec_powerup_animations/spec0_powerup.png').convert()
         self.resting_spec.set_colorkey([34,177,76])
+        self.resting_spec_powerup.set_colorkey([34,177,76])
         self.animations = []
         self.animations.append(pygame.image.load('images/spec1.png').convert())
         self.animations.append(pygame.image.load('images/spec2.png').convert())
@@ -15,6 +17,13 @@ class Spec(pygame.sprite.Sprite):
         self.animations.append(pygame.image.load('images/spec4.png').convert())
         for animation in self.animations:
             animation.set_colorkey([34,177,76])
+        self.animations_powerup = []
+        self.animations_powerup.append(pygame.image.load('images/spec_powerup_animations/spec1_powerup.png').convert())
+        self.animations_powerup.append(pygame.image.load('images/spec_powerup_animations/spec2_powerup.png').convert())
+        self.animations_powerup.append(pygame.image.load('images/spec_powerup_animations/spec3_powerup.png').convert())
+        self.animations_powerup.append(pygame.image.load('images/spec_powerup_animations/spec4_powerup.png').convert())
+        for animation_powerup in self.animations_powerup:
+            animation_powerup.set_colorkey([34,177,76])
         self.image = self.resting_spec
         self.rect = self.image.get_rect()
         self.rect.x = 0
@@ -41,20 +50,20 @@ class Spec(pygame.sprite.Sprite):
                 self.fallTimer = len(self.vertical) - 1
         if self.forward:  #speeds up sprite in right direction
             self.speedControl(powerUp)
-            self.animate()
+            self.animate(powerUp)
         elif self.speed[0] is not 0: #decelerate in forward direction
             self.speed[0] -= .35
             if self.speed[0] < 0:
                 self.speed[0] = 0
         if self.backward: #speeds up sprite in left direction
             self.speedControl(powerUp)
-            self.animate()
+            self.animate(powerUp)
         elif self.speed[1] is not 0:  #decelerate in backward direction
             self.speed[1] -= .35
             if self.speed[1] < 0:
                 self.speed[1] = 0
         if not self.forward and not self.backward:  #sprite at rest
-            self.resting()
+            self.resting(powerUp)
         if self.jump == True and self.jumpTimer < self.jumpThreshold:  #upward arc
             self.rect.y -= self.vertical[self.jumpTimer]
             self.jumpTimer += 1
@@ -93,14 +102,20 @@ class Spec(pygame.sprite.Sprite):
                 if self.speed[1] > 4:
                     self.speed[1] = 4
 
-    def animate(self):
+    def animate(self, powerUp):
         self.step += 1
         if self.step > 39:
             self.step = 0
-        self.image = self.animations[int(self.step/10)]
+        if powerUp == True:
+            self.image = self.animations_powerup[int(self.step/10)]
+        else:
+            self.image = self.animations[int(self.step/10)]
 
-    def resting(self):
-        self.image = self.resting_spec
+    def resting(self, powerUp):
+        if powerUp == True:
+            self.image = self.resting_spec_powerup
+        else:
+            self.image = self.resting_spec
 
     #captures position of last frame into dictionary
     def snapShot(self):
