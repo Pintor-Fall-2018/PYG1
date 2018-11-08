@@ -31,7 +31,7 @@ class Spec(pygame.sprite.Sprite):
         self.vertical = [8,8,7,7,6,6,5,5,4.5,4.5,4.5,4.5,3.5,2.5,2.5,2,1.5,1.5,1,1]
         self.shadow = {"top":0.0, "bottom":0.0, "left":0.0, "right":0.0}
 
-    def update(self):
+    def update(self, powerUp):
         self.snapShot()  #capture position from last frame
         self.rect.x += self.speedCalc() #calculate sprite direction and speed
         if self.falling:  #gravity increases velocity
@@ -40,14 +40,14 @@ class Spec(pygame.sprite.Sprite):
             if self.fallTimer > len(self.vertical) - 1:
                 self.fallTimer = len(self.vertical) - 1
         if self.forward:  #speeds up sprite in right direction
-            self.speedControl()
+            self.speedControl(powerUp)
             self.animate()
         elif self.speed[0] is not 0: #decelerate in forward direction
             self.speed[0] -= .35
             if self.speed[0] < 0:
                 self.speed[0] = 0
         if self.backward: #speeds up sprite in left direction
-            self.speedControl()
+            self.speedControl(powerUp)
             self.animate()
         elif self.speed[1] is not 0:  #decelerate in backward direction
             self.speed[1] -= .35
@@ -72,15 +72,26 @@ class Spec(pygame.sprite.Sprite):
         return self.speed[0] - self.speed[1]
 
     #Sprite acceleration
-    def speedControl(self):
-        if self.forward and self.speed[1] == 0: #speedup if no backward momentum
-            self.speed[0] += .25
-            if self.speed[0] > 4:
-                self.speed[0] = 4
-        if self.backward and self.speed[0] == 0: #speedup if no forward momentum
-            self.speed[1] += .25
-            if self.speed[1] > 4:
-                self.speed[1] = 4
+    def speedControl(self, powerUp):
+        if powerUp == True:
+            print("Using Power Up")
+            if self.forward and self.speed[1] == 0: #speedup if no backward momentum
+                self.speed[0] += .4
+                if self.speed[0] > 6:
+                    self.speed[0] = 6
+            if self.backward and self.speed[0] == 0: #speedup if no forward momentum
+                self.speed[1] += .4
+                if self.speed[1] > 6:
+                    self.speed[1] = 6
+        else:
+            if self.forward and self.speed[1] == 0: #speedup if no backward momentum
+                self.speed[0] += .25
+                if self.speed[0] > 4:
+                    self.speed[0] = 4
+            if self.backward and self.speed[0] == 0: #speedup if no forward momentum
+                self.speed[1] += .25
+                if self.speed[1] > 4:
+                    self.speed[1] = 4
 
     def animate(self):
         self.step += 1
