@@ -308,7 +308,7 @@ class Game:
 
         # Create Powerup if active on red level
         if self.redPowerUp == 1:
-            self.powerUp = PowerUp(400, 300, powerUp_image)
+            self.powerUp = PowerUp(440, 300, powerUp_image)
             self.sprites.add(self.powerUp)
             self.powerUpGroup.add(self.powerUp)
             self.powerUpOnMap = True
@@ -518,12 +518,18 @@ class Game:
             self.powerUpOnMap = False
             self.powerUpTimer = 600
 
-        # Check for a collision between the invisible wall block and the sky blocks
+        # Check for a collision between the invisible wall block and the sky blocks kill sky block
         for block in self.sky_blocks:
             # If midpoint of skyblock touches invisible wall center delete skyblock
             if block.rect.midright <= self.invisible_block.rect.center:
                 #print("Block should be deleted at this point")
                 block.kill()    #Remove block from its groups (Don't draw object anymore)
+
+        for mob in self.mobs:
+            # if mob touches invisible wall center delete mob
+            if mob.rect.midright <= self.invisible_block.rect.center:
+                print ("Killing mob!")
+                mob.kill()
 
         # Check for a collision between the invisible_wall_block and spec
         collide_invisible_wall = pygame.sprite.spritecollide(self.spec, self.invisible_wall_block, False)
