@@ -308,7 +308,7 @@ class Game:
 
         # Create Powerup if active on red level
         if self.redPowerUp == 1:
-            self.powerUp = PowerUp(400, 300, powerUp_image)
+            self.powerUp = PowerUp(440, 300, powerUp_image)
             self.sprites.add(self.powerUp)
             self.powerUpGroup.add(self.powerUp)
             self.powerUpOnMap = True
