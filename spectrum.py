@@ -455,6 +455,7 @@ class Game:
 
             menu.gameOverScreen()            #leave game.updateSprites
 
+
         # Test Spec for collisions with environment
         top_collision = False
         collisions = pygame.sprite.spritecollide(self.spec, self.all_blocks, False)
@@ -527,10 +528,10 @@ class Game:
             self.endCurrentLevel = 1
 
         # Check if there is a collision with spec and the mob object
-        collide_mob = pygame.sprite.spritecollide(self.spec, self.mobs, False)
-        if len(collide_mob) != 0:
-            print("I should be dying by hitting a mob")
-            self.levelStatus = "restart"    #go back to main menu for now
+        # collide_mob = pygame.sprite.spritecollide(self.spec, self.mobs, False)
+        # if len(collide_mob) != 0:
+        #     print("I should be dying by hitting a mob")
+        #     self.levelStatus = "restart"    #go back to main menu for now
 
         # Check if collision between Spec and powerup
         collide_powerUp = pygame.sprite.spritecollide(self.spec, self.powerUpGroup, True)
@@ -754,7 +755,11 @@ while(openMenu):
 
         # Update sprites and background
         game.updateSprites()
-
+        # Check status and don't drawScreen if death on that frame
+        status = game.levelStatus
+        if status == "restart":
+            game.levelStatus = ""
+            break
 
         # Print to screen
         game.drawScreen()
