@@ -317,70 +317,47 @@ class Game:
         self.lives_imgs[0].set_colorkey(BLACK)
         self.lives_imgs[1].set_colorkey(BLACK)
         coords = [-10, -10, 20, -10, 50, -10, 80, -10, 110, -10, 140, -10, 170, -10]
+        img = 0
         if self.lives > 6:
-            self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
-            self.screen.blit(self.lives_imgs[0], (coords[2], coords[3]))
-            self.screen.blit(self.lives_imgs[0], (coords[4], coords[5]))
-            self.screen.blit(self.lives_imgs[0], (coords[6], coords[7]))
-            self.screen.blit(self.lives_imgs[0], (coords[8], coords[9]))
-            self.screen.blit(self.lives_imgs[0], (coords[10], coords[11]))
-            self.screen.blit(self.lives_imgs[0], (coords[12], coords[13]))
+            for i in range(0,14,2):
+                self.screen.blit(self.lives_imgs[img], (coords[i], coords[i+1]))
         elif self.lives > 5:
-            self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
-            self.screen.blit(self.lives_imgs[0], (coords[2], coords[3]))
-            self.screen.blit(self.lives_imgs[0], (coords[4], coords[5]))
-            self.screen.blit(self.lives_imgs[0], (coords[6], coords[7]))
-            self.screen.blit(self.lives_imgs[0], (coords[8], coords[9]))
-            self.screen.blit(self.lives_imgs[0], (coords[10], coords[11]))
-            self.screen.blit(self.lives_imgs[1], (coords[12], coords[13]))
+            for i in range(0,14,2):
+                if(i == 12):
+                    img = 1
+                self.screen.blit(self.lives_imgs[img], (coords[i], coords[i+1]))
         elif self.lives > 4:
-            self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
-            self.screen.blit(self.lives_imgs[0], (coords[2], coords[3]))
-            self.screen.blit(self.lives_imgs[0], (coords[4], coords[5]))
-            self.screen.blit(self.lives_imgs[0], (coords[6], coords[7]))
-            self.screen.blit(self.lives_imgs[0], (coords[8], coords[9]))
-            self.screen.blit(self.lives_imgs[1], (coords[10], coords[11]))
-            self.screen.blit(self.lives_imgs[1], (coords[12], coords[13]))
+            for i in range(0,14,2):
+                if(i == 10 or i == 12):
+                    img = 1
+                self.screen.blit(self.lives_imgs[img], (coords[i], coords[i+1]))
         elif self.lives > 3:
-            self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
-            self.screen.blit(self.lives_imgs[0], (coords[2], coords[3]))
-            self.screen.blit(self.lives_imgs[0], (coords[4], coords[5]))
-            self.screen.blit(self.lives_imgs[0], (coords[6], coords[7]))
-            self.screen.blit(self.lives_imgs[1], (coords[8], coords[9]))
-            self.screen.blit(self.lives_imgs[1], (coords[10], coords[11]))
-            self.screen.blit(self.lives_imgs[1], (coords[12], coords[13]))
+            for i in range(0,14,2):
+                if(i == 8 or i == 10 or i == 12):
+                    img = 1
+                self.screen.blit(self.lives_imgs[img], (coords[i], coords[i+1]))
         elif self.lives > 2:
-            self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
-            self.screen.blit(self.lives_imgs[0], (coords[2], coords[3]))
-            self.screen.blit(self.lives_imgs[0], (coords[4], coords[5]))
-            self.screen.blit(self.lives_imgs[1], (coords[6], coords[7]))
-            self.screen.blit(self.lives_imgs[1], (coords[8], coords[9]))
-            self.screen.blit(self.lives_imgs[1], (coords[10], coords[11]))
-            self.screen.blit(self.lives_imgs[1], (coords[12], coords[13]))
+            for i in range(0,14,2):
+                if(i == 6 or i == 8 or i == 10 or i == 12):
+                    img = 1
+                self.screen.blit(self.lives_imgs[img], (coords[i], coords[i+1]))
         elif self.lives > 1:
-            self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
-            self.screen.blit(self.lives_imgs[0], (coords[2], coords[3]))
-            self.screen.blit(self.lives_imgs[1], (coords[4], coords[5]))
-            self.screen.blit(self.lives_imgs[1], (coords[6], coords[7]))
-            self.screen.blit(self.lives_imgs[1], (coords[8], coords[9]))
-            self.screen.blit(self.lives_imgs[1], (coords[10], coords[11]))
-            self.screen.blit(self.lives_imgs[1], (coords[12], coords[13]))
+            for i in range(0,14,2):
+                if(i == 4 or i == 6 or i == 8 or i == 10 or i == 12):
+                    img = 1
+                self.screen.blit(self.lives_imgs[img], (coords[i], coords[i+1]))
         elif self.lives > 0:
-            self.screen.blit(self.lives_imgs[0], (coords[0], coords[1]))
-            self.screen.blit(self.lives_imgs[1], (coords[2], coords[3]))
-            self.screen.blit(self.lives_imgs[1], (coords[4], coords[5]))
-            self.screen.blit(self.lives_imgs[1], (coords[6], coords[7]))
-            self.screen.blit(self.lives_imgs[1], (coords[8], coords[9]))
-            self.screen.blit(self.lives_imgs[1], (coords[10], coords[11]))
-            self.screen.blit(self.lives_imgs[1], (coords[12], coords[13]))
+            for i in range(0,14,2):
+                if(i == 0):
+                    img = 0
+                else:
+                    img = 1
+                self.screen.blit(self.lives_imgs[img], (coords[i], coords[i+1]))
         else:
-            self.screen.blit(self.lives_imgs[1], (coords[0], coords[1]))
-            self.screen.blit(self.lives_imgs[1], (coords[2], coords[3]))
-            self.screen.blit(self.lives_imgs[1], (coords[4], coords[5]))
-            self.screen.blit(self.lives_imgs[1], (coords[6], coords[7]))
-            self.screen.blit(self.lives_imgs[1], (coords[8], coords[9]))
-            self.screen.blit(self.lives_imgs[1], (coords[10], coords[11]))
-            self.screen.blit(self.lives_imgs[1], (coords[12], coords[13]))
+            img = 1
+            for i in range(0,14,2):
+                self.screen.blit(self.lives_imgs[img], (coords[i], coords[i+1]))
+        img = 0
 
     def shutdown(self):
         pygame.quit()
