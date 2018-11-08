@@ -424,6 +424,11 @@ class Game:
         if self.powerUpActive == True:
             print("game.updateSprites: reducing powerUpTimer: ", self.powerUpTimer)
             self.powerUpTimer -= 1      #reduce timer
+            if self.powerUpTimer <= 0:
+                #Rest Power Up timer
+                self.powerUpActive = False
+                self.powerUpTimer = 0
+
 
         # Test Spec for death below the map or collisions with a mob
         collision_mob = pygame.sprite.spritecollide(self.spec, self.mobs, False)
@@ -519,7 +524,7 @@ class Game:
             print("Coliding with Power Up now")
             self.powerUpActive = True
             self.powerUpOnMap = False
-            self.powerUpTimer = 1500
+            self.powerUpTimer = 600
 
         # Check for a collision between the invisible wall block and the sky blocks
         for block in self.sky_blocks:

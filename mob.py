@@ -52,7 +52,7 @@ class Gamma(Mob):
         self.left = True  #True is left, False is right
         self.starting_y = y #self.rect.y
 
-    def update(self):
+    def update(self, powerUp):
         if self.step > 80 and self.step < 100 and self.step % 2 == 0:
             self.rect.x += randint(0,4)
             self.rect.x -= randint(0,4)
