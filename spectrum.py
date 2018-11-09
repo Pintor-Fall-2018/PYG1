@@ -514,7 +514,7 @@ class Game:
 
         # Trying to detect collisions for mobs and walls
         for mob in pygame.sprite.groupcollide(self.mobs, self.all_blocks, False, False):
-            print("Mob collision with self.ground_blocks!")
+            print("Mob collision with self.all_blocks!")
             # moving rect.x by 3 is done because 1 or 2 would leave mobs stuck in walls sometimes
             if mob.left == True:
                 mob.rect.x += 3         # Move mob right slightly
