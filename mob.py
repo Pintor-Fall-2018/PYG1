@@ -50,7 +50,8 @@ class Gamma(Mob):
         self.rect.x = x
         self.rect.y = y
         self.left = True  #True is left, False is right
-        self.starting_y = y #self.rect.y
+        self.starting_y = y
+        self.starting_x = x
 
     def update(self, powerUp):
         if self.step > 80 and self.step < 100 and self.step % 2 == 0:
@@ -58,10 +59,10 @@ class Gamma(Mob):
             self.rect.x -= randint(0,4)
             self.rect.y -= randint(0,3)
             self.rect.y += randint(0,3)
-            if self.rect.y > 320:
-                self.rect.y = 320
-            if self.rect.y < 310:
-                self.rect.y = 310
+            if self.rect.y > self.starting_y:
+                self.rect.y = self.starting_y
+            if self.rect.y < self.starting_y - 10:
+                self.rect.y = self.starting_y - 10
         if self.step == 0:
             self.rect.y = self.starting_y
         self.animate()
