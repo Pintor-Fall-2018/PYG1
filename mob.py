@@ -1,5 +1,6 @@
 import pygame
 from random import randint
+from settings import *
 
 class Mob(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -21,7 +22,7 @@ class Ultraviolet(Mob):
         self.rect.y = y
         self.left = True  #True is left, False is right
 
-    def update(self, powerUp):
+    def update(self, powerUp, sprites, mobs):
         if self.left:
             self.rect.x -= 1
             self.image = self.animations[0]
@@ -53,7 +54,7 @@ class Gamma(Mob):
         self.starting_y = y
         self.starting_x = x
 
-    def update(self, powerUp):
+    def update(self, powerUp, sprites, mobs):
         if self.step > 80 and self.step < 100 and self.step % 2 == 0:
             self.rect.x += randint(0,4)
             self.rect.x -= randint(0,4)
@@ -65,11 +66,42 @@ class Gamma(Mob):
                 self.rect.y = self.starting_y - 10
         if self.step == 0:
             self.rect.y = self.starting_y
-        self.animate()
+        self.animate(sprites, mobs)
 
-    def animate(self):
+    def animate(self, sprites, mobs):
         self.step += 1
         if self.step == 100:
             self.left = not self.left
             self.image = self.animations[self.left]
             self.step = 0
+            ray = Projectile (self.rect.x, self.rect.centery, sprites, mobs, self.left)
+            sprites.add(ray)
+            mobs.add(ray)
+
+class Projectile(pygame.sprite.Sprite):
+    def __init__(self, x, y, sprites, mobs, left):
+        pygame.sprite.Sprite.__init__(self) #sprite constructor
+        self.image = pygame.Surface((5,5)) #width x height
+        self.image.fill((255,242,0))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.left = left
+        self.timer = 0
+
+    def update(self, powerUp, sprites, mobs):
+        self.animate()
+        self.timer += 1
+        if self.timer < 125:
+            if self.left:
+                self.rect.x += 3
+            else:
+                self.rect.x -= 3
+        else:
+            self.kill()
+
+    def animate(self):
+        if self.timer % 2 == 0:
+            self.image.fill((255,242,0))
+        else:
+            self.image.fill(LIGHT_RED)

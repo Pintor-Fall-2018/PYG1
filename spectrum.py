@@ -410,7 +410,7 @@ class Game:
                         self.spec.jumpThreshold = 5 #raise threshold for smaller jump
 
     def updateSprites(self):
-        self.sprites.update(self.powerUpActive)
+        self.sprites.update(self.powerUpActive, self.sprites, self.mobs)
 
         if self.powerUpActive == True:
             print("game.updateSprites: reducing powerUpTimer: ", self.powerUpTimer)
@@ -513,15 +513,15 @@ class Game:
             self.powerUpTimer = 600
 
         # Trying to detect collisions for mobs and walls
-        for mob in pygame.sprite.groupcollide(self.mobs, self.all_blocks, False, False):
-            print("Mob collision with self.all_blocks!")
+        #for mob in pygame.sprite.groupcollide(self.mobs, self.all_blocks, False, False):
+        #    print("Mob collision with self.all_blocks!")
             # moving rect.x by 3 is done because 1 or 2 would leave mobs stuck in walls sometimes
-            if mob.left == True:
-                mob.rect.x += 3         # Move mob right slightly
-                mob.left = False        # Change moving direction to right
-            else:
-                mob.rect.x -=3          # Move mob left slightly
-                mob.left = True         # Change moving direction to left
+        #    if mob.left == True:
+        #        mob.rect.x += 3         # Move mob right slightly
+        #        mob.left = False        # Change moving direction to right
+        #    else:
+        #        mob.rect.x -=3          # Move mob left slightly
+        #        mob.left = True         # Change moving direction to left
 
         # Check for a collision between the invisible wall block and the sky blocks kill sky block
         for block in self.sky_blocks:
