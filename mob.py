@@ -74,12 +74,12 @@ class Gamma(Mob):
             self.left = not self.left
             self.image = self.animations[self.left]
             self.step = 0
-            ray = Projectile (self.rect.x, self.rect.centery, sprites, mobs, self.left)
+            ray = Projectile (self.rect.x, self.rect.centery, self.left)
             sprites.add(ray)
             mobs.add(ray)
 
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, x, y, sprites, mobs, left):
+    def __init__(self, x, y, left):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
         self.image = pygame.Surface((5,5)) #width x height
         self.image.fill((255,242,0))
