@@ -1,5 +1,6 @@
 import pygame
 from random import randint
+from settings import *
 
 class Mob(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -21,7 +22,7 @@ class Ultraviolet(Mob):
         self.rect.y = y
         self.left = True  #True is left, False is right
 
-    def update(self, powerUp):
+    def update(self, powerUp, sprites, mobs):
         if self.left:
             self.rect.x -= 1
             self.image = self.animations[0]
@@ -50,25 +51,61 @@ class Gamma(Mob):
         self.rect.x = x
         self.rect.y = y
         self.left = True  #True is left, False is right
-        self.starting_y = y #self.rect.y
+        self.starting_y = y
+        self.wiggled_x = 0
 
-    def update(self, powerUp):
+    def update(self, powerUp, sprites, mobs):
+        if self.step is 80:
+            self.recent_x = self.rect.x
         if self.step > 80 and self.step < 100 and self.step % 2 == 0:
-            self.rect.x += randint(0,4)
-            self.rect.x -= randint(0,4)
-            self.rect.y -= randint(0,3)
-            self.rect.y += randint(0,3)
-            if self.rect.y > 320:
-                self.rect.y = 320
-            if self.rect.y < 310:
-                self.rect.y = 310
+            wiggle_x = randint(-4,4)
+            self.rect.x += wiggle_x
+            self.wiggled_x += wiggle_x
+            self.rect.y -= randint(-4,4)
+            if self.rect.y > self.starting_y:
+                self.rect.y = self.starting_y
+            if self.rect.y < self.starting_y - 10:
+                self.rect.y = self.starting_y - 10
         if self.step == 0:
             self.rect.y = self.starting_y
-        self.animate()
+            self.rect.x -= self.wiggled_x
+            self.wiggled_x = 0
+        self.animate(sprites, mobs)
 
-    def animate(self):
+    def animate(self, sprites, mobs):
         self.step += 1
         if self.step == 100:
             self.left = not self.left
             self.image = self.animations[self.left]
             self.step = 0
+            ray = Projectile (self.rect.x, self.rect.centery, self.left)
+            sprites.add(ray)
+            mobs.add(ray)
+
+class Projectile(pygame.sprite.Sprite):
+    def __init__(self, x, y, left):
+        pygame.sprite.Sprite.__init__(self) #sprite constructor
+        self.image = pygame.Surface((5,5)) #width x height
+        self.image.fill((255,242,0))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.left = left
+        self.timer = 0
+
+    def update(self, powerUp, sprites, mobs):
+        self.animate()
+        self.timer += 1
+        if self.timer < 125:
+            if self.left:
+                self.rect.x += 3
+            else:
+                self.rect.x -= 3
+        else:
+            self.kill()
+
+    def animate(self):
+        if self.timer % 2 == 0:
+            self.image.fill((255,242,0))
+        else:
+            self.image.fill(LIGHT_RED)

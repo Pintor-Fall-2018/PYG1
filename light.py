@@ -19,7 +19,7 @@ class Light(pygame.sprite.Sprite):
         self.image = self.images[self.index]
         self.image.set_colorkey(BLACK)
 
-    def update(self, powerUp):
+    def update(self, powerUp, sprites, mobs):
         self.animation_frames += 1
         if self.animation_frames > 10:
             self.animation_frames = 0
