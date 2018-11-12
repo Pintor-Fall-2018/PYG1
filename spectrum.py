@@ -35,6 +35,7 @@ class Game:
         self.endCurrentLevel = 0
         self.levelStatus = ""
         self.lives = 7
+        self.gameLost = False
         self.randomPowerUpLevel = random.randint(1, 3)
         print ("randomPowerUpLevel = ", self.randomPowerUpLevel)
         self.bluePowerUp = 0
@@ -51,6 +52,7 @@ class Game:
         self.endCurrentLevel = 0
         self.levelStatus = ""
         self.lives = 7
+        self.gameLost = False
         self.randomPowerUpLevel = random.randint(1, 3)
         self.powerUpActive = False
         print ("randomPowerUpLevel = ", self.randomPowerUpLevel)
@@ -427,10 +429,15 @@ class Game:
             print("I should be dying now")
             self.levelStatus = "restart"    #go back to main menu for now
 
-            if self.lives > 0:   #Prevent negative lives for now. Update later
-                self.lives -= 1                 #Subtract one life
+            #Spec has lost all 7 of his lives
+            if self.lives <= 0:
+                self.gameLost = True
+            else:
+                self.lives -= 1
+                menu.gameOverScreen()            #leave game.updateSprites
 
-            menu.gameOverScreen()            #leave game.updateSprites
+
+
 
 
         # Test Spec for collisions with environment
@@ -713,6 +720,10 @@ while(openMenu):
             menu.gameCompletedScreen()
             game.resetGame()
             break
+        #Check if Spec lost all his lives
+        if game.gameLost == True:
+            menu.finalGameOverScreen()
+            game.reset()
          #Check for end level status
         if game.endCurrentLevel == 1:
             menu.completeLevel()

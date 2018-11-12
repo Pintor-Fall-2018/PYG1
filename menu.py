@@ -394,7 +394,37 @@ class Menu:
 
             if (end_time - start_time) > 6:
                 openMenu = False
-                # self.sounds[1].set_volume(0)
+                
+    #Change this to be custom later.Right now it's a replica of gameOverScreen
+    def finalGameOverScreen(self):
+        self.sounds[1].play()
+        start_time = time.time()
+        openMenu = True
+
+        while openMenu:
+            end_time = time.time()
+            self.time.tick(FRAMES)
+            # Cover old screen
+            self.screen.fill(MAINMENU_BG)
+            # Check for events to see if user closed window
+            for event in pygame.event.get(pygame.QUIT):
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+            self.generateText("Game Over", self.titleFont, WHITE, 70, (int(WIDTH/2)), int(HEIGHT/5))
+            if (end_time - start_time) > 0.5:
+                self.generateText("Oh no!", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/2.2))
+            if (end_time - start_time) > 2:
+                self.generateText("Spec died", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.8))
+            if (end_time - start_time) > 3:
+                self.generateText("...", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.4))
+            if (end_time - start_time) > 4:
+                self.generateText(":(", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.2))
+
+            pygame.display.flip()
+
+            if (end_time - start_time) > 6:
+                openMenu = False
 
     def gameCompletedScreen(self):
 
