@@ -85,6 +85,7 @@ class Game:
         self.sky_blocks = pygame.sprite.Group()             # Moving blocks
         self.ground_blocks = pygame.sprite.Group()          # Ground blocks don't move!
         self.invisible_wall_block = pygame.sprite.Group()   # Invisible wall block (left screen limiter)
+        self.bg_blocks = pygame.sprite.Group()              # Background blocks (no collisions)
         self.all_blocks = pygame.sprite.Group()
         self.lights = pygame.sprite.Group()
         self.mobs = pygame.sprite.Group()
@@ -191,7 +192,8 @@ class Game:
                         tile = Tile(20 * column, 20 * row, 'images/green_platform.png')
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
-                        self.sky_blocks.add(tile)
+                        self.ground_blocks.add(tile)
+                        #self.sky_blocks.add(tile)
                     elif greenbox[row][column] == tiles_green['earth1']:
                         tile = Tile(20 * column, 20 * row, 'images/green_earth01.png')
                         self.sprites.add(tile)
@@ -205,12 +207,10 @@ class Game:
                     elif greenbox[row][column] == tiles_green['water_surface']:
                         tile = Tile(20 * column, 20 * row, 'images/green_water.png')
                         self.sprites.add(tile)
-                        self.all_blocks.add(tile)
                         self.ground_blocks.add(tile)
                     elif greenbox[row][column] == tiles_green['water']:
                         tile = Tile(20 * column, 20 * row, 'images/green_water1.png')
                         self.sprites.add(tile)
-                        self.all_blocks.add(tile)
                         self.ground_blocks.add(tile)
                     elif greenbox[row][column] == tiles_green['grass_edge_right']:
                         tile = Tile(20 * column, 20 * row, 'images/green_grass01.png')
@@ -227,6 +227,10 @@ class Game:
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.ground_blocks.add(tile)
+                    elif greenbox[row][column] == tiles_green['platform2']:
+                        tile = Tile(20 * column, 20 * row, 'images/green_platform02.png')
+                        self.bg_blocks.add(tile)
+
 
         # Create Green Light Object that wins the green level and adds it to its Groups()
         self.light = Light(green_light_endGame_imgs)
@@ -242,9 +246,10 @@ class Game:
                 m = Ultraviolet(*mob)
                 self.sprites.add(m)
                 self.mobs.add(m)
-            g = Gamma(1900,320)
-            self.sprites.add(g)
-            self.mobs.add(g)
+            for mob in GAMMA_FOREST_LIST:
+                g = Gamma(*mob)
+                self.sprites.add(g)
+                self.mobs.add(g)
 
         # Create Powerup if active on green level
         if self.greenPowerUp == 1:
@@ -370,8 +375,9 @@ class Game:
             self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZEABLE)
 
     def drawScreen(self):
-        self.screen.fill(SKY_BLUE)
+        #self.screen.fill(SKY_BLUE)
         self.screen.blit(self.background, (self.background_x,0))
+        self.bg_blocks.draw(self.screen)
         self.sprites.draw(self.screen)
         self.displayLifeBars()
         pygame.display.flip()
@@ -582,6 +588,9 @@ class Game:
             # Move Power up if it exists
             if self.powerUpOnMap == True and self.powerUpActive == False:
                 self.powerUp.rect.x -= self.spec.speed[0]
+            # Move Background Blocks
+            for bg_block in self.bg_blocks:
+                bg_block.rect.x -= self.spec.speed[0]
             # Scroll Background image based on which level we're playing
             if self.whichLevelToPlay == "BLUE":
                 self.background_x -= (len(bluebox[0]) * 20 / self.background.get_width()) * .60  # map pixels / background image pixels

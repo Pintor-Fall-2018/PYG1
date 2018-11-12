@@ -52,20 +52,24 @@ class Gamma(Mob):
         self.rect.y = y
         self.left = True  #True is left, False is right
         self.starting_y = y
-        self.starting_x = x
+        self.wiggled_x = 0
 
     def update(self, powerUp, sprites, mobs):
+        if self.step is 80:
+            self.recent_x = self.rect.x
         if self.step > 80 and self.step < 100 and self.step % 2 == 0:
-            self.rect.x += randint(0,4)
-            self.rect.x -= randint(0,4)
-            self.rect.y -= randint(0,3)
-            self.rect.y += randint(0,3)
+            wiggle_x = randint(-4,4)
+            self.rect.x += wiggle_x
+            self.wiggled_x += wiggle_x
+            self.rect.y -= randint(-4,4)
             if self.rect.y > self.starting_y:
                 self.rect.y = self.starting_y
             if self.rect.y < self.starting_y - 10:
                 self.rect.y = self.starting_y - 10
         if self.step == 0:
             self.rect.y = self.starting_y
+            self.rect.x -= self.wiggled_x
+            self.wiggled_x = 0
         self.animate(sprites, mobs)
 
     def animate(self, sprites, mobs):

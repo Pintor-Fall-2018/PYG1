@@ -85,13 +85,13 @@ class Spec(pygame.sprite.Sprite):
         if powerUp == True:
             print("Using Power Up")
             if self.forward and self.speed[1] == 0: #speedup if no backward momentum
-                self.speed[0] += .4
-                if self.speed[0] > 6:
-                    self.speed[0] = 6
+                self.speed[0] += .25
+                if self.speed[0] > 5:
+                    self.speed[0] = 5
             if self.backward and self.speed[0] == 0: #speedup if no forward momentum
-                self.speed[1] += .4
-                if self.speed[1] > 6:
-                    self.speed[1] = 6
+                self.speed[1] += .25
+                if self.speed[1] > 5:
+                    self.speed[1] = 5
         else:
             if self.forward and self.speed[1] == 0: #speedup if no backward momentum
                 self.speed[0] += .25
