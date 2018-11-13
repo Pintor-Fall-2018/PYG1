@@ -3,18 +3,21 @@
 # Game window is 30 blocks wide by 20 blocks tall
 
 #Ultraviolet Mobs
-ULTRAVIOLET_FOREST_LIST = [(300,320),
+ULTRAVIOLET_FOREST_LIST = [
+                (300,320),
                  (880,320),
-                 (1500,320)]
+                 (1500,320)
+]
 
 GAMMA_FOREST_LIST = [
                 (2100,320),
                 (1340,160),
-                (1180,280),
                 (660,240)
 ]
-#(1260,220)
-#(1180,280)
+
+INFRARED_FOREST_LIST = [
+                (1180, 280)
+]
 
 # Lookup dictionary
 tiles_green = {
