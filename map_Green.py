@@ -6,17 +6,18 @@
 ULTRAVIOLET_FOREST_LIST = [
                 (300,320),
                  (880,320),
-                 (1500,320)
+                 (1510,320)
 ]
 
 GAMMA_FOREST_LIST = [
                 (2100,320),
-                (1340,160),
+                (1330,160),
                 (660,240)
 ]
 
 INFRARED_FOREST_LIST = [
-                (1180, 280)
+                (530,200),
+                (1170, 280)
 ]
 
 # Lookup dictionary
