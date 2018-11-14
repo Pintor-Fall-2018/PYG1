@@ -252,6 +252,10 @@ class Game:
                 g = Gamma(*mob)
                 self.sprites.add(g)
                 self.mobs.add(g)
+            for mob in INFRARED_FOREST_LIST:
+                i = Infrared(*mob)
+                self.sprites.add(i)
+                self.mobs.add(i)
 
         # Create Powerup if active on green level
         if self.greenPowerUp == 1:

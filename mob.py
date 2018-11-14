@@ -82,6 +82,45 @@ class Gamma(Mob):
             sprites.add(ray)
             mobs.add(ray)
 
+class Infrared(Mob):
+    def __init__(self, x, y):
+        super().__init__(x,y)
+        self.step = 0
+        self.animations = []
+        self.animations.append(pygame.image.load('images/mob_infrared1.png').convert())
+        self.animations.append(pygame.image.load('images/mob_infrared2.png').convert())
+        for animation in self.animations:
+            animation.set_colorkey([34,177,76])
+        self.image = self.animations[0]
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.starting_y = y
+        self.jump = False
+        self.jump_count = 0
+        self.vertical = [3.5,3.5,3.5,3,3,3,2,2,1.5,1.5,1.5,1,1,1,1,1,1,.5,.5,.5,.5,.5]
+
+    def update(self, powerUp, sprites, mobs):
+        self.step += 1
+        if self.jump:
+            self.image = self.animations[1]
+            self.rect.y -= self.vertical[self.jump_count]
+            self.jump_count += 1
+            if self.jump_count > 21:
+                self.jump = False
+                self.jump_count -= 1
+        else:
+            self.image = self.animations[0]
+            self.rect.y += self.vertical[self.jump_count]
+            self.jump_count -= 1
+            if self.rect.y > self.starting_y:
+                self.rect.y = self.starting_y
+            if self.jump_count < 0:
+                self.jump_count = 0
+        if self.step == 100:
+            self.jump = True
+            self.step = 0
+
 class Projectile(pygame.sprite.Sprite):
     def __init__(self, x, y, left):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
