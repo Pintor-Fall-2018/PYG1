@@ -135,9 +135,9 @@ class Menu:
         lvl_btn_h = 120
         btn_w = 220
         btn_h = 60
-        bl_lvl_coords = (int(WIDTH/6), int(HEIGHT/5))
-        gr_lvl_coords = (int(WIDTH/2), int(HEIGHT/5))
-        rd_lvl_coords = (int(WIDTH/1.2), int(HEIGHT/5))
+        bl_lvl_coords = (int(WIDTH/22), int(HEIGHT/20))
+        gr_lvl_coords = (int(WIDTH/2.7), int(HEIGHT/20))
+        rd_lvl_coords = (int(WIDTH/1.43), int(HEIGHT/20))
 
         # Variable that holds which level has been selected. Set by button select
         self.levelSelectButton = ""
@@ -168,6 +168,10 @@ class Menu:
 
         skylevel_inactive = self.images[11]
         skylevel_active = self.images[12]
+        forestlevel_inactive = self.images[13]
+        forestlevel_active = self.images[14]
+        desertlevel_inactive = self.images[15]
+        desertlevel_active = self.images[16]
 
         openMenu = True
 
@@ -184,11 +188,10 @@ class Menu:
             # Colored level panels for main menu
             # Generate text over button based on level completion checkStatus
             #---Blue----
-            blue = self.checkMouseClicks(bl_lvl_coords, lvl_btn_w, lvl_btn_h)
-            # blue = self.button(LIGHT_BLUE, PASTEL_BLUE, lvl_btn_w, lvl_btn_h, bl_lvl_coords, True, PASTEL_BLUE_2)
             sky_rect = skylevel_inactive.get_rect()
-            sky_rect.center = bl_lvl_coords
-            bl_lvl_active = self.checkMousePos((int(bl_lvl_coords[0]/4),int(bl_lvl_coords[1]/4)) , lvl_btn_w, lvl_btn_h)
+            sky_rect.topleft = bl_lvl_coords
+            blue = self.checkMouseClicks(bl_lvl_coords, lvl_btn_w, lvl_btn_h)
+            bl_lvl_active = self.checkMousePos((int(bl_lvl_coords[0]),int(bl_lvl_coords[1])) , lvl_btn_w, lvl_btn_h)
             if bl_lvl_active:
                 self.screen.blit(skylevel_active, sky_rect)
             else:
@@ -196,20 +199,38 @@ class Menu:
             self.btnOutline(sky_rect, WHITE, 5)
 
             if game.checkLightAcquired("blue"):
-                self.generateText("COMPLETED", self.fontPM, BLACK, 25, (int(WIDTH/6)), (int(HEIGHT/5)))
+                self.generateText("COMPLETED", self.fontPM, BLACK, 22, (int(WIDTH/6)), (int(HEIGHT/5)))
             else:
                 self.generateText("PLAY", self.fontPM, BLACK, 30, (int(WIDTH/6)), (int(HEIGHT/5)))
 
             #---Green----
-            green = self.button(LIGHT_GREEN, GREEN, lvl_btn_w, lvl_btn_h, gr_lvl_coords, True, DARK_GREEN)
+            forest_rect = forestlevel_inactive.get_rect()
+            forest_rect.topleft = gr_lvl_coords
+            green = self.checkMouseClicks(gr_lvl_coords, lvl_btn_w, lvl_btn_h)
+            gr_lvl_active = self.checkMousePos((int(gr_lvl_coords[0]),int(gr_lvl_coords[1])) , lvl_btn_w, lvl_btn_h)
+            if gr_lvl_active:
+                self.screen.blit(forestlevel_active, forest_rect)
+            else:
+                self.screen.blit(forestlevel_inactive, forest_rect)
+            self.btnOutline(forest_rect, WHITE, 5)
+
             if game.checkLightAcquired("green"):
-                self.generateText("COMPLETED", self.fontPM, BLACK, 25, (int(WIDTH/2)), (int(HEIGHT/5)))
+                self.generateText("COMPLETED", self.fontPM, BLACK, 22, (int(WIDTH/2)), (int(HEIGHT/5)))
             else:
                 self.generateText("PLAY", self.fontPM, BLACK, 30, (int(WIDTH/2)), (int(HEIGHT/5)))
             #---Red----
-            red = self.button(LIGHT_RED, RED, lvl_btn_w, lvl_btn_h, rd_lvl_coords, True, DARK_RED)
+            desert_rect = desertlevel_inactive.get_rect()
+            desert_rect.topleft = rd_lvl_coords
+            red = self.checkMouseClicks(rd_lvl_coords, lvl_btn_w, lvl_btn_h)
+            rd_lvl_active = self.checkMousePos((rd_lvl_coords[0],rd_lvl_coords[1]) , lvl_btn_w, lvl_btn_h)
+            if rd_lvl_active:
+                self.screen.blit(desertlevel_active, desert_rect)
+            else:
+                self.screen.blit(desertlevel_inactive, desert_rect)
+            self.btnOutline(desert_rect, WHITE, 5)
+
             if game.checkLightAcquired("red"):
-                self.generateText("COMPLETED", self.fontPM, BLACK, 25, (int(WIDTH/1.2)), (int(HEIGHT/5)))
+                self.generateText("COMPLETED", self.fontPM, BLACK, 22, (int(WIDTH/1.2)), (int(HEIGHT/5)))
             else:
                 self.generateText("PLAY", self.fontPM, BLACK, 30, (int(WIDTH/1.2)), (int(HEIGHT/5)))
 
@@ -326,7 +347,7 @@ class Menu:
         textList = ["Tutorial", "Main Menu", "Quit", "Objectives:", "Controls:", obj1, obj2, obj3, obj4, control1, control2, control3]
         textCoords = [title_coords, main_menu_coords, quit_coords, obj_title_coords, control_title_coords, obj1_coords, obj2_coords, obj3_coords, obj4_coords, ctrl1_coords, ctrl2_coords, ctrl3_coords]
         instr_attr = (WHITE, 16, self.fontName)
-        textAttr = [(WHITE, 40, self.titleFont), (BLACK, 20, self.fontName), (BLACK, 20, self.fontName), (WHITE, 20, self.fontName), (WHITE, 20, self.fontName), instr_attr, instr_attr, instr_attr, instr_attr, instr_attr, instr_attr, instr_attr]
+        textAttr = [(WHITE, 40, self.titleFont), (BLACK, 20, self.fontPM), (BLACK, 20, self.fontPM), (WHITE, 20, self.fontPM), (WHITE, 20, self.fontPM), instr_attr, instr_attr, instr_attr, instr_attr, instr_attr, instr_attr, instr_attr]
         btnList = [(btn_w, btn_h), (btn_w, btn_h)]
         btnCoords = [main_menu_coords, quit_coords]
         btnColor = [(WHITE, GRAY), (WHITE, GRAY)]
@@ -394,11 +415,14 @@ class Menu:
 
             if (end_time - start_time) > 6:
                 openMenu = False
-                
+
     #Change this to be custom later.Right now it's a replica of gameOverScreen
     def finalGameOverScreen(self):
-        self.sounds[1].play()
+        self.sounds[3].play()
+        self.sounds[3].fadeout(9000)
         start_time = time.time()
+        dead_spec = self.images[17]
+        dead_spec.set_colorkey(BLACK)
         openMenu = True
 
         while openMenu:
@@ -412,18 +436,17 @@ class Menu:
                     pygame.quit()
                     sys.exit()
             self.generateText("Game Over", self.titleFont, WHITE, 70, (int(WIDTH/2)), int(HEIGHT/5))
-            if (end_time - start_time) > 0.5:
-                self.generateText("Oh no!", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/2.2))
             if (end_time - start_time) > 2:
-                self.generateText("Spec died", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.8))
+                self.generateText("Spec lost all of his lives!", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.8))
             if (end_time - start_time) > 3:
-                self.generateText("...", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.4))
+                self.generateText("...The light has been lost", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.4))
             if (end_time - start_time) > 4:
                 self.generateText(":(", self.fontPM, WHITE, 30, (int(WIDTH/2)), int(HEIGHT/1.2))
 
+            self.screen.blit(dead_spec, (int(WIDTH/2.1), int(HEIGHT/3.0)))
             pygame.display.flip()
 
-            if (end_time - start_time) > 6:
+            if (end_time - start_time) > 9:
                 openMenu = False
 
     def gameCompletedScreen(self):
@@ -459,7 +482,7 @@ class Menu:
     def checkMouseClicks(self, start_coords, width, height):
         """
         #Check for mouse clicks within defined area.
-        #Set a start x, y, ar right top corner of area.
+        #Set a start x, y, as left top corner of area.
         # Will check boundaries for width, height.
         """
         x, y = start_coords
@@ -467,14 +490,14 @@ class Menu:
         btn_click = pygame.mouse.get_pressed()
 
         if( x < mouse_pos[0] < x + width and
-            y < mouse_pos[1] < y + height
-            ):
+        y < mouse_pos[1] < y + height
+        ):
             if btn_click[0] == 1:
                 self.sounds[0].play()
                 return True
         return False
 
-    def checkMousePos(self, start_coords, width, height):
+    def checkMousePos(self, start_coords, width, height, img=False):
         x, y = start_coords
         mouse_pos = pygame.mouse.get_pos()
 

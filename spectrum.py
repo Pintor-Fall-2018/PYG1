@@ -440,14 +440,14 @@ class Game:
             self.levelStatus = "restart"    #go back to main menu for now
 
             #Spec has lost all 7 of his lives
-            if self.lives <= 0:
+            if self.lives <= 1:
+                self.lives -= 1
+                menu.finalGameOverScreen()
                 self.gameLost = True
-            else:
+
+            elif self.lives > 1:
                 self.lives -= 1
                 menu.gameOverScreen()            #leave game.updateSprites
-
-
-
 
 
         # Test Spec for collisions with environment
@@ -662,6 +662,10 @@ click.set_volume(0.5)
 lose_music = pygame.mixer.Sound('sounds/lose_music.ogg')
 win_music = pygame.mixer.Sound('sounds/win_music.ogg')
 
+# Music by Otto Halmén
+# https://opengameart.org/content/death-is-just-another-path
+final_death = pygame.mixer.Sound('sounds/Death Is Just Another Path.ogg')
+
 # Load Menu images
 bl_light_img = pygame.image.load('images/blueLight.png').convert()
 rd_light_img = pygame.image.load('images/redLight.png').convert()
@@ -676,13 +680,23 @@ fullscreen_inactive = pygame.image.load('images/fullscreen_inactive.png').conver
 fullscreen_active = pygame.image.load('images/fullscreen_active.png').convert()
 skylevel_inactive = pygame.image.load('images/skylevel_inactive.png').convert()
 skylevel_active = pygame.image.load('images/skylevel_active.png').convert()
+forestlevel_inactive = pygame.image.load('images/forestlevel_inactive.png').convert()
+forestlevel_active = pygame.image.load('images/forestlevel_active.png').convert()
+desertlevel_inactive = pygame.image.load('images/desertlevel_inactive.png').convert()
+desertlevel_active = pygame.image.load('images/desertlevel_active.png').convert()
+dead_spec = pygame.image.load('images/spec_died.png').convert()
 frame_img = pygame.image.load('images/frame.png').convert()
 powerUp_image = pygame.image.load('images/power_up_img.png').convert()
 
-menu_imgs = []
-menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, vol_bar, vol_arr_right, vol_arr_left, play_btn_inactive, play_btn_active, fullscreen_inactive, fullscreen_active, skylevel_inactive, skylevel_active, frame_img))
 
-menu_sounds = [click, lose_music, win_music]
+menu_imgs = []
+menu_imgs.extend((bl_light_img, rd_light_img, gr_light_img, vol_slider, \
+ vol_bar, vol_arr_right, vol_arr_left, play_btn_inactive, play_btn_active, \
+ fullscreen_inactive, fullscreen_active, skylevel_inactive, skylevel_active, \
+ forestlevel_inactive, forestlevel_active, desertlevel_inactive, desertlevel_active, \
+ dead_spec, frame_img))
+
+menu_sounds = [click, lose_music, win_music, final_death]
 
 bl_light_1 = pygame.image.load('images/bl_light_endGame1.png').convert()
 bl_light_2 = pygame.image.load('images/bl_light_endGame2.png').convert()
@@ -726,6 +740,11 @@ while(openMenu):
     # Main Game Loop
     while(active):
         # print("Starting inner loop")
+
+        # Check is Spec Lost all his lives
+        if game.gameLost == True:
+            game.resetGame()
+
         # Check if all lights have been acquired ; End game if true
         if game.checkLightAcquired("blue") \
         and game.checkLightAcquired("red") \
@@ -733,16 +752,11 @@ while(openMenu):
             menu.gameCompletedScreen()
             game.resetGame()
             break
-        #Check if Spec lost all his lives
-        if game.gameLost == True:
-            menu.finalGameOverScreen()
-            game.reset()
          #Check for end level status
         if game.endCurrentLevel == 1:
             menu.completeLevel()
             game.endCurrentLevel = 0
             break
-
         #print("Active: ", active)
         #print("openGame: ", openGame)
         #increment time
