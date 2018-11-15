@@ -121,6 +121,36 @@ class Infrared(Mob):
             self.jump = True
             self.step = 0
 
+class BlackHole(Mob):
+    def __init__(self, x, y):
+        super().__init__(x,y)
+        self.step = 0
+        self.animations = []
+        self.animations.append(pygame.image.load('images/black_hole1.png').convert())
+        self.animations.append(pygame.image.load('images/black_hole2.png').convert())
+        for animation in self.animations:
+            animation.set_colorkey(BLACK)
+        self.image = self.animations[0]
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.left = True  #True is left, False is right
+
+    def update(self, powerUp, sprites, mobs):
+        if self.left:
+            self.rect.x -= 1
+            self.image = self.animations[0]
+        else:
+            self.rect.x += 1
+            self.image = self.animations[1]
+        self.animate()
+
+    def animate(self):
+        self.step += 1
+        if self.step == 5:
+            self.left = not self.left
+            self.step = 0
+
 class Projectile(pygame.sprite.Sprite):
     def __init__(self, x, y, left):
         pygame.sprite.Sprite.__init__(self) #sprite constructor

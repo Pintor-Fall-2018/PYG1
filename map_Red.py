@@ -3,18 +3,27 @@
 # Game window is 30 blocks wide by 20 blocks tall
 
 #Ultraviolet Mobs
-ULTRAVIOLET_DESERT_LIST = [(300,340),
-                 (800,80),
-                 (750,320),
-                 (1000,320),
-                 (1200, 320),
-                 (1740, 320)]
+ULTRAVIOLET_DESERT_LIST = []# (300,340),
+#                  (800,80),
+#                  (750,320),
+#                  (1000,320),
+#                  (1200, 320),
+#                  (1740, 320)]
 
 #GAMMA Mobs
-GAMMA_DESERT_LIST = [(420,200),
-                 (800,320),
-                 (1500,320),
-                 (1340,140)]
+GAMMA_DESERT_LIST = []#(420,200),
+#                  (800,320),
+#                  (1500,320),
+#                  (1340,140)]
+
+INFRARED_DESERT_LIST = [
+                (1700,320)
+]
+
+BLACK_HOLE_DESERT_LIST = [
+                (200,340)
+]
+
 
 # Lookup dictionary
 tiles_red = {

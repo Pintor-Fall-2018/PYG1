@@ -257,6 +257,7 @@ class Game:
                 self.sprites.add(i)
                 self.mobs.add(i)
 
+
         # Create Powerup if active on green level
         if self.greenPowerUp == 1:
             self.powerUp = PowerUp(1000, 300, powerUp_image)
@@ -316,6 +317,10 @@ class Game:
                 g = Gamma(*mob)
                 self.sprites.add(g)
                 self.mobs.add(g)
+            for mob in BLACK_HOLE_DESERT_LIST:
+                bh = BlackHole(*mob)
+                self.sprites.add(bh)
+                self.mobs.add(bh)
 
         # Create Powerup if active on red level
         if self.redPowerUp == 1:
@@ -323,6 +328,18 @@ class Game:
             self.sprites.add(self.powerUp)
             self.powerUpGroup.add(self.powerUp)
             self.powerUpOnMap = True
+
+    def blackHoleGravity(self):
+        BLACKHOLE_RANGE = 100
+
+        for coords in BLACK_HOLE_DESERT_LIST:
+            if self.spec.rect.x - coords[0] <= 0 and self.spec.rect.x - coords[0] > - BLACKHOLE_RANGE:
+                print("Spec distance LEFT:", self.spec.rect.x - coords[0])
+                self.spec.rect.x = self.spec.rect.x + 1
+            elif self.spec.rect.x - coords[0] >=0 and self.spec.rect.x - coords[0] < BLACKHOLE_RANGE:
+                print("Spec distance RIGHT:", self.spec.rect.x + coords[0])
+                self.spec.rect.x = self.spec.rect.x - 1
+        print("Spec coords: ", self.spec.rect.x)
 
     def displayLifeBars(self):
         self.lives_imgs[0].set_colorkey(BLACK)
@@ -609,6 +626,8 @@ class Game:
                 self.background_x -= (len(greenbox[0]) * 20 / self.background.get_width()) * .60  # map pixels / background image pixels
             elif self.whichLevelToPlay == "RED":
                 self.background_x -= (len(redbox[0]) * 20 / self.background.get_width()) * .60  # map pixels / background image pixels
+
+        self.blackHoleGravity()
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
