@@ -43,6 +43,7 @@ class Game:
         self.redPowerUp = 0
         self.powerUpOnMap = False
         self.powerUpTimer = 0
+        self.red = False
 
     def resetGame(self):
         # resets game attributes
@@ -61,6 +62,7 @@ class Game:
         self.redPowerUp = 0
         self.powerUpOnMap = False
         self.powerUpTimer = 0
+        self.red = False
 
     # Startup function. Responsible for creating the map and all objects
     def startup(self, levelSelect):
@@ -129,6 +131,7 @@ class Game:
             print('Platform: ' + sys.platform)
 
     def playBlue(self):
+        self.red = False
         print ("game.playBlue: Creating the Sky level")
         self.background = pygame.image.load('images/background.png').convert() #load background image
         # Create Blue Level from tile map
@@ -174,6 +177,7 @@ class Game:
             self.powerUpOnMap = True
 
     def playGreen(self):
+        self.red = False
         print ("game.playGreen: Creating the Forest level")
         self.background = pygame.image.load('images/green_background.png').convert() #load background image
         # Create Green Level from tile map
@@ -266,6 +270,7 @@ class Game:
             self.powerUpOnMap = True
 
     def playRed(self):
+        self.red = True
         print ("game.playRed: Creating the Desert level")
         self.background = pygame.image.load('images/red_background.png').convert() #load background image
         # Create Green Level from tile map
@@ -331,15 +336,15 @@ class Game:
 
     def blackHoleGravity(self):
         BLACKHOLE_RANGE = 100
-
-        for coords in BLACK_HOLE_DESERT_LIST:
-            if self.spec.rect.x - coords[0] <= 0 and self.spec.rect.x - coords[0] > - BLACKHOLE_RANGE:
-                print("Spec distance LEFT:", self.spec.rect.x - coords[0])
-                self.spec.rect.x = self.spec.rect.x + 1
-            elif self.spec.rect.x - coords[0] >=0 and self.spec.rect.x - coords[0] < BLACKHOLE_RANGE:
-                print("Spec distance RIGHT:", self.spec.rect.x + coords[0])
-                self.spec.rect.x = self.spec.rect.x - 1
-        print("Spec coords: ", self.spec.rect.x)
+        if self.red:
+            for coords in BLACK_HOLE_DESERT_LIST:
+                if self.spec.rect.x - coords[0] <= -10 and self.spec.rect.x - coords[0] > - BLACKHOLE_RANGE:
+                    print("Spec distance LEFT:", self.spec.rect.x - coords[0])
+                    self.spec.rect.x = self.spec.rect.x + 1
+                elif self.spec.rect.x - coords[0] >= -10 and self.spec.rect.x - coords[0] < BLACKHOLE_RANGE:
+                    print("Spec distance RIGHT:", self.spec.rect.x + coords[0])
+                    self.spec.rect.x = self.spec.rect.x - 1
+            print("Spec coords: ", self.spec.rect.x)
 
     def displayLifeBars(self):
         self.lives_imgs[0].set_colorkey(BLACK)
