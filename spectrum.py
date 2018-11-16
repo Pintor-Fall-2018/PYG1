@@ -402,6 +402,21 @@ class Game:
         else:
             self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZEABLE)
 
+    def endAnimation(self):
+        for i in range(300):
+            if i < 100:
+                pygame.draw.line(self.screen, WHITE, (self.spec.rect.x, self.spec.rect.y), (randint(400,600),randint(0,400)), 1)
+                pygame.display.flip()
+                pygame.time.wait(2)
+            elif i < 200:
+                pygame.draw.line(self.screen, WHITE, (self.spec.rect.x, self.spec.rect.y), (randint(300,600),randint(0,400)),1)
+                pygame.display.flip()
+                pygame.time.wait(2)
+            else:
+                pygame.draw.line(self.screen, WHITE, (self.spec.rect.x, self.spec.rect.y), (randint(0,600),randint(0,400)), 1)
+                pygame.display.flip()
+                pygame.time.wait(2)
+
     def drawScreen(self):
         #self.screen.fill(SKY_BLUE)
         self.screen.blit(self.background, (self.background_x,0))
@@ -773,6 +788,7 @@ while(openMenu):
         if game.checkLightAcquired("blue") \
         and game.checkLightAcquired("red") \
         and game.checkLightAcquired("green"):
+            game.endAnimation()
             menu.gameCompletedScreen()
             game.resetGame()
             break
