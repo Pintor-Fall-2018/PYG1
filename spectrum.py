@@ -403,19 +403,28 @@ class Game:
             self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZEABLE)
 
     def endAnimation(self):
+        fade_out = pygame.Surface((600,400))
+        fade_out.fill(WHITE)
+        fade_out.set_alpha(20)
         for i in range(300):
             if i < 100:
-                pygame.draw.line(self.screen, WHITE, (self.spec.rect.x, self.spec.rect.y), (randint(400,600),randint(0,400)), 1)
+                pygame.draw.line(self.screen, (randint(0,255),randint(0,255),randint(0,255)), (self.light.rect.centerx, self.light.rect.centery), (randint(400,600),randint(0,400)), 1)
+                self.screen.blit(self.light.image, (self.light.rect.x, self.light.rect.y))
+                self.screen.blit(fade_out, (0,0))
                 pygame.display.flip()
-                pygame.time.wait(2)
+                pygame.time.wait(3)
             elif i < 200:
-                pygame.draw.line(self.screen, WHITE, (self.spec.rect.x, self.spec.rect.y), (randint(300,600),randint(0,400)),1)
+                pygame.draw.line(self.screen, (randint(0,255),randint(0,255),randint(0,255)), (self.light.rect.centerx, self.light.rect.centery), (randint(300,600),randint(0,400)),2)
+                self.screen.blit(self.light.image, (self.light.rect.x, self.light.rect.y))
+                self.screen.blit(fade_out, (0,0))
                 pygame.display.flip()
-                pygame.time.wait(2)
+                pygame.time.wait(3)
             else:
-                pygame.draw.line(self.screen, WHITE, (self.spec.rect.x, self.spec.rect.y), (randint(0,600),randint(0,400)), 1)
+                pygame.draw.line(self.screen, (randint(0,255),randint(0,255),randint(0,255)), (self.light.rect.centerx, self.light.rect.centery), (randint(0,600),randint(0,400)), 3)
+                self.screen.blit(self.light.image, (self.light.rect.x, self.light.rect.y))
+                self.screen.blit(fade_out, (0,0))
                 pygame.display.flip()
-                pygame.time.wait(2)
+                pygame.time.wait(3)
 
     def drawScreen(self):
         #self.screen.fill(SKY_BLUE)
