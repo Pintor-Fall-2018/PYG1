@@ -264,7 +264,6 @@ class Game:
                 self.sprites.add(i)
                 self.mobs.add(i)
 
-
         # Create Powerup if active on green level
         if self.greenPowerUp == 1:
             self.powerUp = PowerUp(1000, 300, powerUp_image)
@@ -406,6 +405,30 @@ class Game:
         else:
             self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZEABLE)
 
+    #Animation occurs when Spec collides with mob and loses life
+    def loseAnimation(self):
+        self.spec.kill()
+        self.drawScreen()
+        frozen_screen = self.screen.copy()
+        collision_image = pygame.image.load('images/spec_collision.png').convert()
+        collision_image.set_colorkey([34,177,76])
+        self.spec.image = collision_image
+        self.screen.blit(self.spec.image, (self.spec.rect.x, self.spec.rect.y))
+        pygame.display.flip()
+        pygame.time.wait(500)
+        for i in range(100):
+            if i < 20:
+                self.spec.rect.y -= self.spec.vertical[i] / 1.5
+            elif i < 40:
+                self.spec.rect.y += self.spec.vertical[19-i] / 1.5
+            else:
+                self.spec.rect.y += self.spec.vertical[0] / 1.5
+            self.screen.blit(frozen_screen, (0,0))
+            self.screen.blit(self.spec.image, (self.spec.rect.x, self.spec.rect.y))
+            pygame.display.flip()
+            pygame.time.wait(10)
+
+    #Game winning animation.  Light object radiates color and screen fades to white
     def endAnimation(self):
         fade_out = pygame.Surface((600,400))
         fade_out.fill(WHITE)
@@ -487,6 +510,7 @@ class Game:
         collision_mob = pygame.sprite.spritecollide(self.spec, self.mobs, False)
         if self.spec.rect.top >= HEIGHT or len(collision_mob) != 0:
             print("I should be dying now")
+            self.loseAnimation()
             self.levelStatus = "restart"    #go back to main menu for now
 
             #Spec has lost all 7 of his lives
