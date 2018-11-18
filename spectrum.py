@@ -165,11 +165,11 @@ class Game:
             print("Playing without mobs")
         else:
             # Create Mobs and add to its Groups()
-<<<<<<< HEAD
             for ultraviolet in ULTRAVIOLET_SKY_LIST:
                 uv = Ultraviolet(*ultraviolet)
                 self.sprites.add(uv)
                 self.mobs.add(uv)
+                self.uv_mobs.add(uv)
 
             for gammaRay in GAMMA_SKY_LIST:
                 gr = Gamma(*gammaRay)
@@ -185,13 +185,6 @@ class Game:
                 bh = BlackHole(*blackhole)
                 self.sprites.add(bh)
                 self.mobs.add(bh)
-=======
-            for mob in MOBS_SKY_LIST:
-                m = Ultraviolet(*mob)
-                self.sprites.add(m)
-                self.mobs.add(m)
-                self.uv_mobs.add(m)
->>>>>>> 9777840a69c96120f4f8bd0bf7cfcdbfd3975376
 
         # Create Powerup if active on blue level
         if self.bluePowerUp == 1:
@@ -359,19 +352,6 @@ class Game:
             self.powerUpGroup.add(self.powerUp)
             self.powerUpOnMap = True
 
-<<<<<<< HEAD
-    # def blackHoleGravity(self):
-    #     BLACKHOLE_RANGE = 100
-    #
-    #     for coords in BLACK_HOLE_DESERT_LIST:
-    #         if self.spec.rect.x - coords[0] <= 0 and self.spec.rect.x - coords[0] > - BLACKHOLE_RANGE:
-    #             print("Spec distance LEFT:", self.spec.rect.x - coords[0])
-    #             self.spec.rect.x = self.spec.rect.x + 1
-    #         elif self.spec.rect.x - coords[0] >=0 and self.spec.rect.x - coords[0] < BLACKHOLE_RANGE:
-    #             print("Spec distance RIGHT:", self.spec.rect.x + coords[0])
-    #             self.spec.rect.x = self.spec.rect.x - 1
-    #     print("Spec coords: ", self.spec.rect.x)
-=======
     def blackHoleGravity(self):
         BLACKHOLE_RANGE = 100
         if self.red:
@@ -383,7 +363,6 @@ class Game:
                     print("Spec distance RIGHT:", self.spec.rect.x + coords[0])
                     self.spec.rect.x = self.spec.rect.x - 1
             print("Spec coords: ", self.spec.rect.x)
->>>>>>> 9777840a69c96120f4f8bd0bf7cfcdbfd3975376
 
     def displayLifeBars(self):
         self.lives_imgs[0].set_colorkey(BLACK)
@@ -640,14 +619,8 @@ class Game:
             self.powerUpOnMap = False
             self.powerUpTimer = 600
 
-<<<<<<< HEAD
-
-        # Trying to detect collisions for mobs and walls
-        #for mob in pygame.sprite.groupcollide(self.mobs, self.all_blocks, False, False):
-=======
         # Trying to detect collisions for ultraviolet mobs and walls
         for mob in pygame.sprite.groupcollide(self.uv_mobs, self.all_blocks, False, False):
->>>>>>> 9777840a69c96120f4f8bd0bf7cfcdbfd3975376
         #    print("Mob collision with self.all_blocks!")
             # moving rect.x by 3 is done because 1 or 2 would leave mobs stuck in walls sometimes
             if mob.left == True:
