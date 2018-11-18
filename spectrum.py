@@ -93,6 +93,7 @@ class Game:
         self.all_blocks = pygame.sprite.Group()
         self.lights = pygame.sprite.Group()
         self.mobs = pygame.sprite.Group()
+        self.uv_mobs = pygame.sprite.Group()
         self.powerUpGroup = pygame.sprite.Group()           # Power Up Group
 
         # Life bar images
@@ -168,6 +169,7 @@ class Game:
                 m = Ultraviolet(*mob)
                 self.sprites.add(m)
                 self.mobs.add(m)
+                self.uv_mobs.add(m)
 
         # Create Powerup if active on blue level
         if self.bluePowerUp == 1:
@@ -252,6 +254,7 @@ class Game:
                 m = Ultraviolet(*mob)
                 self.sprites.add(m)
                 self.mobs.add(m)
+                self.uv_mobs.add(m)
             for mob in GAMMA_FOREST_LIST:
                 g = Gamma(*mob)
                 self.sprites.add(g)
@@ -318,6 +321,7 @@ class Game:
                 m = Ultraviolet(*mob)
                 self.sprites.add(m)
                 self.mobs.add(m)
+                self.uv_mobs.add(m)
             for mob in GAMMA_DESERT_LIST:
                 g = Gamma(*mob)
                 self.sprites.add(g)
@@ -575,16 +579,17 @@ class Game:
             self.powerUpOnMap = False
             self.powerUpTimer = 600
 
-        # Trying to detect collisions for mobs and walls
-        #for mob in pygame.sprite.groupcollide(self.mobs, self.all_blocks, False, False):
+        # Trying to detect collisions for ultraviolet mobs and walls
+        for mob in pygame.sprite.groupcollide(self.uv_mobs, self.all_blocks, False, False):
         #    print("Mob collision with self.all_blocks!")
             # moving rect.x by 3 is done because 1 or 2 would leave mobs stuck in walls sometimes
-        #    if mob.left == True:
-        #        mob.rect.x += 3         # Move mob right slightly
-        #        mob.left = False        # Change moving direction to right
-        #    else:
-        #        mob.rect.x -=3          # Move mob left slightly
-        #        mob.left = True         # Change moving direction to left
+            if mob.left == True:
+                mob.rect.x += 3         # Move mob right slightly
+                mob.left = False        # Change moving direction to right
+            else:
+                mob.rect.x -=3          # Move mob left slightly
+                mob.left = True         # Change moving direction to left
+            mob.step = 0                # Reset stepcount
 
         # Check for a collision between the invisible wall block and the sky blocks kill sky block
         for block in self.sky_blocks:
