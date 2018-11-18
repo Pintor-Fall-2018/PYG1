@@ -43,6 +43,7 @@ class Game:
         self.redPowerUp = 0
         self.powerUpOnMap = False
         self.powerUpTimer = 0
+        self.red = False
 
     def resetGame(self):
         # resets game attributes
@@ -61,6 +62,7 @@ class Game:
         self.redPowerUp = 0
         self.powerUpOnMap = False
         self.powerUpTimer = 0
+        self.red = False
 
     # Startup function. Responsible for creating the map and all objects
     def startup(self, levelSelect):
@@ -91,6 +93,7 @@ class Game:
         self.all_blocks = pygame.sprite.Group()
         self.lights = pygame.sprite.Group()
         self.mobs = pygame.sprite.Group()
+        self.uv_mobs = pygame.sprite.Group()
         self.powerUpGroup = pygame.sprite.Group()           # Power Up Group
 
         # Life bar images
@@ -129,6 +132,7 @@ class Game:
             print('Platform: ' + sys.platform)
 
     def playBlue(self):
+        self.red = False
         print ("game.playBlue: Creating the Sky level")
         self.background = pygame.image.load('images/background.png').convert() #load background image
         # Create Blue Level from tile map
@@ -161,6 +165,7 @@ class Game:
             print("Playing without mobs")
         else:
             # Create Mobs and add to its Groups()
+<<<<<<< HEAD
             for ultraviolet in ULTRAVIOLET_SKY_LIST:
                 uv = Ultraviolet(*ultraviolet)
                 self.sprites.add(uv)
@@ -180,6 +185,13 @@ class Game:
                 bh = BlackHole(*blackhole)
                 self.sprites.add(bh)
                 self.mobs.add(bh)
+=======
+            for mob in MOBS_SKY_LIST:
+                m = Ultraviolet(*mob)
+                self.sprites.add(m)
+                self.mobs.add(m)
+                self.uv_mobs.add(m)
+>>>>>>> 9777840a69c96120f4f8bd0bf7cfcdbfd3975376
 
         # Create Powerup if active on blue level
         if self.bluePowerUp == 1:
@@ -189,6 +201,7 @@ class Game:
             self.powerUpOnMap = True
 
     def playGreen(self):
+        self.red = False
         print ("game.playGreen: Creating the Forest level")
         self.background = pygame.image.load('images/green_background.png').convert() #load background image
         # Create Green Level from tile map
@@ -263,6 +276,7 @@ class Game:
                 m = Ultraviolet(*mob)
                 self.sprites.add(m)
                 self.mobs.add(m)
+                self.uv_mobs.add(m)
             for mob in GAMMA_FOREST_LIST:
                 g = Gamma(*mob)
                 self.sprites.add(g)
@@ -272,7 +286,6 @@ class Game:
                 self.sprites.add(i)
                 self.mobs.add(i)
 
-
         # Create Powerup if active on green level
         if self.greenPowerUp == 1:
             self.powerUp = PowerUp(1000, 300, powerUp_image)
@@ -281,6 +294,7 @@ class Game:
             self.powerUpOnMap = True
 
     def playRed(self):
+        self.red = True
         print ("game.playRed: Creating the Desert level")
         self.background = pygame.image.load('images/red_background.png').convert() #load background image
         # Create Green Level from tile map
@@ -328,6 +342,7 @@ class Game:
                 m = Ultraviolet(*mob)
                 self.sprites.add(m)
                 self.mobs.add(m)
+                self.uv_mobs.add(m)
             for mob in GAMMA_DESERT_LIST:
                 g = Gamma(*mob)
                 self.sprites.add(g)
@@ -344,6 +359,7 @@ class Game:
             self.powerUpGroup.add(self.powerUp)
             self.powerUpOnMap = True
 
+<<<<<<< HEAD
     # def blackHoleGravity(self):
     #     BLACKHOLE_RANGE = 100
     #
@@ -355,6 +371,19 @@ class Game:
     #             print("Spec distance RIGHT:", self.spec.rect.x + coords[0])
     #             self.spec.rect.x = self.spec.rect.x - 1
     #     print("Spec coords: ", self.spec.rect.x)
+=======
+    def blackHoleGravity(self):
+        BLACKHOLE_RANGE = 100
+        if self.red:
+            for coords in BLACK_HOLE_DESERT_LIST:
+                if self.spec.rect.x - coords[0] <= -10 and self.spec.rect.x - coords[0] > - BLACKHOLE_RANGE:
+                    print("Spec distance LEFT:", self.spec.rect.x - coords[0])
+                    self.spec.rect.x = self.spec.rect.x + 1
+                elif self.spec.rect.x - coords[0] >= -10 and self.spec.rect.x - coords[0] < BLACKHOLE_RANGE:
+                    print("Spec distance RIGHT:", self.spec.rect.x + coords[0])
+                    self.spec.rect.x = self.spec.rect.x - 1
+            print("Spec coords: ", self.spec.rect.x)
+>>>>>>> 9777840a69c96120f4f8bd0bf7cfcdbfd3975376
 
     def displayLifeBars(self):
         self.lives_imgs[0].set_colorkey(BLACK)
@@ -411,6 +440,54 @@ class Game:
             self.screen = pygame.display.set_mode(RESOLUTION, pygame.FULLSCREEN)
         else:
             self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZEABLE)
+
+    #Animation occurs when Spec collides with mob and loses life
+    def loseAnimation(self):
+        self.spec.kill()
+        self.drawScreen()
+        frozen_screen = self.screen.copy()
+        collision_image = pygame.image.load('images/spec_collision.png').convert()
+        collision_image.set_colorkey([34,177,76])
+        self.spec.image = collision_image
+        self.screen.blit(self.spec.image, (self.spec.rect.x, self.spec.rect.y))
+        pygame.display.flip()
+        pygame.time.wait(500)
+        for i in range(100):
+            if i < 20:
+                self.spec.rect.y -= self.spec.vertical[i] / 1.5
+            elif i < 40:
+                self.spec.rect.y += self.spec.vertical[19-i] / 1.5
+            else:
+                self.spec.rect.y += self.spec.vertical[0] / 1.5
+            self.screen.blit(frozen_screen, (0,0))
+            self.screen.blit(self.spec.image, (self.spec.rect.x, self.spec.rect.y))
+            pygame.display.flip()
+            pygame.time.wait(10)
+
+    #Game winning animation.  Light object radiates color and screen fades to white
+    def endAnimation(self):
+        fade_out = pygame.Surface((600,400))
+        fade_out.fill(WHITE)
+        fade_out.set_alpha(20)
+        for i in range(300):
+            if i < 100:
+                pygame.draw.line(self.screen, (randint(0,255),randint(0,255),randint(0,255)), (self.light.rect.centerx, self.light.rect.centery), (randint(400,600),randint(0,400)), 1)
+                self.screen.blit(self.light.image, (self.light.rect.x, self.light.rect.y))
+                self.screen.blit(fade_out, (0,0))
+                pygame.display.flip()
+                pygame.time.wait(3)
+            elif i < 200:
+                pygame.draw.line(self.screen, (randint(0,255),randint(0,255),randint(0,255)), (self.light.rect.centerx, self.light.rect.centery), (randint(300,600),randint(0,400)),2)
+                self.screen.blit(self.light.image, (self.light.rect.x, self.light.rect.y))
+                self.screen.blit(fade_out, (0,0))
+                pygame.display.flip()
+                pygame.time.wait(3)
+            else:
+                pygame.draw.line(self.screen, (randint(0,255),randint(0,255),randint(0,255)), (self.light.rect.centerx, self.light.rect.centery), (randint(0,600),randint(0,400)), 3)
+                self.screen.blit(self.light.image, (self.light.rect.x, self.light.rect.y))
+                self.screen.blit(fade_out, (0,0))
+                pygame.display.flip()
+                pygame.time.wait(3)
 
     def drawScreen(self):
         #self.screen.fill(SKY_BLUE)
@@ -470,6 +547,7 @@ class Game:
         collision_mob = pygame.sprite.spritecollide(self.spec, self.mobs, False)
         if self.spec.rect.top >= HEIGHT or len(collision_mob) != 0:
             print("I should be dying now")
+            self.loseAnimation()
             self.levelStatus = "restart"    #go back to main menu for now
 
             #Spec has lost all 7 of his lives
@@ -562,17 +640,23 @@ class Game:
             self.powerUpOnMap = False
             self.powerUpTimer = 600
 
+<<<<<<< HEAD
 
         # Trying to detect collisions for mobs and walls
         #for mob in pygame.sprite.groupcollide(self.mobs, self.all_blocks, False, False):
+=======
+        # Trying to detect collisions for ultraviolet mobs and walls
+        for mob in pygame.sprite.groupcollide(self.uv_mobs, self.all_blocks, False, False):
+>>>>>>> 9777840a69c96120f4f8bd0bf7cfcdbfd3975376
         #    print("Mob collision with self.all_blocks!")
             # moving rect.x by 3 is done because 1 or 2 would leave mobs stuck in walls sometimes
-        #    if mob.left == True:
-        #        mob.rect.x += 3         # Move mob right slightly
-        #        mob.left = False        # Change moving direction to right
-        #    else:
-        #        mob.rect.x -=3          # Move mob left slightly
-        #        mob.left = True         # Change moving direction to left
+            if mob.left == True:
+                mob.rect.x += 3         # Move mob right slightly
+                mob.left = False        # Change moving direction to right
+            else:
+                mob.rect.x -=3          # Move mob left slightly
+                mob.left = True         # Change moving direction to left
+            mob.step = 0                # Reset stepcount
 
         # Check for a collision between the invisible wall block and the sky blocks kill sky block
         for block in self.sky_blocks:
@@ -797,6 +881,7 @@ while(openMenu):
         if game.checkLightAcquired("blue") \
         and game.checkLightAcquired("red") \
         and game.checkLightAcquired("green"):
+            game.endAnimation()
             menu.gameCompletedScreen()
             game.resetGame()
             break
