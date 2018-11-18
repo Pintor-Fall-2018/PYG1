@@ -140,8 +140,8 @@ class Game:
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.ground_blocks.add(tile)
-                    elif bluebox[row][column] == tiles['grass']:
-                        tile = Tile(20 * column, 20 * row, 'images/grass.png')
+                    elif bluebox[row][column] == tiles['cloud']:
+                        tile = Tile(20 * column, 20 * row, 'images/cloud.png')
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.ground_blocks.add(tile)
@@ -161,10 +161,25 @@ class Game:
             print("Playing without mobs")
         else:
             # Create Mobs and add to its Groups()
-            for mob in MOBS_SKY_LIST:
-                m = Ultraviolet(*mob)
-                self.sprites.add(m)
-                self.mobs.add(m)
+            for ultraviolet in ULTRAVIOLET_SKY_LIST:
+                uv = Ultraviolet(*ultraviolet)
+                self.sprites.add(uv)
+                self.mobs.add(uv)
+
+            for gammaRay in GAMMA_SKY_LIST:
+                gr = Gamma(*gammaRay)
+                self.sprites.add(gr)
+                self.mobs.add(gr)
+
+            for infrared in INFRARED_SKY_LIST:
+                ir = Infrared(*infrared)
+                self.sprites.add(ir)
+                self.mobs.add(ir)
+
+            for blackhole in BLACK_HOLE_SKY_LIST:
+                bh = BlackHole(*blackhole)
+                self.sprites.add(bh)
+                self.mobs.add(bh)
 
         # Create Powerup if active on blue level
         if self.bluePowerUp == 1:
@@ -329,17 +344,17 @@ class Game:
             self.powerUpGroup.add(self.powerUp)
             self.powerUpOnMap = True
 
-    def blackHoleGravity(self):
-        BLACKHOLE_RANGE = 100
-
-        for coords in BLACK_HOLE_DESERT_LIST:
-            if self.spec.rect.x - coords[0] <= 0 and self.spec.rect.x - coords[0] > - BLACKHOLE_RANGE:
-                print("Spec distance LEFT:", self.spec.rect.x - coords[0])
-                self.spec.rect.x = self.spec.rect.x + 1
-            elif self.spec.rect.x - coords[0] >=0 and self.spec.rect.x - coords[0] < BLACKHOLE_RANGE:
-                print("Spec distance RIGHT:", self.spec.rect.x + coords[0])
-                self.spec.rect.x = self.spec.rect.x - 1
-        print("Spec coords: ", self.spec.rect.x)
+    # def blackHoleGravity(self):
+    #     BLACKHOLE_RANGE = 100
+    #
+    #     for coords in BLACK_HOLE_DESERT_LIST:
+    #         if self.spec.rect.x - coords[0] <= 0 and self.spec.rect.x - coords[0] > - BLACKHOLE_RANGE:
+    #             print("Spec distance LEFT:", self.spec.rect.x - coords[0])
+    #             self.spec.rect.x = self.spec.rect.x + 1
+    #         elif self.spec.rect.x - coords[0] >=0 and self.spec.rect.x - coords[0] < BLACKHOLE_RANGE:
+    #             print("Spec distance RIGHT:", self.spec.rect.x + coords[0])
+    #             self.spec.rect.x = self.spec.rect.x - 1
+    #     print("Spec coords: ", self.spec.rect.x)
 
     def displayLifeBars(self):
         self.lives_imgs[0].set_colorkey(BLACK)
@@ -440,6 +455,7 @@ class Game:
 
     def updateSprites(self):
         self.sprites.update(self.powerUpActive, self.sprites, self.mobs)
+        self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks used in updateSprites
 
         if self.powerUpActive == True:
             print("game.updateSprites: reducing powerUpTimer: ", self.powerUpTimer)
@@ -546,6 +562,7 @@ class Game:
             self.powerUpOnMap = False
             self.powerUpTimer = 600
 
+
         # Trying to detect collisions for mobs and walls
         #for mob in pygame.sprite.groupcollide(self.mobs, self.all_blocks, False, False):
         #    print("Mob collision with self.all_blocks!")
@@ -578,7 +595,6 @@ class Game:
             self.spec.speed[1] = 0      # Set backward speed to 0 so Spec can't move backwards
 
         # Moving the Blocks based on time
-        self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks
         if self.timeSinceInit - self.blockTimer > 50: # Check if it has been 1000ms
             # print("time should be above 1000 ms: ", self.timeSinceInit - self.blockTimer)
             # print("self.timeSinceInit: ", self.timeSinceInit)
@@ -589,12 +605,23 @@ class Game:
                 self.block_movement_counter += 1
                 for block in self.sky_blocks:
                     block.rect.x += 1        # Move blocks right
+                    # block.moving_left = False
+                    # block.moving_right = True
             elif self.block_movement_counter < 100:
                 self.block_movement_counter += 1
                 for block in self.sky_blocks:
                     block.rect.x -= 1        # Move blocks left
+                    # block.moving_left = True
+                    # block.moving_right = False
             else:
                 self.block_movement_counter = 0
+                # block.moving_left = False
+                # block.moving_right = False
+
+            # Scroll Spec if he is standing on a moving platform
+            # for block in self.sky_blocks:
+            #     if block.rect.y >= spec.rect.y + 3: # check if above block
+
 
         # Scrolling happens in the updateSprites part of game
         if (self.spec.rect.x > WIDTH - 300) \
@@ -627,7 +654,7 @@ class Game:
             elif self.whichLevelToPlay == "RED":
                 self.background_x -= (len(redbox[0]) * 20 / self.background.get_width()) * .60  # map pixels / background image pixels
 
-        self.blackHoleGravity()
+        # self.blackHoleGravity()
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
@@ -671,6 +698,8 @@ class Tile(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.moving_left = False
+        self.moving_right = False
 
 
 game = Game()
