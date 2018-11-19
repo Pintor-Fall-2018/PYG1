@@ -10,7 +10,7 @@ class Mob(pygame.sprite.Sprite):
 
     #Returns true if spec is within earshot, evaluates whether to play sound.
     def withinEarshot(self, spec_x):
-        if abs(self.rect.x - spec_x) < 500:
+        if self.rect.x - spec_x < 400:
             return True
         else:
             return False
@@ -86,11 +86,11 @@ class Gamma(Mob):
             self.left = not self.left
             self.image = self.animations[self.left]
             self.step = 0
-            ray = Projectile (self.rect.x, self.rect.centery, self.left)
-            sprites.add(ray)
-            mobs.add(ray)
             if self.withinEarshot(spec_x):
                 self.mob_sounds[0].play()
+                ray = Projectile (self.rect.x, self.rect.centery, self.left)
+                sprites.add(ray)
+                mobs.add(ray)
 
 class Infrared(Mob):
     def __init__(self, x, y, mob_sounds):
