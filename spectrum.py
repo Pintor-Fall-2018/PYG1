@@ -15,7 +15,7 @@ from map_Red import *
 #       Especially import for sound effects
 # 44100 Hz = Frequency,    -16 = size
 # 1 = channels, 2048 = buffersize -- this is what prevents sound lag
-pygame.mixer.pre_init(44100, -16, 1, 2048)
+pygame.mixer.pre_init(44100, -16, 2, 4096)
 
 
 pygame.init()   #initialize imported pygame modules
@@ -36,7 +36,7 @@ class Game:
         self.levelStatus = ""
         self.lives = 7
         self.gameLost = False
-        self.randomPowerUpLevel = random.randint(1, 3)
+        self.randomPowerUpLevel = 1 # random.randint(1, 3)
         print ("randomPowerUpLevel = ", self.randomPowerUpLevel)
         self.bluePowerUp = 0
         self.greenPowerUp = 0
@@ -44,6 +44,10 @@ class Game:
         self.powerUpOnMap = False
         self.powerUpTimer = 0
         self.red = False
+
+        #https://opengameart.org/content/fast-fight-battle-music-looped
+        #Author: XCVG
+        self.powerup_music = pygame.mixer.Sound('sounds/fight_looped.wav')
 
     def resetGame(self):
         # resets game attributes
@@ -188,7 +192,7 @@ class Game:
 
         # Create Powerup if active on blue level
         if self.bluePowerUp == 1:
-            self.powerUp = PowerUp(1000, 300, powerUp_image)
+            self.powerUp = PowerUp(1100, 300, powerUp_image)
             self.sprites.add(self.powerUp)
             self.powerUpGroup.add(self.powerUp)
             self.powerUpOnMap = True
@@ -515,17 +519,21 @@ class Game:
 
         if self.powerUpActive == True:
             print("game.updateSprites: reducing powerUpTimer: ", self.powerUpTimer)
+            self.powerup_music.play(1)
             self.powerUpTimer -= 1      #reduce timer
             if self.powerUpTimer <= 0:
                 #Rest Power Up timer
                 self.powerUpActive = False
                 self.powerUpTimer = 0
+        else:
+            self.powerup_music.stop()
 
 
         # Test Spec for death below the map or collisions with a mob
         collision_mob = pygame.sprite.spritecollide(self.spec, self.mobs, False)
         if self.spec.rect.top >= HEIGHT or len(collision_mob) != 0:
             print("I should be dying now")
+            self.powerup_music.stop()
             self.loseAnimation()
             self.levelStatus = "restart"    #go back to main menu for now
 
@@ -662,22 +670,38 @@ class Game:
                 self.block_movement_counter += 1
                 for block in self.sky_blocks:
                     block.rect.x += 1        # Move blocks right
-                    # block.moving_left = False
-                    # block.moving_right = True
+                    block.moving_left = False
+                    block.moving_right = True
             elif self.block_movement_counter < 100:
                 self.block_movement_counter += 1
                 for block in self.sky_blocks:
                     block.rect.x -= 1        # Move blocks left
-                    # block.moving_left = True
-                    # block.moving_right = False
+                    block.moving_left = True
+                    block.moving_right = False
             else:
                 self.block_movement_counter = 0
-                # block.moving_left = False
-                # block.moving_right = False
+                block.moving_left = False
+                block.moving_right = False
 
             # Scroll Spec if he is standing on a moving platform
-            # for block in self.sky_blocks:
-            #     if block.rect.y >= spec.rect.y + 3: # check if above block
+            for block in self.sky_blocks:
+                # print("block.rect.top: ", block.rect.top, " <= self.spec.rect.bottom: ", self.spec.rect.bottom)
+                # print("block.rect.top: ", block.rect.top, " >= self.spec.rect.top ", self.spec.rect.top)
+                # print("block.rect.left: ", block.rect.left," <= self.spec.rect.bottom:", self.spec.rect.bottom)
+                # print("block.rect.right: ", block.rect.right," >= self.spec.rect.bottom", self.spec.rect.bottom)
+                #Check if Spec is on a block (bottom adjusted below top of block)
+                #Check is spec is above a block so he doesn't slide below the block
+                #Check if spec is between a tile's left to slide
+                #Check if spec is between a tile's right side
+                if block.rect.top <= self.spec.rect.bottom + 3 \
+                and block.rect.top >= self.spec.rect.top \
+                and block.rect.left <= self.spec.rect.left + 5 \
+                and block.rect.right >= self.spec.rect.right - 5:
+
+                    if block.moving_left == True:
+                        self.spec.speed[1] += .1 # Add to spec backward speed
+                    elif block.moving_right == True:
+                        self.spec.speed[0] += .1   # Add to spec forward speed
 
 
         # Scrolling happens in the updateSprites part of game
@@ -766,7 +790,7 @@ click = pygame.mixer.Sound('sounds/click.ogg')
 click.set_volume(0.5)
 lose_music = pygame.mixer.Sound('sounds/lose_music.ogg')
 win_music = pygame.mixer.Sound('sounds/win_music.ogg')
-
+#Load Game Sounds
 # Music by Otto Halmén
 # https://opengameart.org/content/death-is-just-another-path
 final_death = pygame.mixer.Sound('sounds/Death Is Just Another Path.ogg')
