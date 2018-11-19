@@ -684,24 +684,24 @@ class Game:
                 block.moving_right = False
 
             # Scroll Spec if he is standing on a moving platform
-            for block in self.sky_blocks:
-                # print("block.rect.top: ", block.rect.top, " <= self.spec.rect.bottom: ", self.spec.rect.bottom)
-                # print("block.rect.top: ", block.rect.top, " >= self.spec.rect.top ", self.spec.rect.top)
-                # print("block.rect.left: ", block.rect.left," <= self.spec.rect.bottom:", self.spec.rect.bottom)
-                # print("block.rect.right: ", block.rect.right," >= self.spec.rect.bottom", self.spec.rect.bottom)
-                #Check if Spec is on a block (bottom adjusted below top of block)
-                #Check is spec is above a block so he doesn't slide below the block
-                #Check if spec is between a tile's left to slide
-                #Check if spec is between a tile's right side
-                if block.rect.top <= self.spec.rect.bottom + 3 \
-                and block.rect.top >= self.spec.rect.top \
-                and block.rect.left <= self.spec.rect.left + 5 \
-                and block.rect.right >= self.spec.rect.right - 5:
-
-                    if block.moving_left == True:
-                        self.spec.speed[1] += .1 # Add to spec backward speed
-                    elif block.moving_right == True:
-                        self.spec.speed[0] += .1   # Add to spec forward speed
+            # for block in self.sky_blocks:
+            #     # print("block.rect.top: ", block.rect.top, " <= self.spec.rect.bottom: ", self.spec.rect.bottom)
+            #     # print("block.rect.top: ", block.rect.top, " >= self.spec.rect.top ", self.spec.rect.top)
+            #     # print("block.rect.left: ", block.rect.left," <= self.spec.rect.bottom:", self.spec.rect.bottom)
+            #     # print("block.rect.right: ", block.rect.right," >= self.spec.rect.bottom", self.spec.rect.bottom)
+            #     #Check if Spec is on a block (bottom adjusted below top of block)
+            #     #Check is spec is above a block so he doesn't slide below the block
+            #     #Check if spec is between a tile's left to slide
+            #     #Check if spec is between a tile's right side
+            #     if block.rect.top <= self.spec.rect.bottom + 3 \
+            #     and block.rect.top >= self.spec.rect.top \
+            #     and block.rect.left <= self.spec.rect.left + 5 \
+            #     and block.rect.right >= self.spec.rect.right - 5:
+            #
+            #         if block.moving_left == True:
+            #             self.spec.speed[1] += .1 # Add to spec backward speed
+            #         elif block.moving_right == True:
+            #             self.spec.speed[0] += .1   # Add to spec forward speed
 
 
         # Scrolling happens in the updateSprites part of game
