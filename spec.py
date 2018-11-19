@@ -40,7 +40,7 @@ class Spec(pygame.sprite.Sprite):
         self.vertical = [8,8,7,7,6,6,5,5,4.5,4.5,4.5,4.5,3.5,2.5,2.5,2,1.5,1.5,1,1]
         self.shadow = {"top":0.0, "bottom":0.0, "left":0.0, "right":0.0}
 
-    def update(self, powerUp, sprites, mobs):
+    def update(self, powerUp, sprites, mobs, spec_x):
         self.snapShot()  #capture position from last frame
         self.rect.x += self.speedCalc() #calculate sprite direction and speed
         if self.falling:  #gravity increases velocity

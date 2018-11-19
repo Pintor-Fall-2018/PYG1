@@ -23,9 +23,8 @@ pygame.display.set_caption(TITLE)
 pygame.mouse.set_visible(1)   # Mouse visible == 1
 time = pygame.time.Clock()
 
-
 class Game:
-    def __init__(self):
+    def __init__(self, mob_sounds):
         #sets up screen resolution
         self.status = True
         self.screen = pygame.display.set_mode(RESOLUTION, pygame.RESIZABLE)   #display settings
@@ -44,6 +43,7 @@ class Game:
         self.powerUpOnMap = False
         self.powerUpTimer = 0
         self.red = False
+        self.mob_sounds = mob_sounds
 
     def resetGame(self):
         # resets game attributes
@@ -166,23 +166,23 @@ class Game:
         else:
             # Create Mobs and add to its Groups()
             for ultraviolet in ULTRAVIOLET_SKY_LIST:
-                uv = Ultraviolet(*ultraviolet)
+                uv = Ultraviolet(*ultraviolet, self.mob_sounds)
                 self.sprites.add(uv)
                 self.mobs.add(uv)
                 self.uv_mobs.add(uv)
 
             for gammaRay in GAMMA_SKY_LIST:
-                gr = Gamma(*gammaRay)
+                gr = Gamma(*gammaRay, self.mob_sounds)
                 self.sprites.add(gr)
                 self.mobs.add(gr)
 
             for infrared in INFRARED_SKY_LIST:
-                ir = Infrared(*infrared)
+                ir = Infrared(*infrared, self.mob_sounds)
                 self.sprites.add(ir)
                 self.mobs.add(ir)
 
             for blackhole in BLACK_HOLE_SKY_LIST:
-                bh = BlackHole(*blackhole)
+                bh = BlackHole(*blackhole, self.mob_sounds)
                 self.sprites.add(bh)
                 self.mobs.add(bh)
 
@@ -266,16 +266,16 @@ class Game:
         else:
             # Create Mobs and add to its Groups()
             for mob in ULTRAVIOLET_FOREST_LIST:
-                m = Ultraviolet(*mob)
+                m = Ultraviolet(*mob, self.mob_sounds)
                 self.sprites.add(m)
                 self.mobs.add(m)
                 self.uv_mobs.add(m)
             for mob in GAMMA_FOREST_LIST:
-                g = Gamma(*mob)
+                g = Gamma(*mob, self.mob_sounds)
                 self.sprites.add(g)
                 self.mobs.add(g)
             for mob in INFRARED_FOREST_LIST:
-                i = Infrared(*mob)
+                i = Infrared(*mob, self.mob_sounds)
                 self.sprites.add(i)
                 self.mobs.add(i)
 
@@ -332,16 +332,16 @@ class Game:
         else:
             # Create Mobs and add to its Groups()
             for mob in ULTRAVIOLET_DESERT_LIST:
-                m = Ultraviolet(*mob)
+                m = Ultraviolet(*mob, self.mob_sounds)
                 self.sprites.add(m)
                 self.mobs.add(m)
                 self.uv_mobs.add(m)
             for mob in GAMMA_DESERT_LIST:
-                g = Gamma(*mob)
+                g = Gamma(*mob, self.mob_sounds)
                 self.sprites.add(g)
                 self.mobs.add(g)
             for mob in BLACK_HOLE_DESERT_LIST:
-                bh = BlackHole(*mob)
+                bh = BlackHole(*mob, self.mob_sounds)
                 self.sprites.add(bh)
                 self.mobs.add(bh)
 
@@ -510,7 +510,7 @@ class Game:
                         self.spec.jumpThreshold = 5 #raise threshold for smaller jump
 
     def updateSprites(self):
-        self.sprites.update(self.powerUpActive, self.sprites, self.mobs)
+        self.sprites.update(self.powerUpActive, self.sprites, self.mobs, self.spec.rect.x)
         self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks used in updateSprites
 
         if self.powerUpActive == True:
@@ -758,8 +758,13 @@ class Tile(pygame.sprite.Sprite):
         self.moving_left = False
         self.moving_right = False
 
+#Load Game sounds
+mob_sounds = []
+mob_ray = pygame.mixer.Sound('sounds/mob_ray.wav')
+mob_ray.set_volume(0.05)
+mob_sounds.append(mob_ray)
 
-game = Game()
+game = Game(mob_sounds)
 
 #Load menu sounds
 click = pygame.mixer.Sound('sounds/click.ogg')

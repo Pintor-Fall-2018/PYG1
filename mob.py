@@ -3,13 +3,21 @@ from random import randint
 from settings import *
 
 class Mob(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, mob_sounds):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
         self.parent_variable = 12345
+        self.mob_sounds = mob_sounds
+
+    #Returns true if spec is within earshot, evaluates whether to play sound.
+    def withinEarshot(self, spec_x):
+        if abs(self.rect.x - spec_x) < 500:
+            return True
+        else:
+            return False
 
 class Ultraviolet(Mob):
-    def __init__(self, x, y):
-        super().__init__(x,y)
+    def __init__(self, x, y, mob_sounds):
+        super().__init__(x,y, mob_sounds)
         self.step = 0
         self.animations = []
         self.animations.append(pygame.image.load('images/uv0.png').convert())
@@ -22,7 +30,7 @@ class Ultraviolet(Mob):
         self.rect.y = y
         self.left = True  #True is left, False is right
 
-    def update(self, powerUp, sprites, mobs):
+    def update(self, powerUp, sprites, mobs, spec_x):
         if self.left:
             self.rect.x -= 1
             self.image = self.animations[0]
@@ -38,8 +46,8 @@ class Ultraviolet(Mob):
             self.step = 0
 
 class Gamma(Mob):
-    def __init__(self, x, y):
-        super().__init__(x,y)
+    def __init__(self, x, y, mob_sounds):
+        super().__init__(x,y, mob_sounds)
         self.step = 0
         self.animations = []
         self.animations.append(pygame.image.load('images/mob_gamma0.png').convert())
@@ -54,7 +62,7 @@ class Gamma(Mob):
         self.starting_y = y
         self.wiggled_x = 0
 
-    def update(self, powerUp, sprites, mobs):
+    def update(self, powerUp, sprites, mobs, spec_x):
         if self.step is 80:
             self.recent_x = self.rect.x
         if self.step > 80 and self.step < 100 and self.step % 2 == 0:
@@ -70,9 +78,9 @@ class Gamma(Mob):
             self.rect.y = self.starting_y
             self.rect.x -= self.wiggled_x
             self.wiggled_x = 0
-        self.animate(sprites, mobs)
+        self.animate(sprites, mobs, spec_x)
 
-    def animate(self, sprites, mobs):
+    def animate(self, sprites, mobs, spec_x):
         self.step += 1
         if self.step == 100:
             self.left = not self.left
@@ -81,10 +89,12 @@ class Gamma(Mob):
             ray = Projectile (self.rect.x, self.rect.centery, self.left)
             sprites.add(ray)
             mobs.add(ray)
+            if self.withinEarshot(spec_x):
+                self.mob_sounds[0].play()
 
 class Infrared(Mob):
-    def __init__(self, x, y):
-        super().__init__(x,y)
+    def __init__(self, x, y, mob_sounds):
+        super().__init__(x,y, mob_sounds)
         self.step = 0
         self.animations = []
         self.animations.append(pygame.image.load('images/mob_infrared1.png').convert())
@@ -100,7 +110,7 @@ class Infrared(Mob):
         self.jump_count = 0
         self.vertical = [3.5,3.5,3.5,3,3,3,2,2,1.5,1.5,1.5,1,1,1,1,1,1,.5,.5,.5,.5,.5]
 
-    def update(self, powerUp, sprites, mobs):
+    def update(self, powerUp, sprites, mobs, spec_x):
         self.step += 1
         if self.jump:
             self.image = self.animations[1]
@@ -122,8 +132,8 @@ class Infrared(Mob):
             self.step = 0
 
 class BlackHole(Mob):
-    def __init__(self, x, y):
-        super().__init__(x,y)
+    def __init__(self, x, y, mob_sounds):
+        super().__init__(x,y, mob_sounds)
         self.step = 0
         self.animations = []
         self.animations.append(pygame.image.load('images/black_hole1.png').convert())
@@ -136,7 +146,7 @@ class BlackHole(Mob):
         self.rect.y = y
         self.left = True  #True is left, False is right
 
-    def update(self, powerUp, sprites, mobs):
+    def update(self, powerUp, sprites, mobs, spec_x):
         if self.left:
             self.rect.x -= 1
             self.image = self.animations[0]
@@ -162,7 +172,7 @@ class Projectile(pygame.sprite.Sprite):
         self.left = left
         self.timer = 0
 
-    def update(self, powerUp, sprites, mobs):
+    def update(self, powerUp, sprites, mobs, spec_x):
         self.animate()
         self.timer += 1
         if self.timer < 125:
