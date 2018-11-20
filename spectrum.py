@@ -192,7 +192,7 @@ class Game:
 
         # Create Powerup if active on blue level
         if self.bluePowerUp == 1:
-            self.powerUp = PowerUp(1100, 300, powerUp_image)
+            self.powerUp = PowerUp(1120, 260, powerUp_image)
             self.sprites.add(self.powerUp)
             self.powerUpGroup.add(self.powerUp)
             self.powerUpOnMap = True
@@ -609,6 +609,7 @@ class Game:
         collide_light = pygame.sprite.spritecollide(self.spec, self.lights, False)
         if len(collide_light) != 0:
             #print('I am colliding with the light object now')
+            self.powerup_music.stop()
             if self.whichLevelToPlay == "BLUE":
                 self.setLightAcquired("blue")
             elif self.whichLevelToPlay == "GREEN":
