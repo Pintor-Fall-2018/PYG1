@@ -802,7 +802,7 @@ win_music = pygame.mixer.Sound('sounds/win_music.ogg')
 #Game sound effects
 jump_sound = pygame.mixer.Sound('sounds/jump_01.ogg')
 jump_sound.set_volume(0.5)
-death_yell = pygame.mixer.Sound('sounds/3yell9.ogg')
+death_yell = pygame.mixer.Sound('sounds/Wilhelm_Scream.wav')
 
 #Load Game Sounds
 # Music by Otto Halmén
