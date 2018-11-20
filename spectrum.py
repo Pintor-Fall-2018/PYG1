@@ -671,18 +671,18 @@ class Game:
                 self.block_movement_counter += 1
                 for block in self.sky_blocks:
                     block.rect.x += 1        # Move blocks right
-                    block.moving_left = False
-                    block.moving_right = True
+                    # block.moving_left = False
+                    # block.moving_right = True
             elif self.block_movement_counter < 100:
                 self.block_movement_counter += 1
                 for block in self.sky_blocks:
                     block.rect.x -= 1        # Move blocks left
-                    block.moving_left = True
-                    block.moving_right = False
+                    # block.moving_left = True
+                    # block.moving_right = False
             else:
                 self.block_movement_counter = 0
-                block.moving_left = False
-                block.moving_right = False
+                # block.moving_left = False
+                # block.moving_right = False
 
             # Scroll Spec if he is standing on a moving platform
             # for block in self.sky_blocks:
