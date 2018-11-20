@@ -426,6 +426,7 @@ class Game:
 
     #Animation occurs when Spec collides with mob and loses life
     def loseAnimation(self):
+        death_yell.play()
         self.spec.kill()
         self.drawScreen()
         frozen_screen = self.screen.copy()
@@ -800,6 +801,8 @@ win_music = pygame.mixer.Sound('sounds/win_music.ogg')
 
 #Game sound effects
 jump_sound = pygame.mixer.Sound('sounds/jump_01.ogg')
+jump_sound.set_volume(0.5)
+death_yell = pygame.mixer.Sound('sounds/3yell9.ogg')
 
 #Load Game Sounds
 # Music by Otto Halmén
