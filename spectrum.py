@@ -497,6 +497,7 @@ class Game:
                 self.spec.backward = True
             if event.key == pygame.K_UP:
                 if self.spec.falling is False:
+                    jump_sound.play()
                     self.spec.jumpTimeElapsed = pygame.time.get_ticks() #initial store of milliseconds to evaluate length of keypress
                     self.spec.jump = True
             if event.key == pygame.K_ESCAPE:
@@ -735,7 +736,7 @@ class Game:
             elif self.whichLevelToPlay == "RED":
                 self.background_x -= (len(redbox[0]) * 20 / self.background.get_width()) * .60  # map pixels / background image pixels
 
-        # self.blackHoleGravity()
+        self.blackHoleGravity()
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
@@ -795,6 +796,10 @@ click = pygame.mixer.Sound('sounds/click.ogg')
 click.set_volume(0.5)
 lose_music = pygame.mixer.Sound('sounds/lose_music.ogg')
 win_music = pygame.mixer.Sound('sounds/win_music.ogg')
+
+#Game sound effects
+jump_sound = pygame.mixer.Sound('sounds/jump_01.ogg')
+
 #Load Game Sounds
 # Music by Otto Halmén
 # https://opengameart.org/content/death-is-just-another-path
