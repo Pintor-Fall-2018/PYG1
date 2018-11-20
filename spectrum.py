@@ -98,6 +98,7 @@ class Game:
         self.lights = pygame.sprite.Group()
         self.mobs = pygame.sprite.Group()
         self.uv_mobs = pygame.sprite.Group()
+        self.bh_mobs = pygame.sprite.Group()
         self.powerUpGroup = pygame.sprite.Group()           # Power Up Group
 
         # Life bar images
@@ -348,6 +349,7 @@ class Game:
                 bh = BlackHole(*mob, self.mob_sounds)
                 self.sprites.add(bh)
                 self.mobs.add(bh)
+                self.bh_mobs.add(bh)
 
         # Create Powerup if active on red level
         if self.redPowerUp == 1:
@@ -357,14 +359,16 @@ class Game:
             self.powerUpOnMap = True
 
     def blackHoleGravity(self):
-        BLACKHOLE_RANGE = 100
+        BLACKHOLE_RANGE = 80
         if self.red:
-            for coords in BLACK_HOLE_DESERT_LIST:
-                if self.spec.rect.x - coords[0] <= -10 and self.spec.rect.x - coords[0] > - BLACKHOLE_RANGE:
-                    print("Spec distance LEFT:", self.spec.rect.x - coords[0])
+            for mob in self.bh_mobs:
+                #Distance to the left of the black hole
+                if self.spec.rect.x - mob.rect.x <= -10 and self.spec.rect.x - mob.rect.x > - BLACKHOLE_RANGE:
+                    print("Spec distance LEFT:", self.spec.rect.x - mob.rect.x)
                     self.spec.rect.x = self.spec.rect.x + 1
-                elif self.spec.rect.x - coords[0] >= -10 and self.spec.rect.x - coords[0] < BLACKHOLE_RANGE:
-                    print("Spec distance RIGHT:", self.spec.rect.x + coords[0])
+                #Distance to the right of the black hole.
+                elif self.spec.rect.x - mob.rect.x >= -10 and self.spec.rect.x - mob.rect.x < BLACKHOLE_RANGE:
+                    print("Spec distance RIGHT:", self.spec.rect.x + mob.rect.x)
                     self.spec.rect.x = self.spec.rect.x - 1
             print("Spec coords: ", self.spec.rect.x)
 
