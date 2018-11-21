@@ -143,22 +143,27 @@ class Game:
         # Create Blue Level from tile map
         for row in range(len(bluebox)):
             for column in range(len(bluebox[0])):
-                if bluebox[row][column] is not tiles['sky']:
-                    if bluebox[row][column] == tiles['earth']:
+                if bluebox[row][column] is not tiles_blue['sky']:
+                    if bluebox[row][column] == tiles_blue['earth']:
                         tile = Tile(20 * column, 20 * row, 'images/earth.png')
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.ground_blocks.add(tile)
-                    elif bluebox[row][column] == tiles['cloud']:
+                    elif bluebox[row][column] == tiles_blue['cloud']:
                         tile = Tile(20 * column, 20 * row, 'images/cloud.png')
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.ground_blocks.add(tile)
-                    elif bluebox[row][column] == tiles['platform']:
+                    elif bluebox[row][column] == tiles_blue['platform']:
                         tile = Tile(20 * column, 20 * row, 'images/platform.png')
                         self.sprites.add(tile)
                         self.all_blocks.add(tile)
                         self.sky_blocks.add(tile)
+                    elif bluebox[row][column] == tiles_blue['platform1']:
+                        tile = Tile(20 * column, 20 * row, 'images/blue_platform1.png')
+                        self.sprites.add(tile)
+                        self.all_blocks.add(tile)
+                        self.ground_blocks.add(tile)
 
         # Create Blue Light Object that wins the blue level and adds it to its Groups()
         self.light = Light(bl_light_endGame_imgs)
