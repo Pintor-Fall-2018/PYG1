@@ -139,7 +139,7 @@ class Game:
     def playBlue(self):
         self.red = False
         print ("game.playBlue: Creating the Sky level")
-        self.background = pygame.image.load('images/background.png').convert() #load background image
+        self.background = pygame.image.load('images/blue_background.png').convert() #load background image
         # Create Blue Level from tile map
         for row in range(len(bluebox)):
             for column in range(len(bluebox[0])):
