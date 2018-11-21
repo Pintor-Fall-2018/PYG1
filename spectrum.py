@@ -44,6 +44,7 @@ class Game:
         self.powerUpTimer = 0
         self.red = False
         self.mob_sounds = mob_sounds
+        self.block_timer = 0
 
         #https://opengameart.org/content/fast-fight-battle-music-looped
         #Author: XCVG
@@ -73,7 +74,6 @@ class Game:
         #Create Start Up Game timers, counters and variables
         self.background_x = 0  # rate of background scrolling (calculated at runtime)
         self.block_movement_counter = 0
-        self.blockTimer = pygame.time.get_ticks()
         self.whichLevelToPlay = levelSelect # assign map to play based on levelSelect String
         self.powerUpActive = False
         self.powerUpOnMap = False
@@ -521,7 +521,6 @@ class Game:
 
     def updateSprites(self):
         self.sprites.update(self.powerUpActive, self.sprites, self.mobs, self.spec.rect.x)
-        self.timeSinceInit = pygame.time.get_ticks() #get time since overall game ticks used in updateSprites
 
         if self.powerUpActive == True:
             print("game.updateSprites: reducing powerUpTimer: ", self.powerUpTimer)
@@ -667,49 +666,26 @@ class Game:
             self.spec.speed[1] = 0      # Set backward speed to 0 so Spec can't move backwards
 
         # Moving the Blocks based on time
-        if self.timeSinceInit - self.blockTimer > 50: # Check if it has been 1000ms
-            # print("time should be above 1000 ms: ", self.timeSinceInit - self.blockTimer)
-            # print("self.timeSinceInit: ", self.timeSinceInit)
-            # print("self.blockTimer: ", self.blockTimer)
-            self.blockTimer = self.timeSinceInit
-            self.timeSinceInit = 0
+        self.block_timer += 1
+        if self.block_timer == 3:
             if self.block_movement_counter < 50:
                 self.block_movement_counter += 1
                 for block in self.sky_blocks:
                     block.rect.x += 1        # Move blocks right
-                    # block.moving_left = False
-                    # block.moving_right = True
+                    block.moving_left = False
+                    block.moving_right = True
             elif self.block_movement_counter < 100:
                 self.block_movement_counter += 1
                 for block in self.sky_blocks:
                     block.rect.x -= 1        # Move blocks left
-                    # block.moving_left = True
-                    # block.moving_right = False
+                    block.moving_left = True
+                    block.moving_right = False
             else:
                 self.block_movement_counter = 0
-                # block.moving_left = False
-                # block.moving_right = False
-
-            # Scroll Spec if he is standing on a moving platform
-            # for block in self.sky_blocks:
-            #     # print("block.rect.top: ", block.rect.top, " <= self.spec.rect.bottom: ", self.spec.rect.bottom)
-            #     # print("block.rect.top: ", block.rect.top, " >= self.spec.rect.top ", self.spec.rect.top)
-            #     # print("block.rect.left: ", block.rect.left," <= self.spec.rect.bottom:", self.spec.rect.bottom)
-            #     # print("block.rect.right: ", block.rect.right," >= self.spec.rect.bottom", self.spec.rect.bottom)
-            #     #Check if Spec is on a block (bottom adjusted below top of block)
-            #     #Check is spec is above a block so he doesn't slide below the block
-            #     #Check if spec is between a tile's left to slide
-            #     #Check if spec is between a tile's right side
-            #     if block.rect.top <= self.spec.rect.bottom + 3 \
-            #     and block.rect.top >= self.spec.rect.top \
-            #     and block.rect.left <= self.spec.rect.left + 5 \
-            #     and block.rect.right >= self.spec.rect.right - 5:
-            #
-            #         if block.moving_left == True:
-            #             self.spec.speed[1] += .1 # Add to spec backward speed
-            #         elif block.moving_right == True:
-            #             self.spec.speed[0] += .1   # Add to spec forward speed
-
+                block.moving_left = False
+                block.moving_right = False
+            self.block_timer = 0
+            self.platformMotion()  #Move spec if collision with sky_blocks occurs
 
         # Scrolling happens in the updateSprites part of game
         if (self.spec.rect.x > WIDTH - 300) \
@@ -743,6 +719,45 @@ class Game:
                 self.background_x -= (len(redbox[0]) * 20 / self.background.get_width()) * .60  # map pixels / background image pixels
 
         self.blackHoleGravity()
+
+    #Detect whether spec is on a moving platform and adjust x coordinate accordingly
+    def platformMotion(self):
+        top_collision = False
+        collisions = pygame.sprite.spritecollide(self.spec, self.sky_blocks, False)
+        if len(collisions) != 0:
+            rightmost = leftmost = highest = lowest = collisions[0]
+            #determine relative positioning of objects
+            for collision in collisions:
+                if collision.rect.left < leftmost.rect.left:
+                    leftmost = collision
+                if collision.rect.right > rightmost.rect.right:
+                    rightmost = collision
+                if collision.rect.bottom > lowest.rect.bottom:
+                    lowest = collision
+                if collision.rect.top < highest.rect.top:
+                    highest = collision
+            #prohibits assignment of rightmost/leftmost blocks to bottom collision logic
+            if self.spec.forward and (self.spec.jump or self.spec.falling) and rightmost.rect.bottom <= self.spec.rect.bottom:
+                lowest = None
+            if self.spec.backward and (self.spec.jump or self.spec.falling) and leftmost.rect.bottom <= self.spec.rect.bottom:
+                lowest = None
+            #prohibits "sticking" to the wall
+            if (self.spec.forward or self.spec.backward) and self.spec.jump is False:
+                highest = None
+            if lowest is not None:
+                grounded = False #indicates whether sprite is grounded
+                if self.spec.falling and self.spec.rect.bottom <= lowest.rect.bottom: #prohibits falling through floor while falling
+                    grounded = True
+                elif self.spec.rect.bottom <= lowest.rect.centery: #less forgiving threshold while walking
+                    grounded = True
+                if grounded:
+                    if lowest.moving_left:
+                        self.spec.rect.x -= 1
+                        return
+                    else:
+                        self.spec.rect.x += 1
+                        return
+
 
     def checkStatus(self):
         if pygame.event.get(pygame.QUIT): #check if QUIT event. Return status false to terminate game
