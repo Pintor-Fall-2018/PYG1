@@ -671,26 +671,27 @@ class Game:
             self.spec.speed[1] = 0      # Set backward speed to 0 so Spec can't move backwards
 
         # Moving the Blocks based on time
-        self.block_timer += 1
-        if self.block_timer == 3:
-            if self.block_movement_counter < 50:
-                self.block_movement_counter += 1
-                for block in self.sky_blocks:
-                    block.rect.x += 1        # Move blocks right
+        if len(self.sky_blocks) > 0:
+            self.block_timer += 1
+            if self.block_timer == 3:
+                if self.block_movement_counter < 50:
+                    self.block_movement_counter += 1
+                    for block in self.sky_blocks:
+                        block.rect.x += 1        # Move blocks right
+                        block.moving_left = False
+                        block.moving_right = True
+                elif self.block_movement_counter < 100:
+                    self.block_movement_counter += 1
+                    for block in self.sky_blocks:
+                        block.rect.x -= 1        # Move blocks left
+                        block.moving_left = True
+                        block.moving_right = False
+                else:
+                    self.block_movement_counter = 0
                     block.moving_left = False
-                    block.moving_right = True
-            elif self.block_movement_counter < 100:
-                self.block_movement_counter += 1
-                for block in self.sky_blocks:
-                    block.rect.x -= 1        # Move blocks left
-                    block.moving_left = True
                     block.moving_right = False
-            else:
-                self.block_movement_counter = 0
-                block.moving_left = False
-                block.moving_right = False
-            self.block_timer = 0
-            self.platformMotion()  #Move spec if collision with sky_blocks occurs
+                self.block_timer = 0
+                self.platformMotion()  #Move spec if collision with sky_blocks occurs
 
         # Scrolling happens in the updateSprites part of game
         if (self.spec.rect.x > WIDTH - 300) \
