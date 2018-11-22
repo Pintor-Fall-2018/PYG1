@@ -574,9 +574,9 @@ class Game:
                 if collision.rect.top < highest.rect.top:
                     highest = collision
             #prohibits assignment of rightmost/leftmost blocks to bottom collision logic
-            if self.spec.forward and (self.spec.jump or self.spec.falling) and rightmost.rect.bottom <= self.spec.rect.bottom:
+            if self.spec.speed[0] > 0 and (self.spec.jump or self.spec.falling) and rightmost.rect.bottom <= self.spec.rect.bottom:
                 lowest = None
-            if self.spec.backward and (self.spec.jump or self.spec.falling) and leftmost.rect.bottom <= self.spec.rect.bottom:
+            if self.spec.speed[1] > 0 and (self.spec.jump or self.spec.falling) and leftmost.rect.bottom <= self.spec.rect.bottom:
                 lowest = None
             #prohibits "sticking" to the wall
             if (self.spec.forward or self.spec.backward) and self.spec.jump is False:
