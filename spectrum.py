@@ -836,7 +836,10 @@ class Tile(pygame.sprite.Sprite):
 mob_sounds = []
 mob_ray = pygame.mixer.Sound('sounds/mob_ray.wav')
 mob_ray.set_volume(0.05)
+mob_jump = pygame.mixer.Sound('sounds/mob_jump.wav')
+mob_jump.set_volume(0.15)
 mob_sounds.append(mob_ray)
+mob_sounds.append(mob_jump)
 
 game = Game(mob_sounds)
 
