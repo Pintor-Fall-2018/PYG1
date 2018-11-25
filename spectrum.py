@@ -52,6 +52,8 @@ class Game:
         self.block_timer = 0
         self.safe_mode = False
 
+        self.lights_collected = pygame.mixer.Sound('sounds/lights_collected.wav')
+        self.lights_collected.set_volume(0.15)
         #https://opengameart.org/content/fast-fight-battle-music-looped
         #Author: XCVG
         self.powerup_music = pygame.mixer.Sound('sounds/fight_looped.wav')
@@ -460,10 +462,11 @@ class Game:
             self.screen.blit(frozen_screen, (0,0))
             self.screen.blit(self.spec.image, (self.spec.rect.x, self.spec.rect.y))
             pygame.display.flip()
-            pygame.time.wait(10)
+            pygame.time.wait(5)
 
     #Game winning animation.  Light object radiates color and screen fades to white
     def endAnimation(self):
+        self.lights_collected.play()
         fade_out = pygame.Surface((600,400))
         fade_out.fill(WHITE)
         fade_out.set_alpha(20)
