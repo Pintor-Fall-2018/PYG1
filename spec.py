@@ -49,7 +49,7 @@ class Spec(pygame.sprite.Sprite):
         self.jumpTimeElapsed = 0
         self.speed = [0,0]  # [forward, backward]
         self.vertical = [8,8,7,7,6,6,5,5,4.5,4.5,4.5,4.5,3.5,2.5,2.5,2,1.5,1.5,1,1]
-        self.shadow = {"top":0.0, "bottom":0.0, "left":0.0, "right":0.0, "center":0.0}
+        self.shadow = {'top':0, 'bottom':0, 'left':0, 'right':0, 'center':0}
         self.last_direction = "forward"
 
     def update(self, powerUp, sprites, mobs, spec_x):

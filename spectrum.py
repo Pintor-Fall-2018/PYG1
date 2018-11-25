@@ -583,9 +583,13 @@ class Game:
                 highest = None
             if lowest is not None:
                 grounded = False #indicates whether sprite is grounded
-                if self.spec.falling and self.spec.rect.bottom <= lowest.rect.bottom: #prohibits falling through floor while falling
-                    grounded = True
-                elif self.spec.rect.bottom <= lowest.rect.centery: #less forgiving threshold while walking
+                if self.spec.falling and self.spec.rect.center[1] - self.spec.shadow['center'][1] >= 3:
+                    if self.spec.rect.bottom <= lowest.rect.bottom: #prohibits falling through floor while falling at higher rates of speed
+                        grounded = True
+                elif self.spec.jump:
+                    if self.spec.rect.bottom <= lowest.rect.top + 1: #least forgiving threshold for jumping
+                        grounded = True
+                elif self.spec.rect.bottom <= lowest.rect.centery: #medium-level threshold while walking
                     grounded = True
                 if grounded:
                     self.spec.rect.bottom = lowest.rect.top + 1 #reposition spec slightly below top of object
