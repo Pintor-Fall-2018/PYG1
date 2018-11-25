@@ -23,6 +23,11 @@ pygame.display.set_caption(TITLE)
 pygame.mouse.set_visible(1)   # Mouse visible == 1
 time = pygame.time.Clock()
 
+#Font for handling safe/invincible mode
+pygame.font.init() #initialize font module
+system_font = pygame.font.SysFont(pygame.font.get_default_font(), 28, False, False)
+safe_mode = system_font.render('Safety Mode Active', False, (50,120,75))
+
 class Game:
     def __init__(self, mob_sounds):
         #sets up screen resolution
@@ -45,6 +50,7 @@ class Game:
         self.red = False
         self.mob_sounds = mob_sounds
         self.block_timer = 0
+        self.safe_mode = False
 
         #https://opengameart.org/content/fast-fight-battle-music-looped
         #Author: XCVG
@@ -487,6 +493,8 @@ class Game:
         self.bg_blocks.draw(self.screen)
         self.sprites.draw(self.screen)
         self.displayLifeBars()
+        if self.safe_mode:
+            self.screen.blit(safe_mode, (405, 0))
         pygame.display.flip()
 
     def getCommands(self):
@@ -511,6 +519,8 @@ class Game:
                     self.spec.jump = True
             if event.key == pygame.K_ESCAPE:
                 self.levelStatus = menu.pauseScreen()
+            if event.key == pygame.K_s:
+                self.safe_mode = not self.safe_mode
 
         for event in pygame.event.get(pygame.KEYUP):
             #print("Detected KEYUP")
@@ -537,25 +547,16 @@ class Game:
         else:
             self.powerup_music.stop()
 
-
-        # Test Spec for death below the map or collisions with a mob
+        # Test Spec for collisions with a mob
         collision_mob = pygame.sprite.spritecollide(self.spec, self.mobs, False)
-        if self.spec.rect.top >= HEIGHT or len(collision_mob) != 0:
-            print("I should be dying now")
-            self.powerup_music.stop()
-            self.loseAnimation()
-            self.levelStatus = "restart"    #go back to main menu for now
+        if len(collision_mob) != 0 and not self.safe_mode:
+            self.loseLife()
+            return
 
-            #Spec has lost all 7 of his lives
-            if self.lives <= 1:
-                self.lives -= 1
-                menu.finalGameOverScreen()
-                self.gameLost = True
-
-            elif self.lives > 1:
-                self.lives -= 1
-                menu.gameOverScreen()            #leave game.updateSprites
-
+        # Test Spec for death below the map
+        if self.spec.rect.top >= HEIGHT:
+            self.loseLife()
+            return
 
         # Test Spec for collisions with environment
         top_collision = False
@@ -728,6 +729,24 @@ class Game:
                 self.background_x -= (len(redbox[0]) * 20 / self.background.get_width()) * .60  # map pixels / background image pixels
 
         self.blackHoleGravity()
+
+    #Spec loses life and map restarts or game ends
+    def loseLife(self):
+        print("I should be dying now")
+        self.powerup_music.stop()
+        self.loseAnimation()
+        self.spec.kill()
+        self.levelStatus = "restart"    #go back to main menu for now
+
+        #Spec has lost all 7 of his lives
+        if self.lives <= 1:
+            self.lives -= 1
+            menu.finalGameOverScreen()
+            self.gameLost = True
+
+        elif self.lives > 1:
+            self.lives -= 1
+            menu.gameOverScreen()            #leave game.updateSprites
 
     #Detect whether spec is on a moving platform and adjust x coordinate accordingly
     def platformMotion(self):
