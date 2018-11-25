@@ -297,7 +297,7 @@ class Game:
 
         # Create Powerup if active on green level
         if self.greenPowerUp == 1:
-            self.powerUp = PowerUp(1000, 300, powerUp_image)
+            self.powerUp = PowerUp(980, 300, powerUp_image)
             self.sprites.add(self.powerUp)
             self.powerUpGroup.add(self.powerUp)
             self.powerUpOnMap = True
@@ -549,7 +549,7 @@ class Game:
 
         # Test Spec for collisions with a mob
         collision_mob = pygame.sprite.spritecollide(self.spec, self.mobs, False)
-        if len(collision_mob) != 0 and not self.safe_mode:
+        if len(collision_mob) != 0 and not self.safe_mode and not self.powerUpActive:
             self.loseLife()
             return
 
