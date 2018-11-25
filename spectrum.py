@@ -35,7 +35,7 @@ class Game:
         self.levelStatus = ""
         self.lives = 7
         self.gameLost = False
-        self.randomPowerUpLevel = 1 # random.randint(1, 3)
+        self.randomPowerUpLevel = random.randint(1, 3)
         print ("randomPowerUpLevel = ", self.randomPowerUpLevel)
         self.bluePowerUp = 0
         self.greenPowerUp = 0
