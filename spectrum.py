@@ -368,14 +368,13 @@ class Game:
         if self.red:
             for mob in self.bh_mobs:
                 #Distance to the left of the black hole
-                if self.spec.rect.x - mob.rect.x <= -10 and self.spec.rect.x - mob.rect.x > - BLACKHOLE_RANGE:
-                    print("Spec distance LEFT:", self.spec.rect.x - mob.rect.x)
+                if self.spec.rect.x - mob.rect.x <= -10 and self.spec.rect.x - mob.rect.x > - BLACKHOLE_RANGE \
+                and mob.rect.y - self.spec.rect.y < 30:
                     self.spec.rect.x = self.spec.rect.x + 1
                 #Distance to the right of the black hole.
-                elif self.spec.rect.x - mob.rect.x >= -10 and self.spec.rect.x - mob.rect.x < BLACKHOLE_RANGE:
-                    print("Spec distance RIGHT:", self.spec.rect.x + mob.rect.x)
+                elif self.spec.rect.x - mob.rect.x >= -10 and self.spec.rect.x - mob.rect.x < BLACKHOLE_RANGE \
+                and mob.rect.y - self.spec.rect.y < 30:
                     self.spec.rect.x = self.spec.rect.x - 1
-            print("Spec coords: ", self.spec.rect.x)
 
     def displayLifeBars(self):
         self.lives_imgs[0].set_colorkey(BLACK)
