@@ -66,10 +66,10 @@ class Gamma(Mob):
         if self.step is 80:
             self.recent_x = self.rect.x
         if self.step > 80 and self.step < 100 and self.step % 2 == 0:
-            wiggle_x = randint(-4,4)
+            wiggle_x = randint(-3,3)
             self.rect.x += wiggle_x
             self.wiggled_x += wiggle_x
-            self.rect.y -= randint(-4,4)
+            self.rect.y -= randint(-2,4)
             if self.rect.y > self.starting_y:
                 self.rect.y = self.starting_y
             if self.rect.y < self.starting_y - 10:
@@ -113,6 +113,9 @@ class Infrared(Mob):
     def update(self, powerUp, sprites, mobs, spec_x):
         self.step += 1
         if self.jump:
+            if self.step == 1:
+                if self.withinEarshot(spec_x):
+                    self.mob_sounds[1].play()
             self.image = self.animations[1]
             self.rect.y -= self.vertical[self.jump_count]
             self.jump_count += 1
