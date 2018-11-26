@@ -41,7 +41,7 @@ class Game:
         self.lives = 7
         self.gameLost = False
         self.randomPowerUpLevel = random.randint(1, 3)
-        print ("randomPowerUpLevel = ", self.randomPowerUpLevel)
+        #print ("randomPowerUpLevel = ", self.randomPowerUpLevel)
         self.bluePowerUp = 0
         self.greenPowerUp = 0
         self.redPowerUp = 0
@@ -69,7 +69,7 @@ class Game:
         self.gameLost = False
         self.randomPowerUpLevel = random.randint(1, 3)
         self.powerUpActive = False
-        print ("randomPowerUpLevel = ", self.randomPowerUpLevel)
+        #print ("randomPowerUpLevel = ", self.randomPowerUpLevel)
         self.bluePowerUp = 0
         self.greenPowerUp = 0
         self.redPowerUp = 0
@@ -121,13 +121,13 @@ class Game:
         # Create Level based on user selection from menu.MainMenu()
         # Levels create level specific map, mobs, EOG light object
         if self.whichLevelToPlay == "BLUE":
-            print("game.startUp: starting game.playBlue")
+            #print("game.startUp: starting game.playBlue")
             game.playBlue()
         elif self.whichLevelToPlay == "GREEN":
-            print("game.startUp: starting game.playGreen")
+            #print("game.startUp: starting game.playGreen")
             game.playGreen()
         elif self.whichLevelToPlay == "RED":
-            print("game.startUp: starting game.playRed")
+            #print("game.startUp: starting game.playRed")
             game.playRed()
         else:
             print("You shouldn't ever seen this. Level selection ERROR")
@@ -146,7 +146,7 @@ class Game:
 
     def playBlue(self):
         self.red = False
-        print ("game.playBlue: Creating the Sky level")
+        #print ("game.playBlue: Creating the Sky level")
         self.background = pygame.image.load('images/blue_background.png').convert() #load background image
         # Create Blue Level from tile map
         for row in range(len(bluebox)):
@@ -213,7 +213,7 @@ class Game:
 
     def playGreen(self):
         self.red = False
-        print ("game.playGreen: Creating the Forest level")
+        #print ("game.playGreen: Creating the Forest level")
         self.background = pygame.image.load('images/green_background.png').convert() #load background image
         # Create Green Level from tile map
         for row in range(len(greenbox)):
@@ -306,7 +306,7 @@ class Game:
 
     def playRed(self):
         self.red = True
-        print ("game.playRed: Creating the Desert level")
+        #print ("game.playRed: Creating the Desert level")
         self.background = pygame.image.load('images/red_background.png').convert() #load background image
         # Create Green Level from tile map
         for row in range(len(redbox)):
@@ -523,7 +523,11 @@ class Game:
             if event.key == pygame.K_ESCAPE:
                 self.levelStatus = menu.pauseScreen()
             if event.key == pygame.K_s:
-                self.safe_mode = not self.safe_mode
+                self.safe_mode = not self.safe_mode     #deactive or activate safe mode
+                if self.safe_mode:
+                    print ("Safemode activated")
+                else:
+                    print ("Safemode not active")
 
         for event in pygame.event.get(pygame.KEYUP):
             #print("Detected KEYUP")
@@ -540,7 +544,7 @@ class Game:
         self.sprites.update(self.powerUpActive, self.sprites, self.mobs, self.spec.rect.x)
 
         if self.powerUpActive == True:
-            print("game.updateSprites: reducing powerUpTimer: ", self.powerUpTimer)
+            #print("game.updateSprites: reducing powerUpTimer: ", self.powerUpTimer)
             self.powerup_music.play(1)
             self.powerUpTimer -= 1      #reduce timer
             if self.powerUpTimer <= 0:
@@ -640,7 +644,7 @@ class Game:
         # Check if collision between Spec and powerup
         collide_powerUp = pygame.sprite.spritecollide(self.spec, self.powerUpGroup, True)
         if len(collide_powerUp) != 0:
-            print("Coliding with Power Up now")
+            #print("Coliding with Power Up now")
             self.powerUpActive = True
             self.powerUpOnMap = False
             self.powerUpTimer = 600
@@ -667,7 +671,7 @@ class Game:
         for mob in self.mobs:
             # if mob touches invisible wall center delete mob
             if mob.rect.midright <= self.invisible_block.rect.center:
-                print ("Killing mob!")
+                #print ("Killing mob!")
                 mob.kill()
 
         # Check for a collision between the invisible_wall_block and spec
@@ -700,7 +704,8 @@ class Game:
                 self.block_timer = 0
                 self.platformMotion()  #Move spec if collision with sky_blocks occurs
 
-        # Scrolling happens in the updateSprites part of game
+        # Scrolling happens last in updateSprites. Scroll if the following are true:
+        # Spec is within WIDTH-300 of the screen, Spec is not at rest, The light object is above WIDTH-40
         if (self.spec.rect.x > WIDTH - 300) \
             and self.spec.speed[0] is not 0 \
             and self.light.rect.x > WIDTH-40:
@@ -735,7 +740,7 @@ class Game:
 
     #Spec loses life and map restarts or game ends
     def loseLife(self):
-        print("I should be dying now")
+        #print("I should be dying now")
         self.powerup_music.stop()
         self.loseAnimation()
         self.spec.kill()
@@ -744,7 +749,7 @@ class Game:
         #Spec has lost all 7 of his lives
         if self.lives <= 1:
             self.lives -= 1
-            menu.finalGameOverScreen()
+            menu.finalGameOverScreen()  #no more lives show finalGameOverScreen
             self.gameLost = True
 
         elif self.lives > 1:
@@ -795,7 +800,8 @@ class Game:
             self.status = False
 
     def setLightAcquired(self, light):
-        print("setLightAcquired: Trying to set acquired light: ", light)
+        # Set light acquired game variable. 1 is acquired, 0 is not acquired (default)
+        #print("setLightAcquired: Trying to set acquired light: ", light)
         if light == "blue":
             self.blue_light_acquired = 1
         elif light == "red":
@@ -806,6 +812,7 @@ class Game:
             print("game.setLightAcquired: ERROR IN SETTING LIGHT ACQUIRED")
 
     def checkLightAcquired(self, light):
+        # Check if a light has been acquired. Return its boolean value
         if light == "blue":
             return self.blue_light_acquired
         elif light == "red":
