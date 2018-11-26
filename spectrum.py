@@ -565,66 +565,8 @@ class Game:
             self.loseLife()
             return
 
-        # Test Spec for collisions with environment
-        top_collision = False
-        collisions = pygame.sprite.spritecollide(self.spec, self.all_blocks, False)
-        if len(collisions) != 0:
-            rightmost = leftmost = highest = lowest = collisions[0]
-            #determine relative positioning of objects
-            for collision in collisions:
-                if collision.rect.left < leftmost.rect.left:
-                    leftmost = collision
-                if collision.rect.right > rightmost.rect.right:
-                    rightmost = collision
-                if collision.rect.bottom > lowest.rect.bottom:
-                    lowest = collision
-                if collision.rect.top < highest.rect.top:
-                    highest = collision
-            #prohibits assignment of rightmost/leftmost blocks to bottom collision logic
-            if self.spec.speed[0] > 0 and (self.spec.jump or self.spec.falling) and rightmost.rect.bottom <= self.spec.rect.bottom:
-                lowest = None
-            if self.spec.speed[1] > 0 and (self.spec.jump or self.spec.falling) and leftmost.rect.bottom <= self.spec.rect.bottom:
-                lowest = None
-            #prohibits "sticking" to the wall
-            if (self.spec.forward or self.spec.backward) and self.spec.jump is False:
-                highest = None
-            if lowest is not None:
-                grounded = False #indicates whether sprite is grounded
-                if self.spec.falling and self.spec.rect.center[1] - self.spec.shadow['center'][1] >= 3:
-                    if self.spec.rect.bottom <= lowest.rect.bottom: #prohibits falling through floor while falling at higher rates of speed
-                        grounded = True
-                elif self.spec.jump:
-                    if self.spec.rect.bottom <= lowest.rect.top + 1: #least forgiving threshold for jumping
-                        grounded = True
-                elif self.spec.rect.bottom <= lowest.rect.centery: #medium-level threshold while walking
-                    grounded = True
-                if grounded:
-                    self.spec.rect.bottom = lowest.rect.top + 1 #reposition spec slightly below top of object
-                    self.spec.falling = False
-                    self.spec.fallTimer = 0  # reset falltimer
-            if highest is not None:
-                if self.spec.rect.top - highest.rect.bottom <= 0 and self.spec.rect.top - highest.rect.bottom >= -10:  #top collision
-                    if self.spec.forward and highest.rect.centerx - self.spec.rect.centerx > 18.5: #permits spec to jump smoothly against walls
-                        pass
-                    elif self.spec.backward and self.spec.rect.centerx - highest.rect.centerx > 18.5: #permits spec to jump smoothly against walls
-                        pass
-                    else:
-                        self.spec.rect.top = highest.rect.bottom  #reposition spec to bottom of object
-                        self.spec.jump = False
-                        self.spec.jumpTimer = 0
-                        self.spec.falling = True
-                        top_collision = True
-            if rightmost is not None:
-                if not top_collision and self.spec.rect.right - rightmost.rect.left <= 10 and self.spec.rect.right - rightmost.rect.left >= 0 and rightmost.rect.top < self.spec.rect.bottom - 1: #right collision
-                    self.spec.rect.right = rightmost.rect.left #reposition spec to left side of object
-                    self.spec.speed[0] = 0 #stop all forward movement
-            if leftmost is not None:
-                if not top_collision and self.spec.rect.left - leftmost.rect.right <= 0 and self.spec.rect.left - leftmost.rect.right >= -10 and leftmost.rect.top < self.spec.rect.bottom - 1:  #left collision
-                    self.spec.rect.left = leftmost.rect.right #reposition spec to right side of object
-                    self.spec.speed[1] = 0 #stop all backward movement
-        elif len(collisions) == 0:
-            if self.spec.jump == False:
-                self.spec.falling = True
+        # Test Spec for collisions with tiles in environment
+        self.tileCollisions()
 
         # Check if there is a collision with spec and the light object
         collide_light = pygame.sprite.spritecollide(self.spec, self.lights, False)
@@ -737,6 +679,68 @@ class Game:
                 self.background_x -= (len(redbox[0]) * 20 / self.background.get_width()) * .60  # map pixels / background image pixels
 
         self.blackHoleGravity()
+
+    #Function detects all collisions between spec and tiles in environment and adjusts player movement and location accordingly
+    def tileCollisions(self):
+        top_collision = False
+        collisions = pygame.sprite.spritecollide(self.spec, self.all_blocks, False)
+        if len(collisions) != 0:
+            rightmost = leftmost = highest = lowest = collisions[0]
+            #determine relative positioning of objects
+            for collision in collisions:
+                if collision.rect.left < leftmost.rect.left:
+                    leftmost = collision
+                if collision.rect.right > rightmost.rect.right:
+                    rightmost = collision
+                if collision.rect.bottom > lowest.rect.bottom:
+                    lowest = collision
+                if collision.rect.top < highest.rect.top:
+                    highest = collision
+            #prohibits assignment of rightmost/leftmost blocks to bottom collision logic
+            if self.spec.speed[0] > 0 and (self.spec.jump or self.spec.falling) and rightmost.rect.bottom <= self.spec.rect.bottom:
+                lowest = None
+            if self.spec.speed[1] > 0 and (self.spec.jump or self.spec.falling) and leftmost.rect.bottom <= self.spec.rect.bottom:
+                lowest = None
+            #prohibits "sticking" to the wall
+            if (self.spec.forward or self.spec.backward) and self.spec.jump is False:
+                highest = None
+            if lowest is not None:
+                grounded = False #indicates whether sprite is grounded
+                if self.spec.falling and self.spec.rect.center[1] - self.spec.shadow['center'][1] >= 3:
+                    if self.spec.rect.bottom <= lowest.rect.bottom: #prohibits falling through floor while falling at higher rates of speed
+                        grounded = True
+                elif self.spec.jump:
+                    if self.spec.rect.bottom <= lowest.rect.top + 1: #least forgiving threshold for jumping
+                        grounded = True
+                elif self.spec.rect.bottom <= lowest.rect.centery: #medium-level threshold while walking
+                    grounded = True
+                if grounded:
+                    self.spec.rect.bottom = lowest.rect.top + 1 #reposition spec slightly below top of object
+                    self.spec.falling = False
+                    self.spec.fallTimer = 0  # reset falltimer
+            if highest is not None:
+                if self.spec.rect.top - highest.rect.bottom <= 0 and self.spec.rect.top - highest.rect.bottom >= -10:  #top collision
+                    if self.spec.forward and highest.rect.centerx - self.spec.rect.centerx > 18.5: #permits spec to jump smoothly against walls
+                        pass
+                    elif self.spec.backward and self.spec.rect.centerx - highest.rect.centerx > 18.5: #permits spec to jump smoothly against walls
+                        pass
+                    else:
+                        self.spec.rect.top = highest.rect.bottom  #reposition spec to bottom of object
+                        self.spec.jump = False
+                        self.spec.jumpTimer = 0
+                        self.spec.falling = True
+                        top_collision = True
+            if rightmost is not None:
+                if not top_collision and self.spec.rect.right - rightmost.rect.left <= 10 and self.spec.rect.right - rightmost.rect.left >= 0 and rightmost.rect.top < self.spec.rect.bottom - 1: #right collision
+                    self.spec.rect.right = rightmost.rect.left #reposition spec to left side of object
+                    self.spec.speed[0] = 0 #stop all forward movement
+            if leftmost is not None:
+                if not top_collision and self.spec.rect.left - leftmost.rect.right <= 0 and self.spec.rect.left - leftmost.rect.right >= -10 and leftmost.rect.top < self.spec.rect.bottom - 1:  #left collision
+                    self.spec.rect.left = leftmost.rect.right #reposition spec to right side of object
+                    self.spec.speed[1] = 0 #stop all backward movement
+        elif len(collisions) == 0:
+            if self.spec.jump == False:
+                self.spec.falling = True
 
     #Spec loses life and map restarts or game ends
     def loseLife(self):
