@@ -41,4 +41,4 @@ INVISIBLE_BLOCK_LIST = [(-50, 0, 75, 600, WHITE)]
 # Menu Colors
 MAINMENU_BG = BLACK
 MENU_BG_MUSIC = "sounds/acción.ogg"
-MUSIC_VOL = 0.0
+MUSIC_VOL = 1.0
