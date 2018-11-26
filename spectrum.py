@@ -462,7 +462,7 @@ class Game:
             self.screen.blit(frozen_screen, (0,0))
             self.screen.blit(self.spec.image, (self.spec.rect.x, self.spec.rect.y))
             pygame.display.flip()
-            pygame.time.wait(5)
+            pygame.time.wait(10)
 
     #Game winning animation.  Light object radiates color and screen fades to white
     def endAnimation(self):
@@ -476,19 +476,19 @@ class Game:
                 self.screen.blit(self.light.image, (self.light.rect.x, self.light.rect.y))
                 self.screen.blit(fade_out, (0,0))
                 pygame.display.flip()
-                pygame.time.wait(3)
+                pygame.time.wait(2)
             elif i < 200:
                 pygame.draw.line(self.screen, (randint(0,255),randint(0,255),randint(0,255)), (self.light.rect.centerx, self.light.rect.centery), (randint(300,600),randint(0,400)),2)
                 self.screen.blit(self.light.image, (self.light.rect.x, self.light.rect.y))
                 self.screen.blit(fade_out, (0,0))
                 pygame.display.flip()
-                pygame.time.wait(3)
+                pygame.time.wait(2)
             else:
                 pygame.draw.line(self.screen, (randint(0,255),randint(0,255),randint(0,255)), (self.light.rect.centerx, self.light.rect.centery), (randint(0,600),randint(0,400)), 3)
                 self.screen.blit(self.light.image, (self.light.rect.x, self.light.rect.y))
                 self.screen.blit(fade_out, (0,0))
                 pygame.display.flip()
-                pygame.time.wait(3)
+                pygame.time.wait(2)
 
     def drawScreen(self):
         #self.screen.fill(SKY_BLUE)
