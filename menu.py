@@ -3,6 +3,13 @@ from settings import *
 import random as rand
 import time
 class Menu:
+    '''
+    Name: Menu Class
+    Description: Main handler for all menu screen. Start screen, main menu,
+                pause, tutorial, death and win screens.
+    Functions:
+        __init__(self, screen, time, images, sounds)- Constructor
+    '''
     def __init__(self, screen, time, images, sounds):
         """
         Description: Initiates Menu Class Instance... to be continued

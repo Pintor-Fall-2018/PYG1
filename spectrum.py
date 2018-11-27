@@ -613,6 +613,7 @@ class Game:
                     self.spec.jumpTimeElapsed = pygame.time.get_ticks() #initial store of milliseconds to evaluate length of keypress
                     self.spec.jump = True
             if event.key == pygame.K_ESCAPE:
+                self.powerup_music.stop()
                 self.levelStatus = menu.pauseScreen()
             if event.key == pygame.K_s:
                 self.safe_mode = not self.safe_mode     #deactive or activate safe mode
