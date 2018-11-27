@@ -122,7 +122,6 @@ class Game:
         self.gameLost = False
         self.randomPowerUpLevel = random.randint(1, 3)
         self.powerUpActive = False
-        #print ("randomPowerUpLevel = ", self.randomPowerUpLevel)
         self.bluePowerUp = 0
         self.greenPowerUp = 0
         self.redPowerUp = 0
@@ -643,7 +642,6 @@ class Game:
         self.sprites.update(self.powerUpActive, self.sprites, self.mobs, self.spec.rect.x)
 
         if self.powerUpActive == True:
-            #print("game.updateSprites: reducing powerUpTimer: ", self.powerUpTimer)
             self.powerup_music.play(1)
             self.powerUpTimer -= 1      #reduce timer
             if self.powerUpTimer <= 0:
@@ -1074,9 +1072,10 @@ while(openMenu):
         #Check level status to see if level is exited from Pause Menu
         status = game.levelStatus
 
-        #If level exsited, reset level status
+        #If level exited, reset level status
         if status == "restart":
             game.levelStatus = ""
+            game.powerup_music.stop()
             break
 
         # Update sprites and background
