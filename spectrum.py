@@ -2,8 +2,17 @@
  Name: Spectrum.py  (PGY1)
  Team Name: Pictor
  Team Members: Jarret Edelen, Shane Klumpp, Tiffany Warner
- Course: CS 467 - Capstone Project
- Description:
+ Course: CS 467 - Fall 2018 - Capstone Project
+ Description: Spectrum is a platformer game built in pygame. The user
+        plays as a character called Spec who's goal is to play through
+        3 levels(Sky, Forest, and Desert) and acquire the
+        lights(Blue, Green, and Red) at the end of each. Spec has
+        to navigate around obstacles and avoid mobs to reach the light
+        objects at the end. Spec starts with 7 lives. If all lives
+        are lost, the game resets. Upon acquiring all 3 lights, the
+        game is won. Safe Mode can be entered by hitting "s" which
+        allows Spec to navigate each level while being invincible against
+        mobs.
 
 '''
 import pygame, sys, os
