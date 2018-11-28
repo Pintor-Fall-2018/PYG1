@@ -99,14 +99,6 @@ class Menu:
             if DEBUG_MENU:
                 print(gr_x, gr_y)
 
-            # play_active = self.checkMousePos((WIDTH/2 - 125, start_y - 20), 250, 51)
-            # play = self.checkMouseClicks((WIDTH/2 - 125, start_y - 20), 250, 51)
-            # if play or play_active:
-            #     self.screen.blit(play_btn_active, (WIDTH/2 -125, start_y - 20))
-            # else:
-            #     self.screen.blit(play_btn_inactive, (WIDTH/2 -125, start_y - 20))
-            # self.generateText("PLAY", self.fontName, WHITE, 20, WIDTH/2, start_y)
-            # Display the light changes
             self.screen.blit(self.bl_light, (bl_x, bl_y))
             self.screen.blit(self.rd_light, (rd_x, rd_y))
             self.screen.blit(self.gr_light, (gr_x, rd_y))
@@ -248,7 +240,6 @@ class Menu:
             self.generateText("Quit", self.fontPM, BLACK, 30, (int(WIDTH/1.3)), int(HEIGHT/1.2))
 
             #Set up full-screen button
-            # fullScreen_active = self.checkMousePos((fs_coords[0], fs_coords[1]), fs_img_size[0], fs_img_size[1])
             fullScreen_clicked = self.checkMouseClicks((fs_coords[0], fs_coords[1]), fs_img_size[0], fs_img_size[1])
             time.sleep(0.1)
             if fullScreen_clicked and self.fullScreen is False:
@@ -344,6 +335,8 @@ class Menu:
         ctrl1_coords = ((int(WIDTH/5.5), int(HEIGHT/1.5)))
         ctrl2_coords = ((int(WIDTH/5.5), int(HEIGHT/1.4)))
         ctrl3_coords = ((int(WIDTH/5.5), int(HEIGHT/1.3)))
+        ctrl4_coords = ((int(WIDTH/5.5), int(HEIGHT/1.2)))
+        ctrl5_coords = ((int(WIDTH/5.5), int(HEIGHT/1.1)))
         obj1 = "Spec travels the world in search of light!"
         obj2 = "Help Spec navigate through this perilous world"
         obj3 = "and acquire the blue, red, and green light"
@@ -351,16 +344,27 @@ class Menu:
         control1 ="Left Arrow = Move Left"
         control2 ="Right Arrow = Move Right"
         control3 ="Up Arrow = Jump"
-        textList = ["Tutorial", "Main Menu", "Quit", "Objectives:", "Controls:", obj1, obj2, obj3, obj4, control1, control2, control3]
-        textCoords = [title_coords, main_menu_coords, quit_coords, obj_title_coords, control_title_coords, obj1_coords, obj2_coords, obj3_coords, obj4_coords, ctrl1_coords, ctrl2_coords, ctrl3_coords]
+        control4 ="Esc = Pause Menu"
+        control5 ="s = Safety Mode"
+        textList = ["Tutorial", "Main Menu", "Quit", "Objectives:", "Controls:",\
+                    obj1, obj2, obj3, obj4, control1, control2, control3, control4, control5]
+        textCoords = [title_coords, main_menu_coords, quit_coords, \
+                      obj_title_coords, control_title_coords, obj1_coords,\
+                      obj2_coords, obj3_coords, obj4_coords, ctrl1_coords,\
+                      ctrl2_coords, ctrl3_coords, ctrl4_coords, ctrl5_coords]
         instr_attr = (WHITE, 16, self.fontName)
-        textAttr = [(WHITE, 40, self.titleFont), (BLACK, 20, self.fontPM), (BLACK, 20, self.fontPM), (WHITE, 20, self.fontPM), (WHITE, 20, self.fontPM), instr_attr, instr_attr, instr_attr, instr_attr, instr_attr, instr_attr, instr_attr]
+        textAttr = [(WHITE, 40, self.titleFont), (BLACK, 20, self.fontPM),\
+                    (BLACK, 20, self.fontPM), (WHITE, 20, self.fontPM), \
+                    (WHITE, 20, self.fontPM), instr_attr, instr_attr,\
+                     instr_attr, instr_attr, instr_attr, instr_attr, \
+                     instr_attr, instr_attr, instr_attr]
         btnList = [(btn_w, btn_h), (btn_w, btn_h)]
         btnCoords = [main_menu_coords, quit_coords]
         btnColor = [(WHITE, GRAY), (WHITE, GRAY)]
         btnActions = ["menu", "quit"]
 
-        self.runMenuLoop(20, textList, textCoords, textAttr, btnList, btnCoords, btnColor, btnActions)
+        self.runMenuLoop(20, textList, textCoords, textAttr, \
+                        btnList, btnCoords, btnColor, btnActions)
         time.sleep(0.1)
 
     def completeLevel(self):
@@ -458,7 +462,7 @@ class Menu:
 
     def gameCompletedScreen(self):
 
-        text1 = "YOU WON OMG"
+        text1 = "YOU WON! CONGRATULATIONS!"
         text2 = "PLAY ME AGAIN? I BET YOU WON'T"
         menuFPS = 20
         btn_w = 220
@@ -471,10 +475,10 @@ class Menu:
                       ((int(WIDTH/2)), int(HEIGHT/3)), \
                       ((int(WIDTH/2)), int(HEIGHT/1.8)), \
                       ((int(WIDTH/2)), int(HEIGHT/1.2))]
-        textAttr = [(WHITE, 30, self.fontName), \
-                    (WHITE, 30, self.fontName), \
-                    (BLACK, 30, self.fontName), \
-                    (BLACK, 30, self.fontName)]
+        textAttr = [(WHITE, 30, self.fontPM), \
+                    (WHITE, 30, self.fontPM), \
+                    (BLACK, 30, self.fontPM), \
+                    (BLACK, 30, self.fontPM)]
         btnList = [(btn_w, btn_h), (btn_w, btn_h)]
         btnCoords = [replay_coords, quit_coords]
         btnColors = [(LIGHT_GREEN, GRAY), (LIGHT_RED, GRAY)]
