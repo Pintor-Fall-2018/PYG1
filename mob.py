@@ -96,9 +96,41 @@ class Gamma(Mob):
             self.step = 0
             if self.withinEarshot(spec_x):
                 self.mob_sounds[0].play()
-                ray = Projectile (self.rect.x, self.rect.centery, self.left)
+                ray = self.Projectile (self.rect.x, self.rect.centery, self.left)
                 sprites.add(ray)
                 mobs.add(ray)
+
+    class Projectile(pygame.sprite.Sprite):
+        '''
+        Projectile(pygame.sprite.Sprite) - Animated pixel is launched from Gamma mobs
+            Nested inner class of Gamma
+        '''
+        def __init__(self, x, y, left):
+            pygame.sprite.Sprite.__init__(self) #sprite constructor
+            self.image = pygame.Surface((5,5)) #width x height
+            self.image.fill((255,242,0))
+            self.rect = self.image.get_rect()
+            self.rect.x = x
+            self.rect.y = y
+            self.left = left
+            self.timer = 0
+
+        def update(self, powerUp, sprites, mobs, spec_x):
+            self.animate()
+            self.timer += 1
+            if self.timer < 125:
+                if self.left:
+                    self.rect.x += 3
+                else:
+                    self.rect.x -= 3
+            else:
+                self.kill()
+
+        def animate(self):
+            if self.timer % 2 == 0:
+                self.image.fill((255,242,0))
+            else:
+                self.image.fill(LIGHT_RED)
 
 class Infrared(Mob):
     '''
@@ -177,34 +209,3 @@ class BlackHole(Mob):
         if self.step == 5:
             self.left = not self.left
             self.step = 0
-
-class Projectile(pygame.sprite.Sprite):
-    '''
-    Projectile(pygame.sprite.Sprite) - Animated pixel is launched from Gamma mobs
-    '''
-    def __init__(self, x, y, left):
-        pygame.sprite.Sprite.__init__(self) #sprite constructor
-        self.image = pygame.Surface((5,5)) #width x height
-        self.image.fill((255,242,0))
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.left = left
-        self.timer = 0
-
-    def update(self, powerUp, sprites, mobs, spec_x):
-        self.animate()
-        self.timer += 1
-        if self.timer < 125:
-            if self.left:
-                self.rect.x += 3
-            else:
-                self.rect.x -= 3
-        else:
-            self.kill()
-
-    def animate(self):
-        if self.timer % 2 == 0:
-            self.image.fill((255,242,0))
-        else:
-            self.image.fill(LIGHT_RED)
