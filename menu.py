@@ -9,6 +9,21 @@ class Menu:
                 pause, tutorial, death and win screens.
     Functions:
         __init__(self, screen, time, images, sounds)- Constructor
+        startScreen(self) - Title Screen that first pops up
+        mainMenu(self, game) - Main Menu
+        tutorialScreen(self) - Tutorial Menu
+        completeLevel(self) - Completion of level screen
+        gameOverScreen(self) - Game over screen (when Spec loses a life)
+        finalGameOverScreen(self) - Game over screen when Spec loses all lives
+        gameCompletedScreen(self) - Win Game Menu
+        pauseScreen(self) - Pause Menu
+        checkMouseClicks(self, start_coords, width, height) - Check for user clicking mouse events
+        checkMousePos(self, start_coords, width, height, img=False) - Check for mouse hover events
+        checkBoundaries(self, lightColor, curCoords, spawnCoords) - Check boundaries of lights on title screen
+        updateLightPos(self, startPath, x_speed, y_speed, x, y) - Update positions of lights on title screen
+        button(self, active_color, inactive_color, width, height, coords, outline=False, outline_color=BLACK)
+        btnOutline(self, btnRect, color, size)
+        generateText(self, text, font, color, textSize, x_coord, y_coord)
     '''
     def __init__(self, screen, time, images, sounds):
         """
@@ -130,6 +145,12 @@ class Menu:
 
 
     def mainMenu(self, game):
+        '''
+        Description: Generates the main menu
+                User can navigate to tutorial menu, quit, or select
+                a level to play from here. It also contains the
+                full screen option and volume slider.
+        '''
         lvl_btn_w = 160
         lvl_btn_h = 120
         btn_w = 220
@@ -319,6 +340,10 @@ class Menu:
 
 
     def tutorialScreen(self):
+        '''
+        Description: Generates the tutorial menu and loops
+                     until user quits or navigates back to the main menu
+        '''
         btn_w = 180
         btn_h = 40
         openMenu = True
@@ -326,38 +351,41 @@ class Menu:
         title_coords = (int(WIDTH/2), int(HEIGHT/6))
         main_menu_coords = ((int(WIDTH/1.3), int(HEIGHT/3)))
         quit_coords = ((int(WIDTH/1.3), int(HEIGHT/2)))
-        obj_title_coords = ((int(WIDTH/5.5), int(HEIGHT/4)))
-        obj1_coords = ((int(WIDTH/4), int(HEIGHT/3)))
-        obj2_coords = ((int(WIDTH/3.5), int(HEIGHT/2.6)))
-        obj3_coords = ((int(WIDTH/4), int(HEIGHT/2.3)))
-        obj4_coords = ((int(WIDTH/4), int(HEIGHT/2.1)))
-        control_title_coords = ((int(WIDTH/6), int(HEIGHT/1.7)))
-        ctrl1_coords = ((int(WIDTH/5.5), int(HEIGHT/1.5)))
-        ctrl2_coords = ((int(WIDTH/5.5), int(HEIGHT/1.4)))
-        ctrl3_coords = ((int(WIDTH/5.5), int(HEIGHT/1.3)))
-        ctrl4_coords = ((int(WIDTH/5.5), int(HEIGHT/1.2)))
-        ctrl5_coords = ((int(WIDTH/5.5), int(HEIGHT/1.1)))
+        obj_title_coords = ((int(WIDTH/5.5), int(HEIGHT/5)))
+        obj1_coords = ((int(WIDTH/4), int(HEIGHT/4)))
+        obj2_coords = ((int(WIDTH/3.5), int(HEIGHT/3.5)))
+        obj3_coords = ((int(WIDTH/4), int(HEIGHT/3.1)))
+        obj4_coords = ((int(WIDTH/4), int(HEIGHT/2.8)))
+        control_title_coords = ((int(WIDTH/6), int(HEIGHT/2.2)))
+        ctrl1_coords = ((int(WIDTH/5.5), int(HEIGHT/1.9)))
+        ctrl2_coords = ((int(WIDTH/5.5), int(HEIGHT/1.7)))
+        ctrl3_coords = ((int(WIDTH/5.5), int(HEIGHT/1.55)))
+        ctrl4_coords = ((int(WIDTH/5.5), int(HEIGHT/1.4)))
+        ctrl5_coords = ((int(WIDTH/5.5), int(HEIGHT/1.3)))
+        ctrl6_coords = ((int(WIDTH/5.5), int(HEIGHT/1.2)))
         obj1 = "Spec travels the world in search of light!"
         obj2 = "Help Spec navigate through this perilous world"
         obj3 = "and acquire the blue, red, and green light"
         obj4 =" to save... the light of the world"
         control1 ="Left Arrow = Move Left"
         control2 ="Right Arrow = Move Right"
-        control3 ="Up Arrow = Jump"
-        control4 ="Esc = Pause Menu"
-        control5 ="s = Safety Mode"
+        control3 ="Up Arrow (tap) = Hop"
+        control4 = "Up Arrow (hold) = Jump"
+        control5 ="Esc = Pause Menu"
+        control6 ="s = Safety Mode"
         textList = ["Tutorial", "Main Menu", "Quit", "Objectives:", "Controls:",\
-                    obj1, obj2, obj3, obj4, control1, control2, control3, control4, control5]
+                    obj1, obj2, obj3, obj4, control1, control2, control3, control4, control5, control6]
         textCoords = [title_coords, main_menu_coords, quit_coords, \
                       obj_title_coords, control_title_coords, obj1_coords,\
                       obj2_coords, obj3_coords, obj4_coords, ctrl1_coords,\
-                      ctrl2_coords, ctrl3_coords, ctrl4_coords, ctrl5_coords]
+                      ctrl2_coords, ctrl3_coords, ctrl4_coords, ctrl5_coords,\
+                      ctrl6_coords]
         instr_attr = (WHITE, 16, self.fontName)
         textAttr = [(WHITE, 40, self.titleFont), (BLACK, 20, self.fontPM),\
                     (BLACK, 20, self.fontPM), (WHITE, 20, self.fontPM), \
                     (WHITE, 20, self.fontPM), instr_attr, instr_attr,\
                      instr_attr, instr_attr, instr_attr, instr_attr, \
-                     instr_attr, instr_attr, instr_attr]
+                     instr_attr, instr_attr, instr_attr, instr_attr]
         btnList = [(btn_w, btn_h), (btn_w, btn_h)]
         btnCoords = [main_menu_coords, quit_coords]
         btnColor = [(WHITE, GRAY), (WHITE, GRAY)]
@@ -427,7 +455,6 @@ class Menu:
             if (end_time - start_time) > 6:
                 openMenu = False
 
-    #Change this to be custom later.Right now it's a replica of gameOverScreen
     def finalGameOverScreen(self):
         self.sounds[3].play()
         self.sounds[3].fadeout(9000)
@@ -488,6 +515,27 @@ class Menu:
         time.sleep(0.1)
         return status
 
+    def pauseScreen(self):
+        """
+        Description: Generates the pause screen
+        """
+        paused_coords = (int(WIDTH/2), int(HEIGHT/4))
+        openMenu = True
+        menuFPS = 20
+        btn_w = 220
+        btn_h = 60
+        resume_coords = (int(WIDTH/2)), int(HEIGHT/1.8)
+        quit_coords = (int(WIDTH/2)), int(HEIGHT/1.2)
+        textList = ["Paused", "Resume", "Main Menu"]
+        textCoords = [paused_coords, resume_coords, quit_coords]
+        textAttr = [(WHITE, 100, self.titleFont), (BLACK, 30, self.fontPM), (BLACK, 30, self.fontPM)]
+        btnList = [(btn_w, btn_h), (btn_w, btn_h)]
+        btnCoords = [resume_coords, quit_coords]
+        btnColors = [(LIGHT_GREEN, GRAY), (LIGHT_RED, GRAY)]
+        btnActions = ["resume", "pause_return"]
+        status = self.runMenuLoop(menuFPS, textList, textCoords, textAttr, btnList, btnCoords, btnColors, btnActions)
+        time.sleep(0.1)
+        return status
 
 
     def checkMouseClicks(self, start_coords, width, height):
@@ -554,36 +602,15 @@ class Menu:
         y += rand.randrange(-10, y_speed)
         return (x, y)
 
-    def pauseScreen(self):
-        """
-        Description: Generates the pause screen
-        """
-        paused_coords = (int(WIDTH/2), int(HEIGHT/4))
-        openMenu = True
-        menuFPS = 20
-        btn_w = 220
-        btn_h = 60
-        resume_coords = (int(WIDTH/2)), int(HEIGHT/1.8)
-        quit_coords = (int(WIDTH/2)), int(HEIGHT/1.2)
-        textList = ["Paused", "Resume", "Main Menu"]
-        textCoords = [paused_coords, resume_coords, quit_coords]
-        textAttr = [(WHITE, 100, self.titleFont), (BLACK, 30, self.fontPM), (BLACK, 30, self.fontPM)]
-        btnList = [(btn_w, btn_h), (btn_w, btn_h)]
-        btnCoords = [resume_coords, quit_coords]
-        btnColors = [(LIGHT_GREEN, GRAY), (LIGHT_RED, GRAY)]
-        btnActions = ["resume", "pause_return"]
-        status = self.runMenuLoop(menuFPS, textList, textCoords, textAttr, btnList, btnCoords, btnColors, btnActions)
-        time.sleep(0.1)
-        return status
 
-# fps = integer
-# textList = strings to be generated
-# textCoords = [(x,y)]
-# textAttr = [(color, fontsize, fontName)]
-# buttonList = [(width, height)]
-# buttonCoords = [(x, y)]
-# btnColor = Color
-# btnActions = list of strings naming the actions
+        # fps = integer
+        # textList = strings to be generated
+        # textCoords = [(x,y)]
+        # textAttr = [(color, fontsize, fontName)]
+        # buttonList = [(width, height)]
+        # buttonCoords = [(x, y)]
+        # btnColor = Color
+        # btnActions = list of strings naming the actions
     def runMenuLoop(self, fps, textList, textCoords, textAttr, buttonList, buttonCoords, btnColors, btnActions):
         openMenu = True
         self.screen.fill(BLACK)
