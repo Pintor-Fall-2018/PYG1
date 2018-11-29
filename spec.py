@@ -3,8 +3,6 @@ import pygame
 class Spec(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
-        #self.image = pygame.Surface((20,20)) #width x height
-        #self.image.fill((100,100,0))
         self.step = 0
         self.resting_spec_fwd = pygame.image.load('images/spec0.png').convert()
         self.resting_spec_bwd = pygame.image.load('images/spec5.png').convert()
@@ -52,6 +50,7 @@ class Spec(pygame.sprite.Sprite):
         self.shadow = {'top':0, 'bottom':0, 'left':0, 'right':0, 'center':0}
         self.last_direction = "forward"
 
+    #Controls general motion including running and jumping
     def update(self, powerUp, sprites, mobs, spec_x):
         self.snapShot()  #capture position from last frame
         self.rect.x += self.speedCalc() #calculate sprite direction and speed
@@ -87,17 +86,14 @@ class Spec(pygame.sprite.Sprite):
             self.jumpTimer = 0  # reset timer
             self.jumpThreshold = 20
 
-        # Print properties
-        #self.printSpecProperties()
-
     #Returns difference between forward and backward speeds
     def speedCalc(self):
         return self.speed[0] - self.speed[1]
 
-    #Sprite acceleration
+    #Sprite acceleration and enforces speed control
     def speedControl(self, powerUp):
         if powerUp == True:
-            print("Using Power Up")
+            #print("Using Power Up")
             if self.forward and self.speed[1] == 0: #speedup if no backward momentum
                 self.speed[0] += .25
                 if self.speed[0] > 5:
@@ -116,6 +112,7 @@ class Spec(pygame.sprite.Sprite):
                 if self.speed[1] > 4:
                     self.speed[1] = 4
 
+    #Iterates through images to animate Spec
     def animate(self, powerUp):
         self.step += 1
         if self.step > 39:
@@ -137,6 +134,7 @@ class Spec(pygame.sprite.Sprite):
                 else:
                     self.image = self.animations_forward[int(self.step/10)]
 
+    #Player Spec at rest
     def resting(self, powerUp):
         if powerUp == True:
             if self.last_direction == "backward":
@@ -149,19 +147,10 @@ class Spec(pygame.sprite.Sprite):
             else:
                 self.image = self.resting_spec_fwd
 
-    #captures position of last frame into dictionary
+    #Captures position of last frame into dictionary
     def snapShot(self):
         self.shadow["top"] = self.rect.top
         self.shadow["bottom"] = self.rect.bottom
         self.shadow["right"] = self.rect.right
         self.shadow["left"] = self.rect.left
         self.shadow["center"] = self.rect.center
-
-    #Print spec properties from spec.update()
-    def printSpecProperties(self):
-        print ("self.speed[0]: ", self.speed[0])
-        print ("self.speed[1]: ", self.speed[1])
-        print("Speed: " + str(self.speedCalc()))
-        print("FWD: " + str(self.forward))
-        print("BWD: " + str(self.backward))
-        print()

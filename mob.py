@@ -8,14 +8,19 @@ class Mob(pygame.sprite.Sprite):
         self.parent_variable = 12345
         self.mob_sounds = mob_sounds
 
-    #Returns true if spec is within earshot, evaluates whether to play sound.
     def withinEarshot(self, spec_x):
+        '''
+        withinEarshot(self, spec_x) - Returns true if spec is within earshot and evaluates whether to play sound.
+        '''
         if self.rect.x - spec_x < 400:
             return True
         else:
             return False
 
 class Ultraviolet(Mob):
+    '''
+    Ultraviolet(Mob) - Purple enemy Mob slides left and right
+    '''
     def __init__(self, x, y, mob_sounds):
         super().__init__(x,y, mob_sounds)
         self.step = 0
@@ -46,6 +51,9 @@ class Ultraviolet(Mob):
             self.step = 0
 
 class Gamma(Mob):
+    '''
+    Gamma(Mob) - Yellow enemy Mob fires horizontal projectiles
+    '''
     def __init__(self, x, y, mob_sounds):
         super().__init__(x,y, mob_sounds)
         self.step = 0
@@ -93,6 +101,9 @@ class Gamma(Mob):
                 mobs.add(ray)
 
 class Infrared(Mob):
+    '''
+    Infrared(Mob) - Red enemy Mob jumps vertically
+    '''
     def __init__(self, x, y, mob_sounds):
         super().__init__(x,y, mob_sounds)
         self.step = 0
@@ -135,6 +146,9 @@ class Infrared(Mob):
             self.step = 0
 
 class BlackHole(Mob):
+    '''
+    BlackHole(Mob) - Mob pulls spec towards danger if spec is within range
+    '''
     def __init__(self, x, y, mob_sounds):
         super().__init__(x,y, mob_sounds)
         self.step = 0
@@ -165,6 +179,9 @@ class BlackHole(Mob):
             self.step = 0
 
 class Projectile(pygame.sprite.Sprite):
+    '''
+    Projectile(pygame.sprite.Sprite) - Animated pixel is launched from Gamma mobs
+    '''
     def __init__(self, x, y, left):
         pygame.sprite.Sprite.__init__(self) #sprite constructor
         self.image = pygame.Surface((5,5)) #width x height

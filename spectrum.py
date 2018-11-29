@@ -527,7 +527,11 @@ class Game:
         loseAnimation(self) - Animation occurs when Spec collides with
                 mob and loses a life
         '''
-        death_yell.play()
+        #Spec has lost all 7 of his lives
+        if self.lives <= 1:
+            death_yell_alternate.play()
+        else:
+            death_yell.play()
         self.spec.kill()
         self.drawScreen()
         frozen_screen = self.screen.copy()
@@ -952,7 +956,10 @@ mob_sounds.append(mob_jump)
 # -----Spec Sound Effects------
 jump_sound = pygame.mixer.Sound('sounds/jump_01.ogg')
 jump_sound.set_volume(0.5)
-death_yell = pygame.mixer.Sound('sounds/Wilhelm_Scream.wav')
+death_yell = pygame.mixer.Sound('sounds/spec_die.wav')
+death_yell.set_volume(.3)
+death_yell_alternate = pygame.mixer.Sound('sounds/Wilhelm_Scream.wav')
+death_yell_alternate.set_volume(0.5)
 
 
 game = Game(mob_sounds) #Initialize game object
@@ -1084,8 +1091,13 @@ while(openMenu):
 
         # Check status and don't drawScreen if death on that frame
         status = game.levelStatus
-        if status == "restart":
+        if status == "restart" and game.gameLost != True:
             game.levelStatus = ""
+            break
+
+        # Check is Spec Lost all his lives
+        if game.gameLost == True:
+            game.resetGame()
             break
 
         # Print to screen
