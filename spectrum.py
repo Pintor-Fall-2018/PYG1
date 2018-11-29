@@ -1084,8 +1084,13 @@ while(openMenu):
 
         # Check status and don't drawScreen if death on that frame
         status = game.levelStatus
-        if status == "restart":
+        if status == "restart" and game.gameLost != True:
             game.levelStatus = ""
+            break
+
+        # Check is Spec Lost all his lives
+        if game.gameLost == True:
+            game.resetGame()
             break
 
         # Print to screen
