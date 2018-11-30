@@ -954,7 +954,7 @@ mob_jump.set_volume(0.15)
 mob_sounds.append(mob_jump)
 
 # -----Spec Sound Effects------
-jump_sound = pygame.mixer.Sound('sounds/jump_01.ogg')
+jump_sound = pygame.mixer.Sound('sounds/jump_01.ogg')  #Platformer Jumping Sounds CC-BY 3.0 by dklon (https://opengameart.org/content/platformer-jumping-sounds)
 jump_sound.set_volume(0.5)
 death_yell = pygame.mixer.Sound('sounds/spec_die.wav')
 death_yell.set_volume(.3)
